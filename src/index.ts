@@ -52,7 +52,7 @@ app.put(
 
     const result = videoService.update(Number(id), videoEntity);
 
-    if (!result) res.status(404);
+    if (!result) res.status(404).end();
     if (Array.isArray(result)) res.status(400).send({ errorsMessages: result });
     else res.status(204).send(videoService.getId(Number(id)));
   },
@@ -65,8 +65,8 @@ app.delete(
 
     const result = videoService.delete(Number(id));
 
-    if (!result) res.status(404);
-    else res.status(204);
+    if (!result) res.status(404).end();
+    else res.status(204).end();
   },
 );
 
@@ -76,4 +76,4 @@ app.delete(Routs.Testing, (_, res: Response) => {
   res.status(204).end();
 });
 
-app.listen(3001, () => {});
+app.listen(3000, () => {});

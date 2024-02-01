@@ -13,8 +13,8 @@ export class VideoValidator extends BaseValidator<Contracts.VideoValidationField
       value: Contracts.VideoValidationFields[Key],
     ) => boolean
   > = {
-    title: (value) => typeof value === "string",
-    author: (value) => typeof value === "string",
+    title: (value) => typeof value === "string" && value.length <= 40,
+    author: (value) => typeof value === "string" && value.length <= 20,
     canBeDownloaded: (value) => typeof value === "boolean",
     publicationDate: (value) => typeof value === "string",
     minAgeRestriction: (value) => value === null || typeof value === "number",
