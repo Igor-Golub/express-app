@@ -35,11 +35,15 @@ class DB {
     return newEntity;
   }
 
-  public update(id: number, videoEntity: Contracts.VideoModelUpdateDTO) {
+  public update(
+    id: number,
+    { canBeDownloaded = false, ...videoEntity }: Contracts.VideoModelUpdateDTO,
+  ) {
     if (!this.db.videos[id]) return null;
 
     const newEntity: Contracts.VideoModel = {
       ...this.db.videos[id],
+      canBeDownloaded,
       ...videoEntity,
     };
 
