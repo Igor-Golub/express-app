@@ -18,8 +18,7 @@ export class VideoValidator extends BaseValidator<Contracts.VideoValidationField
     canBeDownloaded: (value) => typeof value === "boolean",
     publicationDate: (value) => typeof value === "string",
     minAgeRestriction: (value) =>
-      typeof value === null ||
-      (typeof value === "number" && value < 19 && value > 0),
+      value === null || (typeof value === "number" && value < 19 && value > 0),
     availableResolutions: (value) =>
       Array.isArray(value) ? this.validateVideoQuality(value) : false,
   };
