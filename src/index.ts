@@ -32,9 +32,10 @@ app.post(
   ) => {
     const videoEntity = req.body;
 
-    const newEntity = videoService.create(videoEntity);
+    const result = videoService.create(videoEntity);
 
-    res.sendStatus(201).send(newEntity);
+    if (Array.isArray(result)) res.send({ errorsMessages: result });
+    else res.send(result);
   },
 );
 
@@ -49,8 +50,8 @@ app.put(
 
     const result = videoService.update(Number(id), videoEntity);
 
-    if (!result) res.sendStatus(400);
-    else res.sendStatus(200).send(videoService.getId(Number(id)));
+    if (Array.isArray(result)) res.send({ errorsMessages: result });
+    else res.send(videoService.getId(Number(id)));
   },
 );
 

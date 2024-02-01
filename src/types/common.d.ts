@@ -27,5 +27,12 @@ declare global {
       minAgeRestriction: number;
       publicationDate: string;
     }
+
+    interface ErrorField {
+      message: string;
+      field: string;
+    }
+
+    type VideoValidationFields = Omit<VideoModel, "id" | "createdAt">;
   }
 }
