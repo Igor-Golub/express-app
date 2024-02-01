@@ -36,7 +36,9 @@ class VideoService {
   public delete(id: number) {
     if (!this.dbService.getId(id)) return null;
 
-    return this.dbService.delete(id);
+    this.dbService.delete(id);
+
+    return true;
   }
 
   public clearData() {
