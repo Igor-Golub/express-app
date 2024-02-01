@@ -14,7 +14,11 @@ class DB {
   public create(
     videoEntity: Contracts.VideoModelCreateDTO,
   ): Contracts.VideoModel {
-    const date = new Date();
+    const createdAt = new Date();
+    const publicationDate = new Date();
+
+    createdAt.setDate(createdAt.getDate() + 1);
+
     const id = Date.now();
 
     const newEntity: Contracts.VideoModel = {
@@ -22,8 +26,8 @@ class DB {
       id,
       canBeDownloaded: true,
       minAgeRestriction: null,
-      createdAt: date.toISOString(),
-      publicationDate: date.toISOString(),
+      createdAt: createdAt.toISOString(),
+      publicationDate: publicationDate.toISOString(),
     };
 
     this.db.videos[id] = newEntity;
@@ -31,7 +35,10 @@ class DB {
     return newEntity;
   }
 
-  public update(id: number, videoEntity: Contracts.VideoModelUpdateDTO) {
+  public update(
+    id: number,
+    { canBeDownloaded = false, ...videoEntity }: Contracts.VideoModelUpdateDTO,
+  ) {
     if (!this.db.videos[id]) return null;
 
     const newEntity: Contracts.VideoModel = {
