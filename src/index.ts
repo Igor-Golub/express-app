@@ -73,7 +73,7 @@ app.delete(
 app.delete(Routs.Testing, (_, res: Response) => {
   videoService.clearData();
 
-  res.status(200);
+  res.status(204).end();
 });
 
 app.listen(3001, () => {});
