@@ -47,6 +47,10 @@ class DB {
   public delete(id: number) {
     delete this.db.videos[id];
   }
+
+  public clear() {
+    this.db.videos = {};
+  }
 }
 
 export default DB;

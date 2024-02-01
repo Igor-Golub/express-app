@@ -28,11 +28,19 @@ class VideoService {
 
     if (validationResult.length) return validationResult;
 
+    if (!this.dbService.getId(id)) return null;
+
     return this.dbService.update(id, videoEntity);
   }
 
   public delete(id: number) {
-    this.dbService.delete(id);
+    if (!this.dbService.getId(id)) return null;
+
+    return this.dbService.delete(id);
+  }
+
+  public clearData() {
+    this.dbService.clear();
   }
 }
 

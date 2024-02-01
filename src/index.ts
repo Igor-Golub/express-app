@@ -15,14 +15,15 @@ const videoService = new VideoService(new DBService(db), new VideoValidator());
 app.get(Routs.Videos, (_, res: Response<Contracts.VideoModel[]>) => {
   const data = videoService.get();
 
-  res.send(data);
+  res.status(200).send(data);
 });
 
 app.get(Routs.VideosWithId, (req: Request<{ id: string }>, res: Response) => {
   const id = req.params.id;
   const entity = videoService.getId(Number(id));
 
-  res.send(entity);
+  if (!entity) res.status(404).end();
+  else res.status(200).send(entity);
 });
 
 app.post(
@@ -35,8 +36,8 @@ app.post(
 
     const result = videoService.create(videoEntity);
 
-    if (Array.isArray(result)) res.send({ errorsMessages: result });
-    else res.send(result);
+    if (Array.isArray(result)) res.status(400).send({ errorsMessages: result });
+    else res.status(201).send(result);
   },
 );
 
@@ -51,8 +52,9 @@ app.put(
 
     const result = videoService.update(Number(id), videoEntity);
 
-    if (Array.isArray(result)) res.send({ errorsMessages: result });
-    else res.send(videoService.getId(Number(id)));
+    if (!result) res.status(404);
+    if (Array.isArray(result)) res.status(400).send({ errorsMessages: result });
+    else res.status(204).send(videoService.getId(Number(id)));
   },
 );
 
@@ -61,10 +63,17 @@ app.delete(
   (req: Request<{ id: string }>, res: Response) => {
     const id = req.params.id;
 
-    videoService.delete(Number(id));
+    const result = videoService.delete(Number(id));
 
-    res.sendStatus(204).send({ message: "Removed" });
+    if (!result) res.status(404);
+    else res.status(204);
   },
 );
+
+app.delete(Routs.Testing, (_, res: Response) => {
+  videoService.clearData();
+
+  res.status(200);
+});
 
 app.listen(3001, () => {});
