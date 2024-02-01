@@ -17,7 +17,7 @@ class DB {
     const createdAt = new Date();
     const publicationDate = new Date();
 
-    createdAt.setDate(createdAt.getDate() + 1);
+    publicationDate.setDate(createdAt.getDate() + 1);
 
     const id = Date.now();
 
@@ -35,10 +35,7 @@ class DB {
     return newEntity;
   }
 
-  public update(
-    id: number,
-    { canBeDownloaded = false, ...videoEntity }: Contracts.VideoModelUpdateDTO,
-  ) {
+  public update(id: number, videoEntity: Contracts.VideoModelUpdateDTO) {
     if (!this.db.videos[id]) return null;
 
     const newEntity: Contracts.VideoModel = {
