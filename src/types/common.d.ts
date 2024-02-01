@@ -33,6 +33,6 @@ declare global {
       field: string;
     }
 
-    type VideoValidationFields = Omit<VideoModel, "id" | "createdAt">;
+    type VideoValidationFields = Partial<Omit<VideoModel, "id" | "createdAt">>;
   }
 }

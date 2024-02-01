@@ -4,12 +4,13 @@ import { Routs } from "./enums/Routs";
 import DBService from "./services/dbService";
 import { db } from "./db";
 import VideoService from "./services/videoService";
+import { VideoValidator } from "./validators/videoValidator";
 
 const app = express();
 
 app.use(bodyParser({}));
 
-const videoService = new VideoService(new DBService(db));
+const videoService = new VideoService(new DBService(db), new VideoValidator());
 
 app.get(Routs.Videos, (_, res: Response<Contracts.VideoModel[]>) => {
   const data = videoService.get();
