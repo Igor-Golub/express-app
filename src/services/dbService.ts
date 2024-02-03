@@ -24,7 +24,7 @@ class DB {
     const newEntity: Contracts.VideoModel = {
       ...videoEntity,
       id,
-      canBeDownloaded: true,
+      canBeDownloaded: false,
       minAgeRestriction: null,
       createdAt: createdAt.toISOString(),
       publicationDate: publicationDate.toISOString(),
