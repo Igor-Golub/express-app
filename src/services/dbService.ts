@@ -1,4 +1,4 @@
-class DB {
+class DBService {
   constructor(
     private db: Record<"videos", Record<string, Contracts.VideoModel>>,
   ) {}
@@ -61,4 +61,4 @@ class DB {
   }
 }
 
-export default DB;
+export default DBService;

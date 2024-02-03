@@ -1,5 +1,8 @@
 export enum Routs {
+  Root = "/",
+  RootWithId = "/:id",
+
   Videos = "/videos",
-  VideosWithId = "/videos/:id",
+
   Testing = "/testing/all-data",
 }
