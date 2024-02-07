@@ -1,9 +1,22 @@
 import { VideoQuality } from "../enums/VideoQuality";
+import { DataBaseEntities } from "../enums/DataBaseEntities";
 
 declare global {
   namespace Contracts {
-    interface VideoModel {
-      id: number;
+    interface BaseEntity {
+      id?: string;
+    }
+
+    type DBValues = {
+      [DataBaseEntities.Videos]: VideoModel;
+      [DataBaseEntities.Blogs]: BlogModel;
+    };
+
+    type DBValuesUnion = VideoModel | BlogModel;
+
+    type IDB = { [key in DataBaseEntities]: Record<string, DBValues[key]> };
+
+    interface VideoModel extends BaseEntity {
       title: string;
       author: string;
       canBeDownloaded: boolean;
@@ -28,11 +41,27 @@ declare global {
       publicationDate: string;
     }
 
-    interface ErrorField {
-      message: string;
-      field: string;
+    interface BlogModel extends BaseEntity {
+      title: string;
+      shortDescription: string;
+      content: string;
+      blogId: string;
+      blogName: string;
     }
 
-    type VideoValidationFields = Partial<Omit<VideoModel, "id" | "createdAt">>;
+    interface BlogModelCreateDTO {
+      title: string;
+      shortDescription: string;
+      content: string;
+      blogId: string;
+      blogName: string;
+    }
+
+    interface BlogModelUpdateDTO {
+      title: string;
+      shortDescription: string;
+      content: string;
+      blogId: string;
+    }
   }
 }

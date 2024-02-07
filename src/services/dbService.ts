@@ -1,63 +1,68 @@
+import { DataBaseEntities } from "../enums/DataBaseEntities";
+import { db } from "../db";
+
 class DBService {
-  constructor(
-    private db: Record<"videos", Record<string, Contracts.VideoModel>>,
-  ) {}
+  private db: Contracts.IDB = db;
 
-  public get(): Contracts.VideoModel[] {
-    return Object.values(this.db.videos);
+  public get<Key extends DataBaseEntities>(
+    dbKey: Key,
+  ): Contracts.DBValues[Key][] {
+    return Object.entries(this.db[dbKey]).reduce<Contracts.DBValues[Key][]>(
+      (acc, [_, value]) => {
+        acc.push(value);
+        return acc;
+      },
+      [],
+    );
   }
 
-  public getId(id: number): Contracts.VideoModel {
-    return this.db.videos[id];
+  public getId<Key extends DataBaseEntities>(
+    dbKey: Key,
+    id: string,
+  ): Contracts.DBValues[Key] {
+    return this.db[dbKey][id];
   }
 
-  public create(
-    videoEntity: Contracts.VideoModelCreateDTO,
-  ): Contracts.VideoModel {
-    const createdAt = new Date();
-    const publicationDate = new Date();
+  public create<Entity extends Contracts.DBValuesUnion>(
+    dbKey: DataBaseEntities,
+    entity: Entity,
+  ): Entity {
+    const id = String(Date.now());
 
-    publicationDate.setDate(createdAt.getDate() + 1);
+    const newEntity: Entity = { ...entity, id };
 
-    const id = Date.now();
-
-    const newEntity: Contracts.VideoModel = {
-      ...videoEntity,
-      id,
-      canBeDownloaded: false,
-      minAgeRestriction: null,
-      createdAt: createdAt.toISOString(),
-      publicationDate: publicationDate.toISOString(),
-    };
-
-    this.db.videos[id] = newEntity;
+    this.db[dbKey][id] = newEntity;
 
     return newEntity;
   }
 
-  public update(
-    id: number,
-    { canBeDownloaded = false, ...videoEntity }: Contracts.VideoModelUpdateDTO,
-  ) {
+  public update<Entity extends Contracts.DBValuesUnion>(
+    dbKey: DataBaseEntities,
+    id: string,
+    entity: Entity,
+  ): Entity | null {
     if (!this.db.videos[id]) return null;
 
-    const newEntity: Contracts.VideoModel = {
-      ...this.db.videos[id],
-      canBeDownloaded,
-      ...videoEntity,
-    };
+    const newEntity: Entity = { ...this.db.videos[id], ...entity };
 
-    this.db.videos[id] = newEntity;
+    this.db[dbKey][id] = newEntity;
 
     return newEntity;
   }
 
-  public delete(id: number) {
-    delete this.db.videos[id];
+  public delete(dbKey: DataBaseEntities, id: string) {
+    if (!this.db.videos[id]) return false;
+
+    delete this.db[dbKey][id];
+
+    return true;
   }
 
   public clear() {
-    this.db.videos = {};
+    this.db = {
+      [DataBaseEntities.Blogs]: {},
+      [DataBaseEntities.Videos]: {},
+    };
   }
 }
 

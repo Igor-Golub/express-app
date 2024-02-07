@@ -1,14 +1,14 @@
 import { Request, Response, Router } from "express";
 import { Routs } from "../enums/Routs";
 import VideoService from "../services/videoService";
-import DBService from "../services/dbService";
-import { db } from "../db";
+import VideoRepository from "../repositories/videoRepository";
 import { videoValidators } from "../validators/video";
 import { validation } from "../middlewares/validation";
+import DBService from "../services/dbService";
 
 export const videoRouter = Router({});
 
-const videoService = new VideoService(new DBService(db));
+const videoService = new VideoService(new VideoRepository(new DBService()));
 
 videoRouter.get(Routs.Root, (_, res: Response<Contracts.VideoModel[]>) => {
   const data = videoService.get();
@@ -20,7 +20,7 @@ videoRouter.get(
   Routs.RootWithId,
   (req: Request<{ id: string }>, res: Response) => {
     const id = req.params.id;
-    const entity = videoService.getId(Number(id));
+    const entity = videoService.getId(id);
 
     if (!entity) res.status(404).end();
     else res.status(200).send(entity);
@@ -39,8 +39,7 @@ videoRouter.post(
 
     const result = videoService.create(videoEntity);
 
-    if (Array.isArray(result)) res.status(400).send({ errorsMessages: result });
-    else res.status(201).send(result);
+    res.status(201).send(result);
   },
 );
 
@@ -55,11 +54,10 @@ videoRouter.put(
     const id = req.params.id;
     const videoEntity = req.body;
 
-    const result = videoService.update(Number(id), videoEntity);
+    const result = videoService.update(id, videoEntity);
 
     if (!result) res.status(404).end();
-    if (Array.isArray(result)) res.status(400).send({ errorsMessages: result });
-    else res.status(204).send(videoService.getId(Number(id)));
+    else res.status(204).send(videoService.getId(id));
   },
 );
 
@@ -68,7 +66,7 @@ videoRouter.delete(
   (req: Request<{ id: string }>, res: Response) => {
     const id = req.params.id;
 
-    const result = videoService.delete(Number(id));
+    const result = videoService.delete(id);
 
     if (!result) res.status(404).end();
     else res.status(204).end();

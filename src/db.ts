@@ -1,3 +1,6 @@
-export const db: Record<"videos", Record<string, Contracts.VideoModel>> = {
-  videos: {},
+import { DataBaseEntities } from "./enums/DataBaseEntities";
+
+export const db: Contracts.IDB = {
+  [DataBaseEntities.Videos]: {},
+  [DataBaseEntities.Blogs]: {},
 };
