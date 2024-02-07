@@ -1,10 +1,8 @@
 import DB from "./dbService";
-import { BaseValidator } from "../validators/BaseValidator";
 
 class VideoService {
   constructor(
     private dbService: DB,
-    private validator: BaseValidator<Contracts.VideoValidationFields>,
   ) {}
 
   public get() {
@@ -16,18 +14,10 @@ class VideoService {
   }
 
   public create(videoEntity: Contracts.VideoModelCreateDTO) {
-    const validationResult = this.validator.validate(videoEntity);
-
-    if (validationResult.length) return validationResult;
-
     return this.dbService.create(videoEntity);
   }
 
   public update(id: number, videoEntity: Contracts.VideoModelUpdateDTO) {
-    const validationResult = this.validator.validate(videoEntity);
-
-    if (validationResult.length) return validationResult;
-
     if (!this.dbService.getId(id)) return null;
 
     return this.dbService.update(id, videoEntity);

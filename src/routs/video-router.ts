@@ -3,11 +3,13 @@ import { Routs } from "../enums/Routs";
 import VideoService from "../services/videoService";
 import DBService from "../services/dbService";
 import { db } from "../db";
-import { VideoValidator } from "../validators/videoValidator";
+import { Resources } from "../enums/Resources";
+import { videoValidators } from "../validators/video";
+import { validation } from "../middlewares/validation";
 
 export const videoRouter = Router({});
 
-const videoService = new VideoService(new DBService(db), new VideoValidator());
+const videoService = new VideoService(new DBService(db));
 
 videoRouter.get(Routs.Root, (_, res: Response<Contracts.VideoModel[]>) => {
   const data = videoService.get();
@@ -28,6 +30,8 @@ videoRouter.get(
 
 videoRouter.post(
   Routs.Root,
+  ...videoValidators.create,
+  validation,
   (
     req: Request<Record<string, unknown>, Contracts.VideoModelCreateDTO>,
     res: Response,
@@ -43,6 +47,8 @@ videoRouter.post(
 
 videoRouter.put(
   Routs.RootWithId,
+  ...videoValidators.update,
+  validation,
   (
     req: Request<{ id: string }, Contracts.VideoModelUpdateDTO>,
     res: Response,
@@ -70,7 +76,7 @@ videoRouter.delete(
   },
 );
 
-videoRouter.delete(Routs.Testing, (_, res: Response) => {
+videoRouter.delete(Resources.Testing, (_, res: Response) => {
   videoService.clearData();
 
   res.status(204).end();
