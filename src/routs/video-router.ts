@@ -3,7 +3,6 @@ import { Routs } from "../enums/Routs";
 import VideoService from "../services/videoService";
 import DBService from "../services/dbService";
 import { db } from "../db";
-import { Resources } from "../enums/Resources";
 import { videoValidators } from "../validators/video";
 import { validation } from "../middlewares/validation";
 
@@ -75,9 +74,3 @@ videoRouter.delete(
     else res.status(204).end();
   },
 );
-
-videoRouter.delete(Resources.Testing, (_, res: Response) => {
-  videoService.clearData();
-
-  res.status(204).end();
-});
