@@ -10,9 +10,10 @@ declare global {
     type DBValues = {
       [DataBaseEntities.Videos]: VideoModel;
       [DataBaseEntities.Blogs]: BlogModel;
+      [DataBaseEntities.Posts]: PostModel;
     };
 
-    type DBValuesUnion = VideoModel | BlogModel;
+    type DBValuesUnion = VideoModel | BlogModel | PostModel;
 
     type IDB = { [key in DataBaseEntities]: Record<string, DBValues[key]> };
 
@@ -42,20 +43,12 @@ declare global {
     }
 
     interface BlogModel extends BaseEntity {
-      title: string;
-      shortDescription: string;
-      content: string;
-      blogId: string;
-      blogName: string;
+      name: string;
+      description: string;
+      websiteUrl: string;
     }
 
-    interface BlogModelCreateDTO {
-      title: string;
-      shortDescription: string;
-      content: string;
-      blogId: string;
-      blogName: string;
-    }
+    type BlogModelCreateAndUpdateDTO = Omit<BlogModel, "id">;
 
     interface BlogModelUpdateDTO {
       title: string;
@@ -63,5 +56,15 @@ declare global {
       content: string;
       blogId: string;
     }
+
+    interface PostModel extends BaseEntity {
+      title: string;
+      shortDescription: string;
+      content: string;
+      blogId: string;
+      blogName: string;
+    }
+
+    type PostModelCreateAndUpdateDTO = Omit<PostModel, "blogName">;
   }
 }

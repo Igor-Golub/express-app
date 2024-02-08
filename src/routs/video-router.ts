@@ -8,7 +8,7 @@ import DBService from "../services/dbService";
 
 export const videoRouter = Router({});
 
-const videoService = new VideoService(new VideoRepository(new DBService()));
+const videoService = new VideoService(new VideoRepository(DBService));
 
 videoRouter.get(Routs.Root, (_, res: Response<Contracts.VideoModel[]>) => {
   const data = videoService.get();

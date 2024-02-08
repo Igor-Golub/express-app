@@ -1,75 +1,79 @@
 import { Request, Response, Router } from "express";
 import { Routs } from "../enums/Routs";
-import BlogRepository from "../repositories/blogRepository";
 import DBService from "../services/dbService";
-import BlogService from "../services/blogService";
 import { validation } from "../middlewares/validation";
-import { blogValidators } from "../validators/blog";
+import { postValidators } from "../validators/post";
+import PostRepository from "../repositories/postRepository";
+import PostService from "../services/postService";
+import BlogRepository from "../repositories/blogRepository";
 
-export const blogRouter = Router({});
+export const postRouter = Router({});
 
-const blogService = new BlogService(new BlogRepository(DBService));
+const postService = new PostService(
+  new PostRepository(DBService),
+  new BlogRepository(DBService),
+);
 
-blogRouter.get(Routs.Root, (_, res: Response<Contracts.BlogModel[]>) => {
-  const data = blogService.get();
+postRouter.get(Routs.Root, (_, res: Response<Contracts.PostModel[]>) => {
+  const data = postService.get();
 
   res.status(200).send(data);
 });
 
-blogRouter.get(
+postRouter.get(
   Routs.RootWithId,
   (req: Request<{ id: string }>, res: Response) => {
     const id = req.params.id;
-    const entity = blogService.getId(id);
+    const entity = postService.getId(id);
 
     if (!entity) res.status(404).end();
     else res.status(200).send(entity);
   },
 );
 
-blogRouter.post(
+postRouter.post(
   Routs.Root,
-  ...blogValidators.create,
+  ...postValidators.create,
   validation,
   (
     req: Request<
       Record<string, unknown>,
-      Contracts.BlogModelCreateAndUpdateDTO
+      Contracts.PostModelCreateAndUpdateDTO
     >,
     res: Response,
   ) => {
     const entity = req.body;
 
-    const result = blogService.create(entity);
+    const result = postService.create(entity);
 
     res.status(201).send(result);
   },
 );
 
-blogRouter.put(
+postRouter.put(
   Routs.RootWithId,
-  ...blogValidators.update,
+  ...postValidators.update,
   validation,
   (
-    req: Request<{ id: string }, Contracts.BlogModelUpdateDTO>,
+    req: Request<{ id: string }, Contracts.PostModelCreateAndUpdateDTO>,
     res: Response,
   ) => {
     const id = req.params.id;
     const videoEntity = req.body;
 
-    const result = blogService.update(id, videoEntity);
+    const result = postService.update(id, videoEntity);
 
     if (!result) res.status(404).end();
-    else res.status(204).send(blogService.getId(id));
+    else res.status(204).send(postService.getId(id));
   },
 );
 
-blogRouter.delete(
+postRouter.delete(
   Routs.RootWithId,
   (req: Request<{ id: string }>, res: Response) => {
     const id = req.params.id;
 
-    const result = blogService.delete(id);
+    const result = postService.delete(id);
 
     if (!result) res.status(404).end();
     else res.status(204).end();

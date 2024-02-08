@@ -62,8 +62,9 @@ class DBService {
     this.db = {
       [DataBaseEntities.Blogs]: {},
       [DataBaseEntities.Videos]: {},
+      [DataBaseEntities.Posts]: {},
     };
   }
 }
 
-export default DBService;
+export default new DBService();

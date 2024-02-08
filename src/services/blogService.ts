@@ -11,7 +11,7 @@ class BlogService {
     return this.blogRepository.getId(id);
   }
 
-  public create(blogEntity: Contracts.BlogModelCreateDTO) {
+  public create(blogEntity: Contracts.BlogModelCreateAndUpdateDTO) {
     return this.blogRepository.create(blogEntity);
   }
 
