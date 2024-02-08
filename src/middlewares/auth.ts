@@ -5,8 +5,20 @@ import DbService from "../services/dbService";
 
 const userService = new UserService(new UserRepository(DbService));
 
-const decodeToken = (token: string) => {
-  return Buffer.from(token.split(" ")[1], "base64").toString("ascii");
+const decodeToken = (
+  token: string,
+): {
+  name: string;
+  password: string;
+} => {
+  const [, password] = token.split(" ");
+
+  const secret = Buffer.from(password, "base64").toString("ascii");
+
+  return {
+    name: secret.split(":")[0],
+    password,
+  };
 };
 
 export const auth = (req: Request, res: Response, next: NextFunction) => {
@@ -14,9 +26,11 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
 
   if (!authHeader) return res.status(401).end();
 
-  const user = userService.getByName(decodeToken(authHeader));
+  const { password, name } = decodeToken(authHeader);
 
-  if (!user) return res.status(401).end();
+  const user = userService.getByName(name);
+
+  if (user?.password !== password) return res.status(401).end();
 
   return next();
 };
