@@ -6,6 +6,7 @@ import { postValidators } from "../validators/post";
 import PostRepository from "../repositories/postRepository";
 import PostService from "../services/postService";
 import BlogRepository from "../repositories/blogRepository";
+import { auth } from "../middlewares/auth";
 
 export const postRouter = Router({});
 
@@ -33,6 +34,7 @@ postRouter.get(
 
 postRouter.post(
   Routs.Root,
+  auth,
   ...postValidators.create,
   validation,
   (
@@ -52,6 +54,7 @@ postRouter.post(
 
 postRouter.put(
   Routs.RootWithId,
+  auth,
   ...postValidators.update,
   validation,
   (
@@ -70,6 +73,7 @@ postRouter.put(
 
 postRouter.delete(
   Routs.RootWithId,
+  auth,
   (req: Request<{ id: string }>, res: Response) => {
     const id = req.params.id;
 

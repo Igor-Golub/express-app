@@ -5,6 +5,7 @@ import DBService from "../services/dbService";
 import BlogService from "../services/blogService";
 import { validation } from "../middlewares/validation";
 import { blogValidators } from "../validators/blog";
+import { auth } from "../middlewares/auth";
 
 export const blogRouter = Router({});
 
@@ -29,6 +30,7 @@ blogRouter.get(
 
 blogRouter.post(
   Routs.Root,
+  auth,
   ...blogValidators.create,
   validation,
   (
@@ -48,6 +50,7 @@ blogRouter.post(
 
 blogRouter.put(
   Routs.RootWithId,
+  auth,
   ...blogValidators.update,
   validation,
   (
@@ -66,6 +69,7 @@ blogRouter.put(
 
 blogRouter.delete(
   Routs.RootWithId,
+  auth,
   (req: Request<{ id: string }>, res: Response) => {
     const id = req.params.id;
 

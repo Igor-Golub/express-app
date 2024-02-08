@@ -11,9 +11,10 @@ declare global {
       [DataBaseEntities.Videos]: VideoModel;
       [DataBaseEntities.Blogs]: BlogModel;
       [DataBaseEntities.Posts]: PostModel;
+      [DataBaseEntities.Users]: UserModel;
     };
 
-    type DBValuesUnion = VideoModel | BlogModel | PostModel;
+    type DBValuesUnion = VideoModel | BlogModel | PostModel | UserModel;
 
     type IDB = { [key in DataBaseEntities]: Record<string, DBValues[key]> };
 
@@ -66,5 +67,10 @@ declare global {
     }
 
     type PostModelCreateAndUpdateDTO = Omit<PostModel, "blogName">;
+
+    interface UserModel extends BaseEntity {
+      name: string;
+      password: string;
+    }
   }
 }

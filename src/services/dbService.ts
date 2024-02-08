@@ -23,6 +23,18 @@ class DBService {
     return this.db[dbKey][id];
   }
 
+  public getByName<Key extends DataBaseEntities>(
+    dbKey: Key,
+    name: string,
+  ): Contracts.DBValues[Key] | null {
+    const currentEntity = Object.values(this.db[dbKey]).find((entity) => {
+      if ("name" in entity) return entity.name === name;
+      return null;
+    });
+
+    return currentEntity || null;
+  }
+
   public create<Entity extends Contracts.DBValuesUnion>(
     dbKey: DataBaseEntities,
     entity: Entity,
@@ -63,6 +75,7 @@ class DBService {
       [DataBaseEntities.Blogs]: {},
       [DataBaseEntities.Videos]: {},
       [DataBaseEntities.Posts]: {},
+      [DataBaseEntities.Users]: {},
     };
   }
 }
