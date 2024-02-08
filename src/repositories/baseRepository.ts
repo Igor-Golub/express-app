@@ -3,7 +3,7 @@ export default abstract class BaseRepository<Entity> {
 
   abstract getId(id: string): Entity;
 
-  abstract getByName(name: string): Entity | null;
+  getByName?(name: string): Entity | null;
 
   abstract create(entity: Entity): Entity;
 

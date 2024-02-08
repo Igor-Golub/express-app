@@ -4,10 +4,8 @@ import { Routs } from "../enums/Routs";
 
 export const testingRouter = Router({});
 
-const dbService = new DBService();
-
 testingRouter.delete(Routs.AllData, (_, res: Response) => {
-  dbService.clear();
+  DBService.clear();
 
   res.status(204).end();
 });

@@ -1,9 +1,9 @@
-import DB from "../services/dbService";
+import DbService from "../services/dbService";
 import BaseRepository from "./baseRepository";
 import { DataBaseEntities } from "../enums/DataBaseEntities";
 
 class BlogRepository extends BaseRepository<Contracts.BlogModel> {
-  constructor(private dbService: DB) {
+  constructor(private dbService: typeof DbService) {
     super();
   }
 
