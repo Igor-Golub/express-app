@@ -4,24 +4,17 @@ class AuthService {
   constructor(private userService: UserService) {}
 
   public basicVerification(token: string) {
-    const { userName, userPassword } = this.decodeTokenFromBase64(token);
+    const userPassword = this.getTokenFromToken(token);
 
-    const user = this.userService.getByName(userName);
+    const users = this.userService.get();
 
-    return user?.password === userPassword;
+    return users.map(({ password }) => password).includes(userPassword);
   }
 
-  private decodeTokenFromBase64(token: string) {
+  private getTokenFromToken(token: string) {
     const [, userPassword] = token.split(" ");
 
-    const secret = Buffer.from(userPassword, "base64").toString("ascii");
-
-    const [userName] = secret.split(":");
-
-    return {
-      userName,
-      userPassword,
-    };
+    return userPassword;
   }
 }
 
