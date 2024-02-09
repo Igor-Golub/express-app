@@ -8,7 +8,7 @@ export const db: Contracts.IDB = {
     root: {
       id: "root",
       name: "admin",
-      password: "YWRtaW5ccXdlcnR5",
+      password: "YWRtaW46cXdlcnR5",
     },
   },
 };
