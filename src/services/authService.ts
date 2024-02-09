@@ -16,7 +16,7 @@ class AuthService {
 
     const secret = Buffer.from(userPassword, "base64").toString("ascii");
 
-    const [userName] = secret.split("\\");
+    const [userName] = secret.split(":");
 
     return {
       userName,
