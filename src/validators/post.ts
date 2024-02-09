@@ -6,9 +6,9 @@ import DbService from "../services/dbService";
 const blogService = new BlogService(new BlogRepository(DbService));
 
 const commonFields = [
-  body("title").isString().trim().isLength({ min: 0, max: 30 }),
-  body("shortDescription").isString().trim().isLength({ min: 0, max: 100 }),
-  body("content").isString().trim().isLength({ min: 0, max: 1000 }),
+  body("title").isString().trim().isLength({ min: 1, max: 30 }),
+  body("shortDescription").isString().trim().isLength({ min: 1, max: 100 }),
+  body("content").isString().trim().isLength({ min: 1, max: 1000 }),
   body("blogId")
     .isString()
     .trim()
