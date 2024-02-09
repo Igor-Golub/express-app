@@ -15,7 +15,7 @@ class BlogService {
     return this.blogRepository.create(blogEntity);
   }
 
-  public update(id: string, blogEntity: Contracts.BlogModelUpdateDTO) {
+  public update(id: string, blogEntity: Contracts.BlogModelCreateAndUpdateDTO) {
     const currentElement = this.blogRepository.getId(id);
 
     if (!currentElement) return null;

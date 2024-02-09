@@ -6,6 +6,7 @@ import BlogService from "../services/blogService";
 import { validation } from "../middlewares/validation";
 import { blogValidators } from "../validators/blog";
 import { auth } from "../middlewares/auth";
+import blogRepository from "../repositories/blogRepository";
 
 export const blogRouter = Router({});
 
@@ -54,13 +55,13 @@ blogRouter.put(
   ...blogValidators.update,
   validation,
   (
-    req: Request<{ id: string }, Contracts.BlogModelUpdateDTO>,
+    req: Request<{ id: string }, Contracts.BlogModelCreateAndUpdateDTO>,
     res: Response,
   ) => {
     const id = req.params.id;
-    const videoEntity = req.body;
+    const blogEntity = req.body;
 
-    const result = blogService.update(id, videoEntity);
+    const result = blogService.update(id, blogEntity);
 
     if (!result) res.status(404).end();
     else res.status(204).send(blogService.getId(id));

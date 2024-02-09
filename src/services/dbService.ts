@@ -53,9 +53,9 @@ class DBService {
     id: string,
     entity: Entity,
   ): Entity | null {
-    if (!this.db.videos[id]) return null;
+    if (!this.db[dbKey][id]) return null;
 
-    const newEntity: Entity = { ...this.db.videos[id], ...entity };
+    const newEntity: Entity = { ...this.db[dbKey][id], ...entity };
 
     this.db[dbKey][id] = newEntity;
 

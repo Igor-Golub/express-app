@@ -51,13 +51,6 @@ declare global {
 
     type BlogModelCreateAndUpdateDTO = Omit<BlogModel, "id">;
 
-    interface BlogModelUpdateDTO {
-      title: string;
-      shortDescription: string;
-      content: string;
-      blogId: string;
-    }
-
     interface PostModel extends BaseEntity {
       title: string;
       shortDescription: string;
