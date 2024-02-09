@@ -63,7 +63,7 @@ class DBService {
   }
 
   public delete(dbKey: DataBaseEntities, id: string) {
-    if (!this.db.videos[id]) return false;
+    if (!this.db[dbKey][id]) return false;
 
     delete this.db[dbKey][id];
 
@@ -75,7 +75,7 @@ class DBService {
       [DataBaseEntities.Blogs]: {},
       [DataBaseEntities.Videos]: {},
       [DataBaseEntities.Posts]: {},
-      [DataBaseEntities.Users]: {},
+      [DataBaseEntities.Users]: db.users,
     };
   }
 }

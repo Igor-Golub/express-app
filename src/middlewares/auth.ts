@@ -2,35 +2,19 @@ import { NextFunction, Request, Response } from "express";
 import UserService from "../services/userService";
 import UserRepository from "../repositories/userRepository";
 import DbService from "../services/dbService";
+import AuthService from "../services/authService";
 
-const userService = new UserService(new UserRepository(DbService));
-
-const decodeToken = (
-  token: string,
-): {
-  name: string;
-  password: string;
-} => {
-  const [, password] = token.split(" ");
-
-  const secret = Buffer.from(password, "base64").toString("ascii");
-
-  return {
-    name: secret.split(":")[0],
-    password,
-  };
-};
+const authService = new AuthService(
+  new UserService(new UserRepository(DbService)),
+);
 
 export const auth = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) return res.status(401).end();
 
-  const { password, name } = decodeToken(authHeader);
+  const isAuth = authService.basicVerification(authHeader);
 
-  const user = userService.getByName(name);
-
-  if (user?.password !== password) return res.status(401).end();
-
+  if (!isAuth) return res.status(401).end();
   return next();
 };
