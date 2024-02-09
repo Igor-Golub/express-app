@@ -6,8 +6,6 @@ class AuthService {
   public basicVerification(token: string) {
     const { userName, userPassword } = this.decodeTokenFromBase64(token);
 
-    if (!userName || !userPassword) return false;
-
     const user = this.userService.getByName(userName);
 
     return user?.password === userPassword;
@@ -18,14 +16,7 @@ class AuthService {
 
     const secret = Buffer.from(userPassword, "base64").toString("ascii");
 
-    if (!secret.includes("\\")) {
-      return {
-        userName: null,
-        userPassword: null,
-      };
-    }
-
-    const [userName] = secret.split("\\");
+    const [userName] = secret.split(":");
 
     return {
       userName,
