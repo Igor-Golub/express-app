@@ -1,20 +1,17 @@
 import UserService from "./userService";
+import { AuthorizationTypes } from "../enums/AuthorizationTypes";
 
 class AuthService {
   constructor(private userService: UserService) {}
 
   public basicVerification(token: string) {
-    const userPassword = this.getTokenFromToken(token);
+    const [authorizationType, secretToken] = token.split(" ");
+
+    if (authorizationType !== AuthorizationTypes.Basic) return false;
 
     const users = this.userService.get();
 
-    return users.map(({ password }) => password).includes(userPassword);
-  }
-
-  private getTokenFromToken(token: string) {
-    const [, userPassword] = token.split(" ");
-
-    return userPassword;
+    return users.map(({ password }) => password).includes(secretToken);
   }
 }
 

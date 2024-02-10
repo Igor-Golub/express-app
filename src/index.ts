@@ -15,4 +15,4 @@ app.use(Resources.Blogs, blogRouter);
 app.use(Resources.Posts, postRouter);
 app.use(Resources.Testing, testingRouter);
 
-app.listen(3000, () => {});
+app.listen(3001, () => {});
