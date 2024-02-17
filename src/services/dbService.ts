@@ -5,7 +5,7 @@ import { DataBaseEntities } from "../enums/DataBaseEntities";
 dotenv.config();
 
 class DBService {
-  private client = new MongoClient(process.env.MONGO_URL ?? "");
+  private client = new MongoClient(String(process.env.MONGO_URL));
 
   private rootUser = {
     name: process.env.ROOT_USER_NAME,
@@ -122,9 +122,9 @@ class DBService {
   }
 
   public async clear() {
-    await this.client.db().dropCollection(DataBaseEntities.Blogs);
-    await this.client.db().dropCollection(DataBaseEntities.Videos);
-    await this.client.db().dropCollection(DataBaseEntities.Posts);
+    await this.client.db().collection(DataBaseEntities.Videos).deleteMany({});
+    await this.client.db().collection(DataBaseEntities.Posts).deleteMany({});
+    await this.client.db().collection(DataBaseEntities.Blogs).deleteMany({});
   }
 }
 
