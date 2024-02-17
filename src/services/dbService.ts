@@ -94,10 +94,10 @@ class DBService {
     id: string,
     entity: Entity,
   ): Promise<Entity | null> {
-    const foundEntity = this.client
+    const foundEntity = await this.client
       .db(process.env.DB_NAME)
       .collection(dbKey)
-      .find({ _id: new ObjectId(id) });
+      .findOne({ _id: new ObjectId(id) });
 
     if (!foundEntity) return null;
 
