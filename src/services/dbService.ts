@@ -64,7 +64,11 @@ class DBService {
 
     const { _id, ...entity } = result as WithId<Contracts.DBValues[Key]>;
 
-    return { id: _id, ...entity };
+    return {
+      id: _id,
+      createdAt: _id.getTimestamp(),
+      ...entity,
+    };
   }
 
   public async create<Entity extends Contracts.DBValuesUnion>(
@@ -108,10 +112,10 @@ class DBService {
   }
 
   public async delete(dbKey: DataBaseEntities, id: string) {
-    const foundEntity = this.client
+    const foundEntity = await this.client
       .db(process.env.DB_NAME)
       .collection(dbKey)
-      .find({ _id: new ObjectId(id) });
+      .findOne({ _id: new ObjectId(id) });
 
     if (!foundEntity) return false;
 
