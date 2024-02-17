@@ -31,8 +31,8 @@ class DBService {
 
     await this.client
       .db(process.env.DB_NAME)
-      .createCollection(DataBaseEntities.Users)
-      .then((collection) => collection.insertOne(this.rootUser));
+      .collection(DataBaseEntities.Users)
+      .insertOne(this.rootUser);
   }
 
   public async get<Key extends DataBaseEntities>(
