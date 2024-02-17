@@ -42,7 +42,11 @@ class DBService {
       .find({})
       .toArray();
 
-    return result.map(({ _id, ...entity }) => ({ id: _id, ...entity }));
+    return result.map(({ _id, ...entity }) => ({
+      id: _id.toString(),
+      createdAt: _id.getTimestamp(),
+      ...entity,
+    }));
   }
 
   public async getId<Key extends DataBaseEntities>(
@@ -72,7 +76,11 @@ class DBService {
 
     if (!result.acknowledged) return null;
 
-    return { id: result.insertedId.toString(), ...entity };
+    return {
+      id: result.insertedId.toString(),
+      createdAt: result.insertedId.getTimestamp(),
+      ...entity,
+    };
   }
 
   public async update<Entity extends Contracts.DBValuesUnion>(

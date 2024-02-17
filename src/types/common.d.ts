@@ -17,8 +17,6 @@ declare global {
 
     type DBValuesUnion = VideoModel | BlogModel | PostModel | UserModel;
 
-    type IDB = { [key in DataBaseEntities]: Record<string, DBValues[key]> };
-
     interface VideoModel extends BaseEntity {
       title: string;
       author: string;
@@ -48,6 +46,8 @@ declare global {
       name: string;
       description: string;
       websiteUrl: string;
+      createdAt: string;
+      isMembership: boolean;
     }
 
     type BlogModelCreateAndUpdateDTO = Omit<BlogModel, "id">;
@@ -58,6 +58,7 @@ declare global {
       content: string;
       blogId: string;
       blogName: string;
+      createdAt: string;
     }
 
     type PostModelCreateAndUpdateDTO = Omit<PostModel, "blogName">;

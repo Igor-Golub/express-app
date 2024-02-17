@@ -10,7 +10,10 @@ class BlogService {
   }
 
   public async create(blogEntity: Contracts.BlogModelCreateAndUpdateDTO) {
-    return this.blogRepository.create(blogEntity);
+    return this.blogRepository.create({
+      ...blogEntity,
+      isMembership: true,
+    });
   }
 
   public async update(
