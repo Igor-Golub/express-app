@@ -12,8 +12,8 @@ const commonFields = [
   body("blogId")
     .isString()
     .trim()
-    .custom((blogId: string) => {
-      const blog = blogService.getId(blogId);
+    .custom(async (blogId: string) => {
+      const blog = await blogService.getId(blogId);
       if (!blog) throw new Error("Blog not exist!");
       else return true;
     }),

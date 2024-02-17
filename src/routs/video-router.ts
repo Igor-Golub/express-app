@@ -10,17 +10,20 @@ export const videoRouter = Router({});
 
 const videoService = new VideoService(new VideoRepository(DBService));
 
-videoRouter.get(Routs.Root, (_, res: Response<Contracts.VideoModel[]>) => {
-  const data = videoService.get();
+videoRouter.get(
+  Routs.Root,
+  async (_, res: Response<Contracts.VideoModel[]>) => {
+    const data = await videoService.get();
 
-  res.status(200).send(data);
-});
+    res.status(200).send(data);
+  },
+);
 
 videoRouter.get(
   Routs.RootWithId,
-  (req: Request<{ id: string }>, res: Response) => {
+  async (req: Request<{ id: string }>, res: Response) => {
     const id = req.params.id;
-    const entity = videoService.getId(id);
+    const entity = await videoService.getId(id);
 
     if (!entity) res.status(404).end();
     else res.status(200).send(entity);
@@ -31,13 +34,13 @@ videoRouter.post(
   Routs.Root,
   ...videoValidators.create,
   validation,
-  (
+  async (
     req: Request<Record<string, unknown>, Contracts.VideoModelCreateDTO>,
     res: Response,
   ) => {
     const videoEntity = req.body;
 
-    const result = videoService.create(videoEntity);
+    const result = await videoService.create(videoEntity);
 
     res.status(201).send(result);
   },
@@ -47,14 +50,14 @@ videoRouter.put(
   Routs.RootWithId,
   ...videoValidators.update,
   validation,
-  (
+  async (
     req: Request<{ id: string }, Contracts.VideoModelUpdateDTO>,
     res: Response,
   ) => {
     const id = req.params.id;
     const videoEntity = req.body;
 
-    const result = videoService.update(id, videoEntity);
+    const result = await videoService.update(id, videoEntity);
 
     if (!result) res.status(404).end();
     else res.status(204).send(videoService.getId(id));
@@ -63,10 +66,10 @@ videoRouter.put(
 
 videoRouter.delete(
   Routs.RootWithId,
-  (req: Request<{ id: string }>, res: Response) => {
+  async (req: Request<{ id: string }>, res: Response) => {
     const id = req.params.id;
 
-    const result = videoService.delete(id);
+    const result = await videoService.delete(id);
 
     if (!result) res.status(404).end();
     else res.status(204).end();

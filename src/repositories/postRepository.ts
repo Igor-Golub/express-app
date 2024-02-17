@@ -1,29 +1,26 @@
 import DbService from "../services/dbService";
-import BaseRepository from "./baseRepository";
 import { DataBaseEntities } from "../enums/DataBaseEntities";
 
-class PostRepository extends BaseRepository<Contracts.PostModel> {
-  constructor(private dbService: typeof DbService) {
-    super();
-  }
+class PostRepository implements Base.Repository<Contracts.PostModel> {
+  constructor(private dbService: typeof DbService) {}
 
-  public get() {
+  public async get() {
     return this.dbService.get(DataBaseEntities.Posts);
   }
 
-  public getId(id: string) {
+  public async getId(id: string) {
     return this.dbService.getId(DataBaseEntities.Posts, id);
   }
 
-  public create(entity: Contracts.PostModel) {
+  public async create(entity: Contracts.PostModel) {
     return this.dbService.create(DataBaseEntities.Posts, entity);
   }
 
-  public update(id: string, entity: Contracts.PostModel) {
+  public async update(id: string, entity: Contracts.PostModel) {
     return this.dbService.update(DataBaseEntities.Posts, id, entity);
   }
 
-  public delete(id: string) {
+  public async delete(id: string) {
     return this.dbService.delete(DataBaseEntities.Posts, id);
   }
 }

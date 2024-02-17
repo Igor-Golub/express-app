@@ -1,21 +1,21 @@
-import BaseRepository from "../repositories/baseRepository";
-
 class PostService {
   constructor(
-    private postRepository: BaseRepository<Contracts.PostModel>,
-    private blogRepository: BaseRepository<Contracts.BlogModel>,
+    private postRepository: Base.Repository<Contracts.PostModel>,
+    private blogRepository: Base.Repository<Contracts.BlogModel>,
   ) {}
 
-  public get() {
+  public async get() {
     return this.postRepository.get();
   }
 
-  public getId(id: string) {
+  public async getId(id: string) {
     return this.postRepository.getId(id);
   }
 
-  public create(postEntity: Contracts.PostModelCreateAndUpdateDTO) {
-    const blogEntity = this.blogRepository.getId(postEntity.blogId);
+  public async create(postEntity: Contracts.PostModelCreateAndUpdateDTO) {
+    const blogEntity = await this.blogRepository.getId(postEntity.blogId);
+
+    if (!blogEntity?.name) return null;
 
     const newEntity: Contracts.PostModel = {
       ...postEntity,
@@ -25,25 +25,15 @@ class PostService {
     return this.postRepository.create(newEntity);
   }
 
-  public update(id: string, postEntity: Contracts.PostModelCreateAndUpdateDTO) {
-    const currentElement = this.postRepository.getId(id);
-
-    if (!currentElement) return null;
-
-    const newEntity: Contracts.PostModel = {
-      ...currentElement,
-      ...postEntity,
-    };
-
-    return this.postRepository.update(id, newEntity);
+  public async update(
+    id: string,
+    postEntity: Contracts.PostModelCreateAndUpdateDTO,
+  ) {
+    return this.postRepository.update(id, postEntity);
   }
 
-  public delete(id: string) {
-    if (!this.postRepository.getId(id)) return false;
-
-    this.postRepository.delete(id);
-
-    return true;
+  public async delete(id: string) {
+    return this.postRepository.delete(id);
   }
 }
 

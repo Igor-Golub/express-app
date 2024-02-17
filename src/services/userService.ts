@@ -1,14 +1,12 @@
-import BaseRepository from "../repositories/baseRepository";
-
 class UserService {
-  constructor(private blogRepository: BaseRepository<Contracts.UserModel>) {}
+  constructor(private userRepository: Base.Repository<Contracts.UserModel>) {}
 
-  public get() {
-    return this.blogRepository.get();
+  public async get() {
+    return this.userRepository.get();
   }
 
-  public getByName(name: string) {
-    return this.blogRepository.getByName?.(name) ?? null;
+  public async create(entity: Contracts.UserModel) {
+    return this.userRepository.create(entity);
   }
 }
 

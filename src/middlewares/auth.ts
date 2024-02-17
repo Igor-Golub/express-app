@@ -8,12 +8,12 @@ const authService = new AuthService(
   new UserService(new UserRepository(DbService)),
 );
 
-export const auth = (req: Request, res: Response, next: NextFunction) => {
+export const auth = async (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) return res.status(401).end();
 
-  const isAuth = authService.basicVerification(authHeader);
+  const isAuth = await authService.basicVerification(authHeader);
 
   if (!isAuth) return res.status(401).end();
   return next();

@@ -12,17 +12,17 @@ export const blogRouter = Router({});
 
 const blogService = new BlogService(new BlogRepository(DBService));
 
-blogRouter.get(Routs.Root, (_, res: Response<Contracts.BlogModel[]>) => {
-  const data = blogService.get();
+blogRouter.get(Routs.Root, async (_, res: Response<Contracts.BlogModel[]>) => {
+  const data = await blogService.get();
 
   res.status(200).send(data);
 });
 
 blogRouter.get(
   Routs.RootWithId,
-  (req: Request<{ id: string }>, res: Response) => {
+  async (req: Request<{ id: string }>, res: Response) => {
     const id = req.params.id;
-    const entity = blogService.getId(id);
+    const entity = await blogService.getId(id);
 
     if (!entity) res.status(404).end();
     else res.status(200).send(entity);
@@ -34,7 +34,7 @@ blogRouter.post(
   auth,
   ...blogValidators.create,
   validation,
-  (
+  async (
     req: Request<
       Record<string, unknown>,
       Contracts.BlogModelCreateAndUpdateDTO
@@ -43,7 +43,7 @@ blogRouter.post(
   ) => {
     const entity = req.body;
 
-    const result = blogService.create(entity);
+    const result = await blogService.create(entity);
 
     res.status(201).send(result);
   },
@@ -54,14 +54,14 @@ blogRouter.put(
   auth,
   ...blogValidators.update,
   validation,
-  (
+  async (
     req: Request<{ id: string }, Contracts.BlogModelCreateAndUpdateDTO>,
     res: Response,
   ) => {
     const id = req.params.id;
     const blogEntity = req.body;
 
-    const result = blogService.update(id, blogEntity);
+    const result = await blogService.update(id, blogEntity);
 
     if (!result) res.status(404).end();
     else res.status(204).send(blogService.getId(id));
@@ -71,10 +71,10 @@ blogRouter.put(
 blogRouter.delete(
   Routs.RootWithId,
   auth,
-  (req: Request<{ id: string }>, res: Response) => {
+  async (req: Request<{ id: string }>, res: Response) => {
     const id = req.params.id;
 
-    const result = blogService.delete(id);
+    const result = await blogService.delete(id);
 
     if (!result) res.status(404).end();
     else res.status(204).end();

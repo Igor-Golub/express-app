@@ -1,82 +1,122 @@
+import dotenv from "dotenv";
+import { MongoClient, ObjectId, WithId } from "mongodb";
 import { DataBaseEntities } from "../enums/DataBaseEntities";
-import { db } from "../db";
+
+dotenv.config();
 
 class DBService {
-  private db: Contracts.IDB = db;
+  private client = new MongoClient(process.env.MONGO_URL ?? "");
 
-  public get<Key extends DataBaseEntities>(
-    dbKey: Key,
-  ): Contracts.DBValues[Key][] {
-    return Object.entries(this.db[dbKey]).reduce<Contracts.DBValues[Key][]>(
-      (acc, [_, value]) => {
-        acc.push(value);
-        return acc;
-      },
-      [],
-    );
+  private rootUser = {
+    name: process.env.ROOT_USER_NAME,
+    password: process.env.ROOT_USER_PASSWORD,
+  };
+
+  public connect() {
+    this.client
+      .connect()
+      .then(() => console.log("DB connected"))
+      .then(() => this.createRootUser.call(this))
+      .catch(console.dir);
   }
 
-  public getId<Key extends DataBaseEntities>(
+  private async createRootUser() {
+    const userCollection = this.client
+      .db(process.env.DB_NAME)
+      .collection(DataBaseEntities.Users);
+
+    if (userCollection) return;
+
+    await this.client
+      .db(process.env.DB_NAME)
+      .createCollection(DataBaseEntities.Users)
+      .then((collection) => collection.insertOne(this.rootUser));
+  }
+
+  public async get<Key extends DataBaseEntities>(
+    dbKey: Key,
+  ): Promise<Omit<WithId<Contracts.DBValues[Key]>, "_id">[]> {
+    const result = await this.client
+      .db()
+      .collection<Contracts.DBValues[Key]>(dbKey)
+      .find({})
+      .toArray();
+
+    return result.map(({ _id, ...entity }) => ({ id: _id, ...entity }));
+  }
+
+  public async getId<Key extends DataBaseEntities>(
     dbKey: Key,
     id: string,
-  ): Contracts.DBValues[Key] {
-    return this.db[dbKey][id];
+  ): Promise<Omit<WithId<Contracts.DBValues[Key]>, "_id"> | null> {
+    const result = await this.client
+      .db()
+      .collection(dbKey)
+      .findOne({ _id: new ObjectId(id) });
+
+    if (!result) return null;
+
+    const { _id, ...entity } = result as WithId<Contracts.DBValues[Key]>;
+
+    return { id: _id, ...entity };
   }
 
-  public getByName<Key extends DataBaseEntities>(
-    dbKey: Key,
-    name: string,
-  ): Contracts.DBValues[Key] | null {
-    const currentEntity = Object.values(this.db[dbKey]).find((entity) => {
-      if ("name" in entity) return entity.name === name;
-      return null;
-    });
-
-    return currentEntity || null;
-  }
-
-  public create<Entity extends Contracts.DBValuesUnion>(
+  public async create<Entity extends Contracts.DBValuesUnion>(
     dbKey: DataBaseEntities,
     entity: Entity,
-  ): Entity {
-    const id = String(Date.now());
+  ): Promise<Entity | null> {
+    const result = await this.client
+      .db()
+      .collection(dbKey)
+      .insertOne({ ...entity });
 
-    const newEntity: Entity = { ...entity, id };
+    if (!result.acknowledged) return null;
 
-    this.db[dbKey][id] = newEntity;
-
-    return newEntity;
+    return { id: result.insertedId.toString(), ...entity };
   }
 
-  public update<Entity extends Contracts.DBValuesUnion>(
+  public async update<Entity extends Contracts.DBValuesUnion>(
     dbKey: DataBaseEntities,
     id: string,
     entity: Entity,
-  ): Entity | null {
-    if (!this.db[dbKey][id]) return null;
+  ): Promise<Entity | null> {
+    const foundEntity = this.client
+      .db()
+      .collection(dbKey)
+      .find({ _id: new ObjectId(id) });
 
-    const newEntity: Entity = { ...this.db[dbKey][id], ...entity };
+    if (!foundEntity) return null;
 
-    this.db[dbKey][id] = newEntity;
+    const result = await this.client
+      .db()
+      .collection(dbKey)
+      .updateOne({ _id: new ObjectId(id) }, { $set: entity });
 
-    return newEntity;
+    if (!result.acknowledged) return null;
+
+    return { ...foundEntity, ...entity };
   }
 
-  public delete(dbKey: DataBaseEntities, id: string) {
-    if (!this.db[dbKey][id]) return false;
+  public async delete(dbKey: DataBaseEntities, id: string) {
+    const foundEntity = this.client
+      .db()
+      .collection(dbKey)
+      .find({ _id: new ObjectId(id) });
 
-    delete this.db[dbKey][id];
+    if (!foundEntity) return false;
 
-    return true;
+    const result = await this.client
+      .db()
+      .collection(dbKey)
+      .deleteOne({ _id: new ObjectId(id) });
+
+    return result.acknowledged;
   }
 
-  public clear() {
-    this.db = {
-      [DataBaseEntities.Blogs]: {},
-      [DataBaseEntities.Videos]: {},
-      [DataBaseEntities.Posts]: {},
-      [DataBaseEntities.Users]: db.users,
-    };
+  public async clear() {
+    await this.client.db().dropCollection(DataBaseEntities.Blogs);
+    await this.client.db().dropCollection(DataBaseEntities.Videos);
+    await this.client.db().dropCollection(DataBaseEntities.Posts);
   }
 }
 

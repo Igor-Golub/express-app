@@ -15,17 +15,17 @@ const postService = new PostService(
   new BlogRepository(DBService),
 );
 
-postRouter.get(Routs.Root, (_, res: Response<Contracts.PostModel[]>) => {
-  const data = postService.get();
+postRouter.get(Routs.Root, async (_, res: Response<Contracts.PostModel[]>) => {
+  const data = await postService.get();
 
   res.status(200).send(data);
 });
 
 postRouter.get(
   Routs.RootWithId,
-  (req: Request<{ id: string }>, res: Response) => {
+  async (req: Request<{ id: string }>, res: Response) => {
     const id = req.params.id;
-    const entity = postService.getId(id);
+    const entity = await postService.getId(id);
 
     if (!entity) res.status(404).end();
     else res.status(200).send(entity);
@@ -37,7 +37,7 @@ postRouter.post(
   auth,
   ...postValidators.create,
   validation,
-  (
+  async (
     req: Request<
       Record<string, unknown>,
       Contracts.PostModelCreateAndUpdateDTO
@@ -46,7 +46,7 @@ postRouter.post(
   ) => {
     const entity = req.body;
 
-    const result = postService.create(entity);
+    const result = await postService.create(entity);
 
     res.status(201).send(result);
   },
@@ -57,14 +57,14 @@ postRouter.put(
   auth,
   ...postValidators.update,
   validation,
-  (
+  async (
     req: Request<{ id: string }, Contracts.PostModelCreateAndUpdateDTO>,
     res: Response,
   ) => {
     const id = req.params.id;
     const videoEntity = req.body;
 
-    const result = postService.update(id, videoEntity);
+    const result = await postService.update(id, videoEntity);
 
     if (!result) res.status(404).end();
     else res.status(204).send(postService.getId(id));
@@ -74,10 +74,10 @@ postRouter.put(
 postRouter.delete(
   Routs.RootWithId,
   auth,
-  (req: Request<{ id: string }>, res: Response) => {
+  async (req: Request<{ id: string }>, res: Response) => {
     const id = req.params.id;
 
-    const result = postService.delete(id);
+    const result = await postService.delete(id);
 
     if (!result) res.status(404).end();
     else res.status(204).end();
