@@ -21,11 +21,13 @@ class DBService {
   }
 
   private async createRootUser() {
-    const userCollection = this.client
+    const userCollection = await this.client
       .db(process.env.DB_NAME)
-      .collection(DataBaseEntities.Users);
+      .collection(DataBaseEntities.Users)
+      .find({})
+      .toArray();
 
-    if (userCollection) return;
+    if (userCollection.length) return;
 
     await this.client
       .db(process.env.DB_NAME)
@@ -37,7 +39,7 @@ class DBService {
     dbKey: Key,
   ): Promise<Omit<WithId<Contracts.DBValues[Key]>, "_id">[]> {
     const result = await this.client
-      .db()
+      .db(process.env.DB_NAME)
       .collection<Contracts.DBValues[Key]>(dbKey)
       .find({})
       .toArray();
@@ -54,7 +56,7 @@ class DBService {
     id: string,
   ): Promise<Omit<WithId<Contracts.DBValues[Key]>, "_id"> | null> {
     const result = await this.client
-      .db()
+      .db(process.env.DB_NAME)
       .collection(dbKey)
       .findOne({ _id: new ObjectId(id) });
 
@@ -70,7 +72,7 @@ class DBService {
     entity: Entity,
   ): Promise<Entity | null> {
     const result = await this.client
-      .db()
+      .db(process.env.DB_NAME)
       .collection(dbKey)
       .insertOne({ ...entity });
 
@@ -89,14 +91,14 @@ class DBService {
     entity: Entity,
   ): Promise<Entity | null> {
     const foundEntity = this.client
-      .db()
+      .db(process.env.DB_NAME)
       .collection(dbKey)
       .find({ _id: new ObjectId(id) });
 
     if (!foundEntity) return null;
 
     const result = await this.client
-      .db()
+      .db(process.env.DB_NAME)
       .collection(dbKey)
       .updateOne({ _id: new ObjectId(id) }, { $set: entity });
 
@@ -107,14 +109,14 @@ class DBService {
 
   public async delete(dbKey: DataBaseEntities, id: string) {
     const foundEntity = this.client
-      .db()
+      .db(process.env.DB_NAME)
       .collection(dbKey)
       .find({ _id: new ObjectId(id) });
 
     if (!foundEntity) return false;
 
     const result = await this.client
-      .db()
+      .db(process.env.DB_NAME)
       .collection(dbKey)
       .deleteOne({ _id: new ObjectId(id) });
 
@@ -122,9 +124,18 @@ class DBService {
   }
 
   public async clear() {
-    await this.client.db().collection(DataBaseEntities.Videos).deleteMany({});
-    await this.client.db().collection(DataBaseEntities.Posts).deleteMany({});
-    await this.client.db().collection(DataBaseEntities.Blogs).deleteMany({});
+    await this.client
+      .db(process.env.DB_NAME)
+      .collection(DataBaseEntities.Videos)
+      .deleteMany({});
+    await this.client
+      .db(process.env.DB_NAME)
+      .collection(DataBaseEntities.Posts)
+      .deleteMany({});
+    await this.client
+      .db(process.env.DB_NAME)
+      .collection(DataBaseEntities.Blogs)
+      .deleteMany({});
   }
 }
 
