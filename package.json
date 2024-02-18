@@ -8,7 +8,9 @@
     "watch": "tsc -w",
     "jest": "jest --detectOpenHandles --no-cache --watchAll",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "check:TS": "tsc",
+    "pettify": "prettier --write ."
   },
   "dependencies": {
     "@types/jest": "^29.5.11",
