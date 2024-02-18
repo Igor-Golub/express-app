@@ -15,8 +15,8 @@ app.use(bodyParser({}));
 app.use(Resources.Videos, videoRouter);
 app.use(Resources.Blogs, blogRouter);
 app.use(Resources.Posts, postRouter);
-app.use(Resources.Testing, testingRouter);
 app.use(Resources.Users, userRouter);
+app.use(Resources.Testing, testingRouter);
 
 dbService.connect();
 

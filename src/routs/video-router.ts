@@ -1,5 +1,6 @@
-import { Request, Response, Router } from "express";
+import { Router } from "express";
 import { Routs } from "../enums/Routs";
+import VideoController from "../controllers/videoController";
 import VideoService from "../services/videoService";
 import VideoRepository from "../repositories/videoRepository";
 import { videoValidators } from "../validators/video";
@@ -8,70 +9,26 @@ import DBService from "../services/dbService";
 
 export const videoRouter = Router({});
 
-const videoService = new VideoService(new VideoRepository(DBService));
-
-videoRouter.get(
-  Routs.Root,
-  async (_, res: Response<Contracts.VideoModel[]>) => {
-    const data = await videoService.get();
-
-    res.status(200).send(data);
-  },
+const videoController = new VideoController(
+  new VideoService(new VideoRepository(DBService)),
 );
 
-videoRouter.get(
-  Routs.RootWithId,
-  async (req: Request<{ id: string }>, res: Response) => {
-    const id = req.params.id;
-    const entity = await videoService.getId(id);
+videoRouter.get(Routs.Root, videoController.getAll);
 
-    if (!entity) res.status(404).end();
-    else res.status(200).send(entity);
-  },
-);
+videoRouter.get(Routs.RootWithId, videoController.getById);
 
 videoRouter.post(
   Routs.Root,
   ...videoValidators.create,
   validation,
-  async (
-    req: Request<Record<string, unknown>, Contracts.VideoModelCreateDTO>,
-    res: Response,
-  ) => {
-    const videoEntity = req.body;
-
-    const result = await videoService.create(videoEntity);
-
-    res.status(201).send(result);
-  },
+  videoController.create,
 );
 
 videoRouter.put(
   Routs.RootWithId,
   ...videoValidators.update,
   validation,
-  async (
-    req: Request<{ id: string }, Contracts.VideoModelUpdateDTO>,
-    res: Response,
-  ) => {
-    const id = req.params.id;
-    const videoEntity = req.body;
-
-    const result = await videoService.update(id, videoEntity);
-
-    if (!result) res.status(404).end();
-    else res.status(204).send(videoService.getId(id));
-  },
+  videoController.update,
 );
 
-videoRouter.delete(
-  Routs.RootWithId,
-  async (req: Request<{ id: string }>, res: Response) => {
-    const id = req.params.id;
-
-    const result = await videoService.delete(id);
-
-    if (!result) res.status(404).end();
-    else res.status(204).end();
-  },
-);
+videoRouter.delete(Routs.RootWithId, videoController.delete);

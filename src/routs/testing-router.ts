@@ -1,11 +1,9 @@
-import { Response, Router } from "express";
-import DBService from "../services/dbService";
+import { Router } from "express";
 import { Routs } from "../enums/Routs";
+import TestingController from "../controllers/testingController";
 
 export const testingRouter = Router({});
 
-testingRouter.delete(Routs.AllData, async (_, res: Response) => {
-  await DBService.clear();
+const testingController = new TestingController();
 
-  res.status(204).end();
-});
+testingRouter.delete(Routs.AllData, testingController.clear);
