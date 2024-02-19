@@ -17,7 +17,7 @@ class VideoController implements Base.Controller {
 
   public getById = async (req: Utils.ReqWithParams<Params.URIId>, res: Response) => {
     const id = req.params.id;
-    const entity = await this.videoQueryRepository.getId(id);
+    const entity = await this.videoQueryRepository.getId(String(id));
 
     if (!entity) res.status(StatusCodes.NotFound_404).end();
     else res.status(StatusCodes.Ok_200).send(entity);
@@ -38,7 +38,7 @@ class VideoController implements Base.Controller {
     const id = req.params.id;
     const videoEntity = req.body;
 
-    const result = await this.videoService.update(id, videoEntity);
+    const result = await this.videoService.update(String(id), videoEntity);
 
     if (!result) res.status(StatusCodes.NotFound_404).end();
     else res.status(StatusCodes.NoContent_204).send(result);
@@ -47,7 +47,7 @@ class VideoController implements Base.Controller {
   public delete = async (req: Utils.ReqWithParams<Params.URIId>, res: Response) => {
     const id = req.params.id;
 
-    const result = await this.videoService.delete(id);
+    const result = await this.videoService.delete(String(id));
 
     if (!result) res.status(StatusCodes.NotFound_404).end();
     else res.status(StatusCodes.NoContent_204).end();

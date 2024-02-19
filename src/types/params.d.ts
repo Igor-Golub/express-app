@@ -16,8 +16,6 @@ export declare global {
       sortDirection: string;
     }
 
-    type PaginationAndSortingQueryParams = Partial<
-      PaginationQueryParams & SortingQueryParams
-    >;
+    type PaginationAndSortingQueryParams = Partial<PaginationQueryParams & SortingQueryParams>;
   }
 }
