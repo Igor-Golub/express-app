@@ -1,16 +1,10 @@
-import DbService from "../services/dbService";
-import { DataBaseEntities } from "../enums/DataBaseEntities";
+import DbService from "../../services/dbService";
+import { DataBaseEntities } from "../../enums/DataBaseEntities";
 
-class VideoRepository implements Base.Repository<Contracts.VideoModel> {
+class VideoCommandRepository
+  implements Base.CommandRepository<Contracts.VideoModel>
+{
   constructor(private dbService: typeof DbService) {}
-
-  public async get() {
-    return this.dbService.get(DataBaseEntities.Videos);
-  }
-
-  public async getId(id: string) {
-    return this.dbService.getId(DataBaseEntities.Videos, id);
-  }
 
   public async create(entity: Contracts.VideoModel) {
     return this.dbService.create(DataBaseEntities.Videos, entity);
@@ -25,4 +19,4 @@ class VideoRepository implements Base.Repository<Contracts.VideoModel> {
   }
 }
 
-export default VideoRepository;
+export default VideoCommandRepository;

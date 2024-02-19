@@ -1,12 +1,15 @@
 class VideoService {
-  constructor(private videoRepository: Base.Repository<Contracts.VideoModel>) {}
+  constructor(
+    private videoQueryRepository: Base.QueryRepository<Contracts.VideoModel>,
+    private videoCommandRepository: Base.CommandRepository<Contracts.VideoModel>,
+  ) {}
 
   public async get() {
-    return this.videoRepository.get();
+    return this.videoQueryRepository.get();
   }
 
   public async getId(id: string) {
-    return this.videoRepository.getId(id);
+    return this.videoQueryRepository.getId(id);
   }
 
   public async create(videoEntity: Contracts.VideoModelCreateDTO) {
@@ -23,21 +26,21 @@ class VideoService {
       publicationDate: publicationDate.toISOString(),
     };
 
-    return this.videoRepository.create(newVideoEntity);
+    return this.videoCommandRepository.create(newVideoEntity);
   }
 
   public async update(
     id: string,
     { canBeDownloaded = false, ...videoEntity }: Contracts.VideoModelUpdateDTO,
   ) {
-    return this.videoRepository.update(id, {
+    return this.videoCommandRepository.update(id, {
       canBeDownloaded,
       ...videoEntity,
     });
   }
 
   public async delete(id: string) {
-    return this.videoRepository.delete(id);
+    return this.videoCommandRepository.delete(id);
   }
 }
 
