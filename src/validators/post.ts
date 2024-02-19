@@ -1,9 +1,13 @@
 import { body } from "express-validator";
 import BlogService from "../services/blogService";
-import BlogRepository from "../repositories/blogRepository";
+import { BlogQueryRepository } from "../repositories/query";
+import { BlogCommandRepository } from "../repositories/command";
 import DbService from "../services/dbService";
 
-const blogService = new BlogService(new BlogRepository(DbService));
+const blogService = new BlogService(
+  new BlogQueryRepository(DbService),
+  new BlogCommandRepository(DbService),
+);
 
 const commonFields = [
   body("title").isString().trim().isLength({ min: 1, max: 30 }),

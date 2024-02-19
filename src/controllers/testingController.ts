@@ -9,4 +9,4 @@ class TestingController {
   }
 }
 
-export default TestingController;
+export default new TestingController();

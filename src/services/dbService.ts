@@ -29,20 +29,11 @@ class DBService {
 
     if (userCollection.length) return;
 
-    await this.client
-      .db(process.env.DB_NAME)
-      .collection(DataBaseEntities.Users)
-      .insertOne(this.rootUser);
+    await this.client.db(process.env.DB_NAME).collection(DataBaseEntities.Users).insertOne(this.rootUser);
   }
 
-  public async get<Key extends DataBaseEntities>(
-    dbKey: Key,
-  ): Promise<Omit<WithId<Models.DBValues[Key]>, "_id">[]> {
-    const result = await this.client
-      .db(process.env.DB_NAME)
-      .collection<Models.DBValues[Key]>(dbKey)
-      .find({})
-      .toArray();
+  public async get<Key extends DataBaseEntities>(dbKey: Key): Promise<Omit<WithId<Models.DBValues[Key]>, "_id">[]> {
+    const result = await this.client.db(process.env.DB_NAME).collection<Models.DBValues[Key]>(dbKey).find({}).toArray();
 
     return result.map(({ _id, ...entity }) => ({
       id: _id.toString(),
@@ -128,18 +119,9 @@ class DBService {
   }
 
   public async clear() {
-    await this.client
-      .db(process.env.DB_NAME)
-      .collection(DataBaseEntities.Videos)
-      .deleteMany({});
-    await this.client
-      .db(process.env.DB_NAME)
-      .collection(DataBaseEntities.Posts)
-      .deleteMany({});
-    await this.client
-      .db(process.env.DB_NAME)
-      .collection(DataBaseEntities.Blogs)
-      .deleteMany({});
+    await this.client.db(process.env.DB_NAME).collection(DataBaseEntities.Videos).deleteMany({});
+    await this.client.db(process.env.DB_NAME).collection(DataBaseEntities.Posts).deleteMany({});
+    await this.client.db(process.env.DB_NAME).collection(DataBaseEntities.Blogs).deleteMany({});
   }
 }
 
