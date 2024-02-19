@@ -1,3 +1,5 @@
+import blogCommandRepository from "../repositories/command/blogCommandRepository";
+
 class BlogService {
   constructor(private blogCommandRepository: Base.CommandRepository<Models.BlogModel>) {}
 
@@ -17,4 +19,4 @@ class BlogService {
   }
 }
 
-export default BlogService;
+export default new BlogService(blogCommandRepository);

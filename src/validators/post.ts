@@ -1,13 +1,5 @@
 import { body } from "express-validator";
-import BlogService from "../services/blogService";
 import { BlogQueryRepository } from "../repositories/query";
-import { BlogCommandRepository } from "../repositories/command";
-import DbService from "../services/dbService";
-
-const blogService = new BlogService(
-  new BlogQueryRepository(DbService),
-  new BlogCommandRepository(DbService),
-);
 
 const commonFields = [
   body("title").isString().trim().isLength({ min: 1, max: 30 }),
@@ -17,7 +9,7 @@ const commonFields = [
     .isString()
     .trim()
     .custom(async (blogId: string) => {
-      const blog = await blogService.getId(blogId);
+      const blog = await BlogQueryRepository.getId(blogId);
       if (!blog) throw new Error("Blog not exist!");
       else return true;
     }),

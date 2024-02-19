@@ -13,4 +13,4 @@ class VideoQueryRepository implements Base.QueryRepository<Models.VideoModel> {
   }
 }
 
-export default VideoQueryRepository;
+export default new VideoQueryRepository(DbService);

@@ -1,9 +1,7 @@
 import DbService from "../../services/dbService";
 import { DataBaseEntities } from "../../enums/DataBaseEntities";
 
-class BlogCommandRepository
-  implements Base.CommandRepository<Models.BlogModel>
-{
+class BlogCommandRepository implements Base.CommandRepository<Models.BlogModel> {
   constructor(private dbService: typeof DbService) {}
 
   public async create(entity: Models.BlogModel) {
@@ -19,4 +17,4 @@ class BlogCommandRepository
   }
 }
 
-export default BlogCommandRepository;
+export default new BlogCommandRepository(DbService);

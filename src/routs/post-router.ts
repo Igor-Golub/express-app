@@ -7,12 +7,9 @@ import { auth } from "../middlewares/auth";
 
 export const postRouter = Router({});
 
-postRouter.get(Routs.Root, PostController.getAll);
-
-postRouter.get(Routs.RootWithId, PostController.getById);
-
-postRouter.post(Routs.Root, auth, ...postValidators.create, validation, PostController.create);
-
-postRouter.put(Routs.RootWithId, auth, ...postValidators.update, validation, PostController.update);
-
-postRouter.delete(Routs.RootWithId, auth, PostController.delete);
+postRouter
+  .get(Routs.Root, PostController.getAll)
+  .get(Routs.RootWithId, PostController.getById)
+  .post(Routs.Root, auth, ...postValidators.create, validation, PostController.create)
+  .put(Routs.RootWithId, auth, ...postValidators.update, validation, PostController.update)
+  .delete(Routs.RootWithId, auth, PostController.delete);

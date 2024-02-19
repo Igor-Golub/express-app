@@ -6,6 +6,6 @@ import UserController from "../controllers/userController";
 
 export const userRouter = Router({});
 
-userRouter.get(Routs.Root, UserController.getAll);
-
-userRouter.post(Routs.Root, ...userValidators.create, validation, UserController.create);
+userRouter
+  .get(Routs.Root, UserController.getAll)
+  .post(Routs.Root, ...userValidators.create, validation, UserController.create);

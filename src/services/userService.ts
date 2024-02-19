@@ -1,3 +1,5 @@
+import { UserCommandRepository } from "../repositories/command";
+
 class UserService {
   constructor(private userCommandRepository: Base.CommandRepository<Models.UserModel>) {}
 
@@ -6,4 +8,4 @@ class UserService {
   }
 }
 
-export default UserService;
+export default new UserService(UserCommandRepository);

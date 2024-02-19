@@ -13,4 +13,4 @@ class BlogQueryRepository implements Base.QueryRepository<Models.BlogModel> {
   }
 }
 
-export default BlogQueryRepository;
+export default new BlogQueryRepository(DbService);

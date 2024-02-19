@@ -1,9 +1,7 @@
 import DbService from "../../services/dbService";
 import { DataBaseEntities } from "../../enums/DataBaseEntities";
 
-class VideoCommandRepository
-  implements Base.CommandRepository<Models.VideoModel>
-{
+class VideoCommandRepository implements Base.CommandRepository<Models.VideoModel> {
   constructor(private dbService: typeof DbService) {}
 
   public async create(entity: Models.VideoModel) {
@@ -19,4 +17,4 @@ class VideoCommandRepository
   }
 }
 
-export default VideoCommandRepository;
+export default new VideoCommandRepository(DbService);

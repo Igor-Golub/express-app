@@ -1,3 +1,6 @@
+import { PostCommandRepository } from "../repositories/command";
+import { BlogQueryRepository } from "../repositories/query";
+
 class PostService {
   constructor(
     private postCommandRepository: Base.CommandRepository<Models.PostModel>,
@@ -26,4 +29,4 @@ class PostService {
   }
 }
 
-export default PostService;
+export default new PostService(PostCommandRepository, BlogQueryRepository);

@@ -13,4 +13,4 @@ class UserQueryRepository implements Base.QueryRepository<Models.UserModel> {
   }
 }
 
-export default UserQueryRepository;
+export default new UserQueryRepository(DbService);

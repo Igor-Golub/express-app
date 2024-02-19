@@ -13,4 +13,4 @@ class PostQueryRepository implements Base.QueryRepository<Models.PostModel> {
   }
 }
 
-export default PostQueryRepository;
+export default new PostQueryRepository(DbService);

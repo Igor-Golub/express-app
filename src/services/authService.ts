@@ -1,18 +1,18 @@
-import UserService from "./userService";
 import { AuthorizationTypes } from "../enums/AuthorizationTypes";
+import { UserQueryRepository } from "../repositories/query";
 
 class AuthService {
-  constructor(private userService: UserService) {}
+  constructor(private userQueryRepository: typeof UserQueryRepository) {}
 
   public async basicVerification(token: string) {
     const [authorizationType, secretToken] = token.split(" ");
 
     if (authorizationType !== AuthorizationTypes.Basic) return false;
 
-    const users = await this.userService.get();
+    const users = await this.userQueryRepository.get();
 
     return users.map(({ password }) => password).includes(secretToken);
   }
 }
 
-export default AuthService;
+export default new AuthService(UserQueryRepository);

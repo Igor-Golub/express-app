@@ -1,3 +1,5 @@
+import { VideoCommandRepository } from "../repositories/command";
+
 class VideoService {
   constructor(private videoCommandRepository: Base.CommandRepository<Models.VideoModel>) {}
 
@@ -30,4 +32,4 @@ class VideoService {
   }
 }
 
-export default VideoService;
+export default new VideoService(VideoCommandRepository);

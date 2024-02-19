@@ -6,12 +6,9 @@ import { validation } from "../middlewares/validation";
 
 export const videoRouter = Router({});
 
-videoRouter.get(Routs.Root, VideoController.getAll);
-
-videoRouter.get(Routs.RootWithId, VideoController.getById);
-
-videoRouter.post(Routs.Root, ...videoValidators.create, validation, VideoController.create);
-
-videoRouter.put(Routs.RootWithId, ...videoValidators.update, validation, VideoController.update);
-
-videoRouter.delete(Routs.RootWithId, VideoController.delete);
+videoRouter
+  .get(Routs.Root, VideoController.getAll)
+  .get(Routs.RootWithId, VideoController.getById)
+  .post(Routs.Root, ...videoValidators.create, validation, VideoController.create)
+  .put(Routs.RootWithId, ...videoValidators.update, validation, VideoController.update)
+  .delete(Routs.RootWithId, VideoController.delete);
