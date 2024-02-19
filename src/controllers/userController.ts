@@ -17,7 +17,7 @@ class UserController {
     res.status(StatusCodes.Ok_200).send(data);
   };
 
-  public create = async (req: Request<Record<string, unknown>, Models.UserModel>, res: Response) => {
+  public create = async (req: Utils.ReqWithReqBody<Models.UserModel>, res: Response) => {
     const entity = req.body;
 
     const result = await this.userService.create(entity);

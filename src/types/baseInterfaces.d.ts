@@ -1,5 +1,3 @@
-import { Request, Response } from "express";
-
 export declare global {
   namespace Base {
     interface QueryRepository<Entity> {
@@ -14,11 +12,11 @@ export declare global {
     }
 
     interface Controller {
-      getAll(req: Request, res: Response): Promise<void>;
-      getById(req: Request<Params.URIId>, res: Response): Promise<void>;
-      create(req: Request, res: Response): Promise<void>;
-      update(req: Request, res: Response): Promise<void>;
-      delete(req: Request, res: Response): Promise<void>;
+      getAll(req, res): Promise<void>;
+      getById(req, res): Promise<void>;
+      create(req, res): Promise<void>;
+      update(req, res): Promise<void>;
+      delete(req, res): Promise<void>;
     }
   }
 }

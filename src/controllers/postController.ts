@@ -15,7 +15,7 @@ class PostController implements Base.Controller {
     res.status(StatusCodes.Ok_200).send(data);
   };
 
-  public getById = async (req: Request<Params.URIId>, res: Response) => {
+  public getById = async (req: Utils.ReqWithParams<Params.URIId>, res: Response) => {
     const id = req.params.id;
     const entity = await this.postQueryRepository.getId(id);
 
@@ -23,7 +23,7 @@ class PostController implements Base.Controller {
     else res.status(StatusCodes.Ok_200).send(entity);
   };
 
-  public create = async (req: Request<Record<string, unknown>, Models.PostModelCreateAndUpdateDTO>, res: Response) => {
+  public create = async (req: Utils.ReqWithReqBody<Models.PostModelCreateAndUpdateDTO>, res: Response) => {
     const entity = req.body;
 
     const result = await this.postService.create(entity);
@@ -31,7 +31,10 @@ class PostController implements Base.Controller {
     res.status(StatusCodes.Created_201).send(result);
   };
 
-  public update = async (req: Request<{ id: string }, Models.PostModelCreateAndUpdateDTO>, res: Response) => {
+  public update = async (
+    req: Utils.RequestWithParamsAndReqBody<Params.URIId, Models.PostModelCreateAndUpdateDTO>,
+    res: Response,
+  ) => {
     const id = req.params.id;
     const videoEntity = req.body;
 
@@ -41,7 +44,7 @@ class PostController implements Base.Controller {
     else res.status(StatusCodes.NoContent_204).send(result);
   };
 
-  public delete = async (req: Request<{ id: string }>, res: Response) => {
+  public delete = async (req: Utils.ReqWithParams<Params.URIId>, res: Response) => {
     const id = req.params.id;
 
     const result = await this.postService.delete(id);

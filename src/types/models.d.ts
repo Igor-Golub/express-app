@@ -1,11 +1,11 @@
 import { VideoQuality } from "../enums/VideoQuality";
 import { DataBaseEntities } from "../enums/DataBaseEntities";
-import { ObjectId } from "mongodb";
 
-declare global {
+export declare global {
   namespace Models {
     interface BaseEntity {
-      id?: string;
+      id: string;
+      createdAt: string;
     }
 
     type DBValues = {
@@ -22,7 +22,6 @@ declare global {
       author: string;
       canBeDownloaded: boolean;
       minAgeRestriction: number | null;
-      createdAt: string;
       publicationDate: string;
       availableResolutions: VideoQuality[];
     }
@@ -46,7 +45,6 @@ declare global {
       name: string;
       description: string;
       websiteUrl: string;
-      createdAt: string;
       isMembership: boolean;
     }
 
@@ -58,7 +56,6 @@ declare global {
       content: string;
       blogId: string;
       blogName: string;
-      createdAt: string;
     }
 
     type PostModelCreateAndUpdateDTO = Omit<PostModel, "blogName">;

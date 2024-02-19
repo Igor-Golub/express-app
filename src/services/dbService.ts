@@ -36,9 +36,9 @@ class DBService {
     const result = await this.client.db(process.env.DB_NAME).collection<Models.DBValues[Key]>(dbKey).find({}).toArray();
 
     return result.map(({ _id, ...entity }) => ({
-      id: _id.toString(),
-      createdAt: _id.getTimestamp(),
       ...entity,
+      createdAt: _id.getTimestamp(),
+      id: _id.toString(),
     }));
   }
 
@@ -56,9 +56,9 @@ class DBService {
     const { _id, ...entity } = result as WithId<Models.DBValues[Key]>;
 
     return {
-      id: _id,
-      createdAt: _id.getTimestamp(),
       ...entity,
+      createdAt: _id.getTimestamp(),
+      id: _id,
     };
   }
 
@@ -74,9 +74,9 @@ class DBService {
     if (!result.acknowledged) return null;
 
     return {
-      id: result.insertedId.toString(),
-      createdAt: result.insertedId.getTimestamp(),
       ...entity,
+      createdAt: result.insertedId.getTimestamp(),
+      id: result.insertedId.toString(),
     };
   }
 
