@@ -4,7 +4,7 @@ import VideoService from "../services/videoService";
 class VideoController implements Base.Controller {
   constructor(private videoService: VideoService) {}
 
-  public async getAll(req: Request, res: Response<Contracts.VideoModel[]>) {
+  public async getAll(req: Request, res: Response<Models.VideoModel[]>) {
     const data = await this.videoService.get();
 
     res.status(200).send(data);
@@ -19,7 +19,7 @@ class VideoController implements Base.Controller {
   }
 
   public async create(
-    req: Request<Record<string, unknown>, Contracts.VideoModelCreateDTO>,
+    req: Request<Record<string, unknown>, Models.VideoModelCreateDTO>,
     res: Response,
   ) {
     const videoEntity = req.body;
@@ -30,7 +30,7 @@ class VideoController implements Base.Controller {
   }
 
   public async update(
-    req: Request<{ id: string }, Contracts.VideoModelUpdateDTO>,
+    req: Request<{ id: string }, Models.VideoModelUpdateDTO>,
     res: Response,
   ) {
     const id = req.params.id;

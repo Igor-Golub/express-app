@@ -1,9 +1,7 @@
 import DbService from "../../services/dbService";
 import { DataBaseEntities } from "../../enums/DataBaseEntities";
 
-class VideoQueryRepository
-  implements Base.QueryRepository<Contracts.VideoModel>
-{
+class VideoQueryRepository implements Base.QueryRepository<Models.VideoModel> {
   constructor(private dbService: typeof DbService) {}
 
   public async get() {

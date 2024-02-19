@@ -37,10 +37,10 @@ class DBService {
 
   public async get<Key extends DataBaseEntities>(
     dbKey: Key,
-  ): Promise<Omit<WithId<Contracts.DBValues[Key]>, "_id">[]> {
+  ): Promise<Omit<WithId<Models.DBValues[Key]>, "_id">[]> {
     const result = await this.client
       .db(process.env.DB_NAME)
-      .collection<Contracts.DBValues[Key]>(dbKey)
+      .collection<Models.DBValues[Key]>(dbKey)
       .find({})
       .toArray();
 
@@ -54,7 +54,7 @@ class DBService {
   public async getId<Key extends DataBaseEntities>(
     dbKey: Key,
     id: string,
-  ): Promise<Omit<WithId<Contracts.DBValues[Key]>, "_id"> | null> {
+  ): Promise<Omit<WithId<Models.DBValues[Key]>, "_id"> | null> {
     const result = await this.client
       .db(process.env.DB_NAME)
       .collection(dbKey)
@@ -62,7 +62,7 @@ class DBService {
 
     if (!result) return null;
 
-    const { _id, ...entity } = result as WithId<Contracts.DBValues[Key]>;
+    const { _id, ...entity } = result as WithId<Models.DBValues[Key]>;
 
     return {
       id: _id,
@@ -71,7 +71,7 @@ class DBService {
     };
   }
 
-  public async create<Entity extends Contracts.DBValuesUnion>(
+  public async create<Entity extends Models.DBValuesUnion>(
     dbKey: DataBaseEntities,
     entity: Entity,
   ): Promise<Entity | null> {
@@ -89,7 +89,7 @@ class DBService {
     };
   }
 
-  public async update<Entity extends Contracts.DBValuesUnion>(
+  public async update<Entity extends Models.DBValuesUnion>(
     dbKey: DataBaseEntities,
     id: string,
     entity: Entity,

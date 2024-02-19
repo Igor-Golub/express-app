@@ -4,7 +4,7 @@ import BlogService from "../services/blogService";
 class BlogController implements Base.Controller {
   constructor(private blogService: BlogService) {}
 
-  public async getAll(req: Request, res: Response<Contracts.BlogModel[]>) {
+  public async getAll(req: Request, res: Response<Models.BlogModel[]>) {
     const data = await this.blogService.get();
 
     res.status(200).send(data);
@@ -19,10 +19,7 @@ class BlogController implements Base.Controller {
   }
 
   public async create(
-    req: Request<
-      Record<string, unknown>,
-      Contracts.BlogModelCreateAndUpdateDTO
-    >,
+    req: Request<Record<string, unknown>, Models.BlogModelCreateAndUpdateDTO>,
     res: Response,
   ) {
     const entity = req.body;
@@ -33,7 +30,7 @@ class BlogController implements Base.Controller {
   }
 
   public async update(
-    req: Request<{ id: string }, Contracts.BlogModelCreateAndUpdateDTO>,
+    req: Request<{ id: string }, Models.BlogModelCreateAndUpdateDTO>,
     res: Response,
   ) {
     const id = req.params.id;

@@ -1,7 +1,7 @@
 class VideoService {
   constructor(
-    private videoQueryRepository: Base.QueryRepository<Contracts.VideoModel>,
-    private videoCommandRepository: Base.CommandRepository<Contracts.VideoModel>,
+    private videoQueryRepository: Base.QueryRepository<Models.VideoModel>,
+    private videoCommandRepository: Base.CommandRepository<Models.VideoModel>,
   ) {}
 
   public async get() {
@@ -12,13 +12,13 @@ class VideoService {
     return this.videoQueryRepository.getId(id);
   }
 
-  public async create(videoEntity: Contracts.VideoModelCreateDTO) {
+  public async create(videoEntity: Models.VideoModelCreateDTO) {
     const createdAt = new Date();
     const publicationDate = new Date();
 
     publicationDate.setDate(createdAt.getDate() + 1);
 
-    const newVideoEntity: Contracts.VideoModel = {
+    const newVideoEntity: Models.VideoModel = {
       ...videoEntity,
       canBeDownloaded: false,
       minAgeRestriction: null,
@@ -31,7 +31,7 @@ class VideoService {
 
   public async update(
     id: string,
-    { canBeDownloaded = false, ...videoEntity }: Contracts.VideoModelUpdateDTO,
+    { canBeDownloaded = false, ...videoEntity }: Models.VideoModelUpdateDTO,
   ) {
     return this.videoCommandRepository.update(id, {
       canBeDownloaded,

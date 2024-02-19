@@ -1,8 +1,8 @@
 class PostService {
   constructor(
-    private postQueryRepository: Base.QueryRepository<Contracts.PostModel>,
-    private postCommandRepository: Base.CommandRepository<Contracts.PostModel>,
-    private blogQueryRepository: Base.QueryRepository<Contracts.BlogModel>,
+    private postQueryRepository: Base.QueryRepository<Models.PostModel>,
+    private postCommandRepository: Base.CommandRepository<Models.PostModel>,
+    private blogQueryRepository: Base.QueryRepository<Models.BlogModel>,
   ) {}
 
   public async get() {
@@ -13,12 +13,12 @@ class PostService {
     return this.postQueryRepository.getId(id);
   }
 
-  public async create(postEntity: Contracts.PostModelCreateAndUpdateDTO) {
+  public async create(postEntity: Models.PostModelCreateAndUpdateDTO) {
     const blogEntity = await this.blogQueryRepository.getId(postEntity.blogId);
 
     if (!blogEntity?.name) return null;
 
-    const newEntity: Contracts.PostModel = {
+    const newEntity: Models.PostModel = {
       ...postEntity,
       blogName: blogEntity.name,
     };
@@ -28,7 +28,7 @@ class PostService {
 
   public async update(
     id: string,
-    postEntity: Contracts.PostModelCreateAndUpdateDTO,
+    postEntity: Models.PostModelCreateAndUpdateDTO,
   ) {
     return this.postCommandRepository.update(id, postEntity);
   }

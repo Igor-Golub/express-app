@@ -2,15 +2,15 @@ import DbService from "../../services/dbService";
 import { DataBaseEntities } from "../../enums/DataBaseEntities";
 
 class UserCommandRepository
-  implements Base.CommandRepository<Contracts.UserModel>
+  implements Base.CommandRepository<Models.UserModel>
 {
   constructor(private dbService: typeof DbService) {}
 
-  public async create(entity: Contracts.UserModel) {
+  public async create(entity: Models.UserModel) {
     return this.dbService.create(DataBaseEntities.Users, entity);
   }
 
-  public async update(id: string, entity: Contracts.UserModel) {
+  public async update(id: string, entity: Models.UserModel) {
     return this.dbService.update(DataBaseEntities.Users, id, entity);
   }
 

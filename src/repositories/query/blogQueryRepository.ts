@@ -1,7 +1,7 @@
 import { DataBaseEntities } from "../../enums/DataBaseEntities";
 import DbService from "../../services/dbService";
 
-class BlogQueryRepository implements Base.QueryRepository<Contracts.BlogModel> {
+class BlogQueryRepository implements Base.QueryRepository<Models.BlogModel> {
   constructor(private dbService: typeof DbService) {}
 
   public async get() {

@@ -3,7 +3,7 @@ import { DataBaseEntities } from "../enums/DataBaseEntities";
 import { ObjectId } from "mongodb";
 
 declare global {
-  namespace Contracts {
+  namespace Models {
     interface BaseEntity {
       id?: string;
     }

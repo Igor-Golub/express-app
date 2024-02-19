@@ -4,14 +4,14 @@ import UserService from "../services/userService";
 class UserController {
   constructor(private userService: UserService) {}
 
-  public async getAll(req: Request, res: Response<Contracts.UserModel[]>) {
+  public async getAll(req: Request, res: Response<Models.UserModel[]>) {
     const data = await this.userService.get();
 
     res.status(200).send(data);
   }
 
   public async create(
-    req: Request<Record<string, unknown>, Contracts.UserModel>,
+    req: Request<Record<string, unknown>, Models.UserModel>,
     res: Response,
   ) {
     const entity = req.body;

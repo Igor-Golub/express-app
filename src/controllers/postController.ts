@@ -4,7 +4,7 @@ import PostService from "../services/postService";
 class PostController implements Base.Controller {
   constructor(private postService: PostService) {}
 
-  public async getAll(req: Request, res: Response<Contracts.PostModel[]>) {
+  public async getAll(req: Request, res: Response<Models.PostModel[]>) {
     const data = await this.postService.get();
 
     res.status(200).send(data);
@@ -19,10 +19,7 @@ class PostController implements Base.Controller {
   }
 
   public async create(
-    req: Request<
-      Record<string, unknown>,
-      Contracts.PostModelCreateAndUpdateDTO
-    >,
+    req: Request<Record<string, unknown>, Models.PostModelCreateAndUpdateDTO>,
     res: Response,
   ) {
     const entity = req.body;
@@ -33,7 +30,7 @@ class PostController implements Base.Controller {
   }
 
   public async update(
-    req: Request<{ id: string }, Contracts.PostModelCreateAndUpdateDTO>,
+    req: Request<{ id: string }, Models.PostModelCreateAndUpdateDTO>,
     res: Response,
   ) {
     const id = req.params.id;
