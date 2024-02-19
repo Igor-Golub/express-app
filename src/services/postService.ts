@@ -1,17 +1,8 @@
 class PostService {
   constructor(
-    private postQueryRepository: Base.QueryRepository<Models.PostModel>,
     private postCommandRepository: Base.CommandRepository<Models.PostModel>,
     private blogQueryRepository: Base.QueryRepository<Models.BlogModel>,
   ) {}
-
-  public async get() {
-    return this.postQueryRepository.get();
-  }
-
-  public async getId(id: string) {
-    return this.postQueryRepository.getId(id);
-  }
 
   public async create(postEntity: Models.PostModelCreateAndUpdateDTO) {
     const blogEntity = await this.blogQueryRepository.getId(postEntity.blogId);
@@ -26,10 +17,7 @@ class PostService {
     return this.postCommandRepository.create(newEntity);
   }
 
-  public async update(
-    id: string,
-    postEntity: Models.PostModelCreateAndUpdateDTO,
-  ) {
+  public async update(id: string, postEntity: Models.PostModelCreateAndUpdateDTO) {
     return this.postCommandRepository.update(id, postEntity);
   }
 

@@ -8,10 +8,10 @@ import { StatusCodes } from "../enums/StatusCodes";
 class UserController {
   private userQueryRepository: UserQueryRepository = new UserQueryRepository(DBService);
 
-  private userService: UserService = new UserService(this.userQueryRepository, new UserCommandRepository(DBService));
+  private userService: UserService = new UserService(new UserCommandRepository(DBService));
 
   public async getAll(req: Request, res: Response<Models.UserModel[]>) {
-    const data = await this.userService.get();
+    const data = await this.userQueryRepository.get();
 
     res.status(StatusCodes.Ok_200).send(data);
   }

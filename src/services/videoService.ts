@@ -1,16 +1,5 @@
 class VideoService {
-  constructor(
-    private videoQueryRepository: Base.QueryRepository<Models.VideoModel>,
-    private videoCommandRepository: Base.CommandRepository<Models.VideoModel>,
-  ) {}
-
-  public async get() {
-    return this.videoQueryRepository.get();
-  }
-
-  public async getId(id: string) {
-    return this.videoQueryRepository.getId(id);
-  }
+  constructor(private videoCommandRepository: Base.CommandRepository<Models.VideoModel>) {}
 
   public async create(videoEntity: Models.VideoModelCreateDTO) {
     const createdAt = new Date();
@@ -29,10 +18,7 @@ class VideoService {
     return this.videoCommandRepository.create(newVideoEntity);
   }
 
-  public async update(
-    id: string,
-    { canBeDownloaded = false, ...videoEntity }: Models.VideoModelUpdateDTO,
-  ) {
+  public async update(id: string, { canBeDownloaded = false, ...videoEntity }: Models.VideoModelUpdateDTO) {
     return this.videoCommandRepository.update(id, {
       canBeDownloaded,
       ...videoEntity,

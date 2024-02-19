@@ -8,7 +8,7 @@ import { StatusCodes } from "../enums/StatusCodes";
 class BlogController implements Base.Controller {
   private blogQueryRepository: Base.QueryRepository<Models.BlogModel> = new BlogQueryRepository(DBService);
 
-  private blogService: BlogService = new BlogService(this.blogQueryRepository, new BlogCommandRepository(DBService));
+  private blogService: BlogService = new BlogService(new BlogCommandRepository(DBService));
 
   public async getAll(req: Request, res: Response<Models.BlogModel[]>) {
     const data = await this.blogQueryRepository.get();
@@ -39,7 +39,7 @@ class BlogController implements Base.Controller {
     const result = await this.blogService.update(id, blogEntity);
 
     if (!result) res.status(StatusCodes.NotFound_404).end();
-    else res.status(StatusCodes.NoContent_204).send(this.blogService.getId(id));
+    else res.status(StatusCodes.NoContent_204).send(result);
   }
 
   public async delete(req: Request<{ id: string }>, res: Response) {

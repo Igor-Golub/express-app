@@ -9,7 +9,6 @@ class PostController implements Base.Controller {
   private postQueryRepository: PostQueryRepository = new PostQueryRepository(DBService);
 
   private postService: PostService = new PostService(
-    this.postQueryRepository,
     new PostCommandRepository(DBService),
     new BlogQueryRepository(DBService),
   );
@@ -43,7 +42,7 @@ class PostController implements Base.Controller {
     const result = await this.postService.update(id, videoEntity);
 
     if (!result) res.status(StatusCodes.NotFound_404).end();
-    else res.status(StatusCodes.NoContent_204).send(this.postService.getId(id));
+    else res.status(StatusCodes.NoContent_204).send(result);
   }
 
   public async delete(req: Request<{ id: string }>, res: Response) {

@@ -8,10 +8,7 @@ import { StatusCodes } from "../enums/StatusCodes";
 class VideoController implements Base.Controller {
   private videoQueryRepository: VideoQueryRepository = new VideoQueryRepository(DBService);
 
-  private videoService: VideoService = new VideoService(
-    this.videoQueryRepository,
-    new VideoCommandRepository(DBService),
-  );
+  private videoService: VideoService = new VideoService(new VideoCommandRepository(DBService));
 
   public async getAll(req: Request, res: Response<Models.VideoModel[]>) {
     const data = await this.videoQueryRepository.get();
@@ -42,7 +39,7 @@ class VideoController implements Base.Controller {
     const result = await this.videoService.update(id, videoEntity);
 
     if (!result) res.status(StatusCodes.NotFound_404).end();
-    else res.status(StatusCodes.NoContent_204).send(this.videoService.getId(id));
+    else res.status(StatusCodes.NoContent_204).send(result);
   }
 
   public async delete(req: Request<{ id: string }>, res: Response) {
