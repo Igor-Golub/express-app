@@ -4,15 +4,22 @@ import DBService from "../services/dbService";
 import { validation } from "../middlewares/validation";
 import { postValidators } from "../validators/post";
 import PostController from "../controllers/postController";
-import PostRepository from "../repositories/postRepository";
 import PostService from "../services/postService";
-import BlogRepository from "../repositories/blogRepository";
 import { auth } from "../middlewares/auth";
+import {
+  PostQueryRepository,
+  BlogQueryRepository,
+} from "../repositories/query";
+import { PostCommandRepository } from "../repositories/command";
 
 export const postRouter = Router({});
 
 const postController = new PostController(
-  new PostService(new PostRepository(DBService), new BlogRepository(DBService)),
+  new PostService(
+    new PostQueryRepository(DBService),
+    new PostCommandRepository(DBService),
+    new BlogQueryRepository(DBService),
+  ),
 );
 
 postRouter.get(Routs.Root, postController.getAll);

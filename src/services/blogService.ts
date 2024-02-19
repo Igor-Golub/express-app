@@ -1,16 +1,19 @@
 class BlogService {
-  constructor(private blogRepository: Base.Repository<Contracts.BlogModel>) {}
+  constructor(
+    private blogQueryRepository: Base.QueryRepository<Contracts.BlogModel>,
+    private blogCommandRepository: Base.CommandRepository<Contracts.BlogModel>,
+  ) {}
 
   public async get() {
-    return this.blogRepository.get();
+    return this.blogQueryRepository.get();
   }
 
   public async getId(id: string) {
-    return this.blogRepository.getId(id);
+    return this.blogQueryRepository.getId(id);
   }
 
   public async create(blogEntity: Contracts.BlogModelCreateAndUpdateDTO) {
-    return this.blogRepository.create({
+    return this.blogCommandRepository.create({
       ...blogEntity,
       isMembership: false,
     });
@@ -20,11 +23,11 @@ class BlogService {
     id: string,
     blogEntity: Contracts.BlogModelCreateAndUpdateDTO,
   ) {
-    return this.blogRepository.update(id, blogEntity);
+    return this.blogCommandRepository.update(id, blogEntity);
   }
 
   public async delete(id: string) {
-    return this.blogRepository.delete(id);
+    return this.blogCommandRepository.delete(id);
   }
 }
 

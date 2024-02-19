@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { Routs } from "../enums/Routs";
-import BlogRepository from "../repositories/blogRepository";
+import { BlogQueryRepository } from "../repositories/query";
+import { BlogCommandRepository } from "../repositories/command";
 import DBService from "../services/dbService";
 import BlogService from "../services/blogService";
 import { validation } from "../middlewares/validation";
@@ -11,7 +12,10 @@ import BlogController from "../controllers/blogController";
 export const blogRouter = Router({});
 
 const blogController = new BlogController(
-  new BlogService(new BlogRepository(DBService)),
+  new BlogService(
+    new BlogQueryRepository(DBService),
+    new BlogCommandRepository(DBService),
+  ),
 );
 
 blogRouter.get(Routs.Root, blogController.getAll);

@@ -1,16 +1,10 @@
-import DbService from "../services/dbService";
-import { DataBaseEntities } from "../enums/DataBaseEntities";
+import DbService from "../../services/dbService";
+import { DataBaseEntities } from "../../enums/DataBaseEntities";
 
-class UserRepository implements Base.Repository<Contracts.UserModel> {
+class UserCommandRepository
+  implements Base.CommandRepository<Contracts.UserModel>
+{
   constructor(private dbService: typeof DbService) {}
-
-  public async get() {
-    return this.dbService.get(DataBaseEntities.Users);
-  }
-
-  public async getId(id: string) {
-    return this.dbService.getId(DataBaseEntities.Users, id);
-  }
 
   public async create(entity: Contracts.UserModel) {
     return this.dbService.create(DataBaseEntities.Users, entity);
@@ -25,4 +19,4 @@ class UserRepository implements Base.Repository<Contracts.UserModel> {
   }
 }
 
-export default UserRepository;
+export default UserCommandRepository;

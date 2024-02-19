@@ -1,16 +1,10 @@
-import DbService from "../services/dbService";
-import { DataBaseEntities } from "../enums/DataBaseEntities";
+import DbService from "../../services/dbService";
+import { DataBaseEntities } from "../../enums/DataBaseEntities";
 
-class BlogRepository implements Base.Repository<Contracts.BlogModel> {
+class BlogCommandRepository
+  implements Base.CommandRepository<Contracts.BlogModel>
+{
   constructor(private dbService: typeof DbService) {}
-
-  public async get() {
-    return this.dbService.get(DataBaseEntities.Blogs);
-  }
-
-  public async getId(id: string) {
-    return this.dbService.getId(DataBaseEntities.Blogs, id);
-  }
 
   public async create(entity: Contracts.BlogModel) {
     return this.dbService.create(DataBaseEntities.Blogs, entity);
@@ -25,4 +19,4 @@ class BlogRepository implements Base.Repository<Contracts.BlogModel> {
   }
 }
 
-export default BlogRepository;
+export default BlogCommandRepository;

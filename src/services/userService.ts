@@ -1,12 +1,15 @@
 class UserService {
-  constructor(private userRepository: Base.Repository<Contracts.UserModel>) {}
+  constructor(
+    private userQueryRepository: Base.QueryRepository<Contracts.UserModel>,
+    private userCommandRepository: Base.CommandRepository<Contracts.UserModel>,
+  ) {}
 
   public async get() {
-    return this.userRepository.get();
+    return this.userQueryRepository.get();
   }
 
   public async create(entity: Contracts.UserModel) {
-    return this.userRepository.create(entity);
+    return this.userCommandRepository.create(entity);
   }
 }
 
