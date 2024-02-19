@@ -3,6 +3,7 @@ import DBService from "../services/dbService";
 import BlogService from "../services/blogService";
 import { BlogQueryRepository } from "../repositories/query";
 import { BlogCommandRepository } from "../repositories/command";
+import { StatusCodes } from "../enums/StatusCodes";
 
 class BlogController implements Base.Controller {
   private blogQueryRepository: Base.QueryRepository<Models.BlogModel> = new BlogQueryRepository(DBService);
@@ -12,15 +13,15 @@ class BlogController implements Base.Controller {
   public async getAll(req: Request, res: Response<Models.BlogModel[]>) {
     const data = await this.blogQueryRepository.get();
 
-    res.status(200).send(data);
+    res.status(StatusCodes.Ok_200).send(data);
   }
 
   public async getById(req: Request<Params.URIId>, res: Response) {
     const id = req.params.id;
     const entity = await this.blogQueryRepository.getId(id);
 
-    if (!entity) res.status(404).end();
-    else res.status(200).send(entity);
+    if (!entity) res.status(StatusCodes.NotFound_404).end();
+    else res.status(StatusCodes.Ok_200).send(entity);
   }
 
   public async create(req: Request<Record<string, unknown>, Models.BlogModelCreateAndUpdateDTO>, res: Response) {
@@ -28,7 +29,7 @@ class BlogController implements Base.Controller {
 
     const result = await this.blogService.create(entity);
 
-    res.status(201).send(result);
+    res.status(StatusCodes.Created_201).send(result);
   }
 
   public async update(req: Request<{ id: string }, Models.BlogModelCreateAndUpdateDTO>, res: Response) {
@@ -37,8 +38,8 @@ class BlogController implements Base.Controller {
 
     const result = await this.blogService.update(id, blogEntity);
 
-    if (!result) res.status(404).end();
-    else res.status(204).send(this.blogService.getId(id));
+    if (!result) res.status(StatusCodes.NotFound_404).end();
+    else res.status(StatusCodes.NoContent_204).send(this.blogService.getId(id));
   }
 
   public async delete(req: Request<{ id: string }>, res: Response) {
@@ -46,8 +47,8 @@ class BlogController implements Base.Controller {
 
     const result = await this.blogService.delete(id);
 
-    if (!result) res.status(404).end();
-    else res.status(204).end();
+    if (!result) res.status(StatusCodes.NotFound_404).end();
+    else res.status(StatusCodes.NoContent_204).end();
   }
 }
 
