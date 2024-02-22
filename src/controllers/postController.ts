@@ -9,8 +9,11 @@ class PostController implements Base.Controller {
     private postService: typeof PostService,
   ) {}
 
-  public getAll = async (req: Request, res: Response<Models.PostModel[]>) => {
-    const data = await this.postQueryRepository.get();
+  public getAll = async (
+    req: Utils.ReqWithQuery<Params.PaginationQueryParams>,
+    res: Response<ViewModels.ResponseWithPagination<ViewModels.Post>>,
+  ) => {
+    const data = await this.postQueryRepository.getWithPagination();
 
     res.status(StatusCodes.Ok_200).send(data);
   };
@@ -23,7 +26,7 @@ class PostController implements Base.Controller {
     else res.status(StatusCodes.Ok_200).send(entity);
   };
 
-  public create = async (req: Utils.ReqWithReqBody<Models.PostModelCreateAndUpdateDTO>, res: Response) => {
+  public create = async (req: Utils.ReqWithReqBody<DTO.PostCreateAndUpdate>, res: Response) => {
     const entity = req.body;
 
     const result = await this.postService.create(entity);
@@ -32,7 +35,7 @@ class PostController implements Base.Controller {
   };
 
   public update = async (
-    req: Utils.RequestWithParamsAndReqBody<Params.URIId, Models.PostModelCreateAndUpdateDTO>,
+    req: Utils.RequestWithParamsAndReqBody<Params.URIId, DTO.PostCreateAndUpdate>,
     res: Response,
   ) => {
     const id = req.params.id;

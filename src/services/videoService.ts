@@ -1,26 +1,25 @@
 import { VideoCommandRepository } from "../repositories/command";
 
 class VideoService {
-  constructor(private videoCommandRepository: Base.CommandRepository<Models.VideoModel>) {}
+  constructor(private videoCommandRepository: Base.CommandRepository<DBModels.Video, ViewModels.Video>) {}
 
-  public async create(videoEntity: Models.VideoModelCreateDTO) {
+  public async create(videoEntity: DTO.VideoCreate) {
     const createdAt = new Date();
     const publicationDate = new Date();
 
     publicationDate.setDate(createdAt.getDate() + 1);
 
-    const newVideoEntity: Models.VideoModel = {
+    const newVideoEntity: DBModels.Video = {
       ...videoEntity,
       canBeDownloaded: false,
       minAgeRestriction: null,
-      createdAt: createdAt.toISOString(),
       publicationDate: publicationDate.toISOString(),
     };
 
     return this.videoCommandRepository.create(newVideoEntity);
   }
 
-  public async update(id: string, { canBeDownloaded = false, ...videoEntity }: Models.VideoModelUpdateDTO) {
+  public async update(id: string, { canBeDownloaded = false, ...videoEntity }: DTO.VideoUpdate) {
     return this.videoCommandRepository.update(id, {
       canBeDownloaded,
       ...videoEntity,

@@ -1,9 +1,9 @@
 import { UserCommandRepository } from "../repositories/command";
 
 class UserService {
-  constructor(private userCommandRepository: Base.CommandRepository<Models.UserModel>) {}
+  constructor(private userCommandRepository: Base.CommandRepository<DBModels.User, ViewModels.User>) {}
 
-  public async create(entity: Models.UserModel) {
+  public async create(entity: DBModels.User) {
     return this.userCommandRepository.create(entity);
   }
 }

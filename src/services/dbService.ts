@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
-import { MongoClient, ObjectId, WithId } from "mongodb";
+import { Collection, MongoClient } from "mongodb";
 import { DataBaseEntities } from "../enums/DataBaseEntities";
+import { Document } from "bson";
 
 dotenv.config();
 
@@ -32,90 +33,23 @@ class DBService {
     await this.client.db(process.env.DB_NAME).collection(DataBaseEntities.Users).insertOne(this.rootUser);
   }
 
-  public async get<Key extends DataBaseEntities>(dbKey: Key): Promise<Omit<WithId<Models.DBValues[Key]>, "_id">[]> {
-    const result = await this.client.db(process.env.DB_NAME).collection<Models.DBValues[Key]>(dbKey).find({}).toArray();
+  public blogsCollection = this.client.db(process.env.DB_NAME).collection<DBModels.Blog>(DataBaseEntities.Blogs);
 
-    return result.map(({ _id, ...entity }) => ({
-      ...entity,
-      createdAt: _id.getTimestamp(),
-      id: _id.toString(),
-    }));
-  }
+  public postsCollection = this.client.db(process.env.DB_NAME).collection<DBModels.Post>(DataBaseEntities.Posts);
 
-  public async getId<Key extends DataBaseEntities>(
-    dbKey: Key,
-    id: string,
-  ): Promise<Omit<WithId<Models.DBValues[Key]>, "_id"> | null> {
-    const result = await this.client
-      .db(process.env.DB_NAME)
-      .collection(dbKey)
-      .findOne({ _id: new ObjectId(id) });
+  public usersCollection = this.client.db(process.env.DB_NAME).collection<DBModels.User>(DataBaseEntities.Users);
 
-    if (!result) return null;
+  public videosCollection = this.client.db(process.env.DB_NAME).collection<DBModels.Video>(DataBaseEntities.Videos);
 
-    const { _id, ...entity } = result as WithId<Models.DBValues[Key]>;
-
-    return {
-      ...entity,
-      createdAt: _id.getTimestamp(),
-      id: _id,
-    };
-  }
-
-  public async create<Entity extends Models.DBValuesUnion>(
-    dbKey: DataBaseEntities,
-    entity: Entity,
-  ): Promise<Entity | null> {
-    const result = await this.client
-      .db(process.env.DB_NAME)
-      .collection(dbKey)
-      .insertOne({ ...entity });
-
-    if (!result.acknowledged) return null;
-
-    return {
-      ...entity,
-      createdAt: result.insertedId.getTimestamp(),
-      id: result.insertedId.toString(),
-    };
-  }
-
-  public async update<Entity extends Models.DBValuesUnion>(
-    dbKey: DataBaseEntities,
-    id: string,
-    entity: Entity,
-  ): Promise<Entity | null> {
-    const foundEntity = await this.client
-      .db(process.env.DB_NAME)
-      .collection(dbKey)
-      .findOne({ _id: new ObjectId(id) });
-
-    if (!foundEntity) return null;
-
-    const result = await this.client
-      .db(process.env.DB_NAME)
-      .collection(dbKey)
-      .updateOne({ _id: new ObjectId(id) }, { $set: entity });
-
-    if (!result.acknowledged) return null;
-
-    return { ...foundEntity, ...entity };
-  }
-
-  public async delete(dbKey: DataBaseEntities, id: string) {
-    const foundEntity = await this.client
-      .db(process.env.DB_NAME)
-      .collection(dbKey)
-      .findOne({ _id: new ObjectId(id) });
-
-    if (!foundEntity) return false;
-
-    const result = await this.client
-      .db(process.env.DB_NAME)
-      .collection(dbKey)
-      .deleteOne({ _id: new ObjectId(id) });
-
-    return result.acknowledged;
+  public async findWithPagination<TSchema extends Document = Document>(
+    collection: Collection<TSchema>,
+    { page, pageSize }: Omit<Base.Pagination, "totalCount" | "pagesCount">,
+  ) {
+    return collection
+      .find({})
+      .skip((page - 1) * pageSize)
+      .limit(pageSize)
+      .toArray();
   }
 
   public async clear() {

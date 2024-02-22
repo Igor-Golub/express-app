@@ -9,7 +9,7 @@ class VideoController implements Base.Controller {
     private videoService: typeof VideoService,
   ) {}
 
-  public getAll = async (req: Request, res: Response<Models.VideoModel[]>) => {
+  public getAll = async (req: Utils.ReqWithQuery<Params.PaginationQueryParams>, res: Response<ViewModels.Video[]>) => {
     const data = await this.videoQueryRepository.get();
 
     res.status(StatusCodes.Ok_200).send(data);
@@ -23,7 +23,7 @@ class VideoController implements Base.Controller {
     else res.status(StatusCodes.Ok_200).send(entity);
   };
 
-  public create = async (req: Utils.ReqWithReqBody<Models.VideoModelCreateDTO>, res: Response) => {
+  public create = async (req: Utils.ReqWithReqBody<DTO.VideoCreate>, res: Response) => {
     const videoEntity = req.body;
 
     const result = await this.videoService.create(videoEntity);
@@ -31,10 +31,7 @@ class VideoController implements Base.Controller {
     res.status(StatusCodes.Created_201).send(result);
   };
 
-  public update = async (
-    req: Utils.RequestWithParamsAndReqBody<Params.URIId, Models.VideoModelUpdateDTO>,
-    res: Response,
-  ) => {
+  public update = async (req: Utils.RequestWithParamsAndReqBody<Params.URIId, DTO.VideoUpdate>, res: Response) => {
     const id = req.params.id;
     const videoEntity = req.body;
 

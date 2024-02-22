@@ -1,16 +1,18 @@
 import blogCommandRepository from "../repositories/command/blogCommandRepository";
 
 class BlogService {
-  constructor(private blogCommandRepository: Base.CommandRepository<Models.BlogModel>) {}
+  constructor(private blogCommandRepository: Base.CommandRepository<DBModels.Blog, ViewModels.Blog>) {}
 
-  public async create(blogEntity: Models.BlogModelCreateAndUpdateDTO) {
-    return this.blogCommandRepository.create({
+  public async create(blogEntity: DTO.BlogCreateAndUpdate) {
+    const newEntity: DBModels.Blog = {
       ...blogEntity,
       isMembership: false,
-    });
+    };
+
+    return this.blogCommandRepository.create(newEntity);
   }
 
-  public async update(id: string, blogEntity: Models.BlogModelCreateAndUpdateDTO) {
+  public async update(id: string, blogEntity: DTO.BlogCreateAndUpdate) {
     return this.blogCommandRepository.update(id, blogEntity);
   }
 

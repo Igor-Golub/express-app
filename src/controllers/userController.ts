@@ -11,13 +11,13 @@ class UserController {
     private userService: typeof UserService,
   ) {}
 
-  public getAll = async (req: Request, res: Response<Models.UserModel[]>) => {
+  public getAll = async (req: Request, res: Response<ViewModels.User[]>) => {
     const data = await this.userQueryRepository.get();
 
     res.status(StatusCodes.Ok_200).send(data);
   };
 
-  public create = async (req: Utils.ReqWithReqBody<Models.UserModel>, res: Response) => {
+  public create = async (req: Utils.ReqWithReqBody<ViewModels.User>, res: Response) => {
     const entity = req.body;
 
     const result = await this.userService.create(entity);

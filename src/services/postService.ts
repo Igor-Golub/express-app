@@ -3,16 +3,16 @@ import { BlogQueryRepository } from "../repositories/query";
 
 class PostService {
   constructor(
-    private postCommandRepository: Base.CommandRepository<Models.PostModel>,
-    private blogQueryRepository: Base.QueryRepository<Models.BlogModel>,
+    private postCommandRepository: Base.CommandRepository<DBModels.Post, ViewModels.Post>,
+    private blogQueryRepository: Base.QueryRepository<ViewModels.Blog>,
   ) {}
 
-  public async create(postEntity: Models.PostModelCreateAndUpdateDTO) {
+  public async create(postEntity: DTO.PostCreateAndUpdate) {
     const blogEntity = await this.blogQueryRepository.getId(postEntity.blogId);
 
     if (!blogEntity?.name) return null;
 
-    const newEntity: Models.PostModel = {
+    const newEntity: DBModels.Post = {
       ...postEntity,
       blogName: blogEntity.name,
     };
@@ -20,7 +20,7 @@ class PostService {
     return this.postCommandRepository.create(newEntity);
   }
 
-  public async update(id: string, postEntity: Models.PostModelCreateAndUpdateDTO) {
+  public async update(id: string, postEntity: DTO.PostCreateAndUpdate) {
     return this.postCommandRepository.update(id, postEntity);
   }
 

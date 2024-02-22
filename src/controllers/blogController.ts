@@ -1,16 +1,19 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import BlogService from "../services/blogService";
 import { BlogQueryRepository } from "../repositories/query";
 import { StatusCodes } from "../enums/StatusCodes";
 
 class BlogController implements Base.Controller {
   constructor(
-    private blogQueryRepository: Base.QueryRepository<Models.BlogModel>,
+    private blogQueryRepository: Base.QueryRepository<ViewModels.Blog>,
     private blogService: typeof BlogService,
   ) {}
 
-  public getAll = async (req: Request, res: Response<Models.BlogModel[]>) => {
-    const data = await this.blogQueryRepository.get();
+  public getAll = async (
+    req: Utils.ReqWithQuery<Params.PaginationQueryParams>,
+    res: Response<ViewModels.ResponseWithPagination<ViewModels.Blog>>,
+  ) => {
+    const data = await this.blogQueryRepository.getWithPagination();
 
     res.status(StatusCodes.Ok_200).send(data);
   };
@@ -24,7 +27,7 @@ class BlogController implements Base.Controller {
     else res.status(StatusCodes.Ok_200).send(entity);
   };
 
-  public create = async (req: Utils.ReqWithReqBody<Models.BlogModelCreateAndUpdateDTO>, res: Response) => {
+  public create = async (req: Utils.ReqWithReqBody<DTO.BlogCreateAndUpdate>, res: Response) => {
     const entity = req.body;
 
     const result = await this.blogService.create(entity);
@@ -33,7 +36,7 @@ class BlogController implements Base.Controller {
   };
 
   public update = async (
-    req: Utils.RequestWithParamsAndReqBody<Params.URIId, Models.BlogModelCreateAndUpdateDTO>,
+    req: Utils.RequestWithParamsAndReqBody<Params.URIId, DTO.BlogCreateAndUpdate>,
     res: Response,
   ) => {
     const id = req.params.id;

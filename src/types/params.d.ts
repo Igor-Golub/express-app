@@ -7,7 +7,6 @@ export declare global {
     interface PaginationQueryParams {
       pageNumber: string;
       pageSize: string;
-      total: string;
     }
 
     interface SortingQueryParams {
