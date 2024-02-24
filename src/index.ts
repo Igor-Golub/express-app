@@ -1,6 +1,5 @@
 import express from "express";
 import dotenv from "dotenv";
-import bodyParser from "body-parser";
 import { postRouter } from "./routs/post-router";
 import { testingRouter } from "./routs/testing-router";
 import { userRouter } from "./routs/user-router";
@@ -12,8 +11,8 @@ dotenv.config();
 
 export const app = express();
 
-app.use(bodyParser.urlencoded());
-app.use(bodyParser.json());
+app.use(express.urlencoded());
+app.use(express.json());
 
 app
   .use(Resources.Blogs, blogRouter)
