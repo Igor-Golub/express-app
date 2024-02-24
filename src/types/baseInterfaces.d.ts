@@ -1,7 +1,15 @@
+import { Filter, Sort, SortDirection } from "mongodb";
+import { SortingDirectionStrings } from "../enums/Sorting";
+
 export declare global {
   namespace Base {
+    interface Sorting<Model> {
+      sortBy: keyof Model;
+      sortDirection: SortDirection;
+    }
+
     interface Pagination {
-      page: number;
+      pageNumber: number;
       pagesCount: number;
       pageSize: number;
       totalCount: number;
@@ -25,6 +33,16 @@ export declare global {
       create(req, res): Promise<void>;
       update(req, res): Promise<void>;
       delete(req, res): Promise<void>;
+    }
+
+    interface SortingService<ViewEntity> {
+      setValue(key: keyof ViewEntity | undefined, value: SortingDirectionStrings | undefined);
+      createSortCondition(): Sort;
+    }
+
+    interface FilterService<ViewEntity> {
+      setValue(value: string);
+      getFilters(): Filter<any>;
     }
   }
 }

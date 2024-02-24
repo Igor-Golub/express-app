@@ -1,5 +1,4 @@
 import { WithId } from "mongodb";
-import { VideoQuality } from "../enums/VideoQuality";
 
 export declare global {
   namespace DBModels {
@@ -8,15 +7,6 @@ export declare global {
     }
 
     type MongoResponseEntity<Entity> = WithId<Entity>;
-
-    interface Video {
-      title: string;
-      author: string;
-      canBeDownloaded: boolean;
-      minAgeRestriction: number | null;
-      publicationDate: string;
-      availableResolutions: VideoQuality[];
-    }
 
     interface Blog {
       name: string;

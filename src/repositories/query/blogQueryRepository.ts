@@ -1,11 +1,15 @@
 import DbService from "../../services/dbService";
 import { ObjectId } from "mongodb";
 import PaginationService from "../../services/paginationService";
+import SortingService from "../../services/sortingService";
+import FilterService from "../../services/filterService";
 
 class BlogQueryRepository implements Base.QueryRepository<ViewModels.Blog> {
   constructor(
     private dbService: typeof DbService,
     private paginationService: typeof PaginationService,
+    private sortingService: Base.SortingService<ViewModels.Blog>,
+    private filterService: Base.FilterService<ViewModels.Blog>,
   ) {}
 
   public async get() {
@@ -29,13 +33,21 @@ class BlogQueryRepository implements Base.QueryRepository<ViewModels.Blog> {
   }
 
   public async getWithPagination() {
-    const { page, pageSize } = this.paginationService.value;
+    const { pageNumber, pageSize } = this.paginationService.value;
+    const sort = this.sortingService.createSortCondition();
+    const filter = this.filterService.getFilters();
 
-    const result = await this.dbService.findWithPagination(this.dbService.blogsCollection, { page, pageSize });
+    const result = await this.dbService.findWithPaginationAndSorting(
+      this.dbService.blogsCollection,
+      { pageNumber, pageSize },
+      sort,
+      filter,
+    );
+
     const collectionLength = await this.dbService.blogsCollection.countDocuments();
 
     return {
-      page,
+      pageNumber,
       pageSize,
       totalCount: collectionLength,
       items: this.mapToViewModels(result),
@@ -52,4 +64,4 @@ class BlogQueryRepository implements Base.QueryRepository<ViewModels.Blog> {
   }
 }
 
-export default new BlogQueryRepository(DbService, PaginationService);
+export default new BlogQueryRepository(DbService, PaginationService, SortingService, FilterService);

@@ -1,19 +1,21 @@
 class PaginationService {
   public value: Base.Pagination = {
-    page: 1,
+    pageNumber: 1,
     pageSize: 10,
     pagesCount: 0,
     totalCount: 0,
   };
 
-  private setValue(key: keyof Base.Pagination, value: number) {
-    if (!value) return;
+  public setValue(key: keyof Base.Pagination, value: number) {
     this.value[key] = value;
   }
 
-  public createPagination(req: Utils.ReqWithQuery<Params.PaginationQueryParams>) {
-    this.setValue("page", Number(req.query.pageNumber));
-    this.setValue("pageSize", Number(req.query.pageSize));
+  public setValues(values: Partial<Params.PaginationQueryParams>) {
+    Object.entries(values).forEach(([key, value]) => {
+      if (!value) return;
+
+      this.value[key as keyof Base.Pagination] = Number(value);
+    });
   }
 }
 

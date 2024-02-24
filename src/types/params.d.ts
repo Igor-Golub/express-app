@@ -1,3 +1,5 @@
+import { SortingDirectionStrings } from "../enums/Sorting";
+
 export declare global {
   namespace Params {
     interface URIId {
@@ -10,11 +12,14 @@ export declare global {
     }
 
     interface SortingQueryParams {
-      sortBy: "asc" | "desc";
-      searchNameTerm: string;
-      sortDirection: string;
+      sortBy: string;
+      sortDirection: SortingDirectionStrings;
     }
 
-    type PaginationAndSortingQueryParams = Partial<PaginationQueryParams & SortingQueryParams>;
+    interface FilterQueryParams {
+      searchNameTerm: string;
+    }
+
+    type PaginationAndSortingQueryParams = Partial<PaginationQueryParams & SortingQueryParams> & FilterQueryParams;
   }
 }

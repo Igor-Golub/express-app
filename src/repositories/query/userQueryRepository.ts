@@ -29,13 +29,13 @@ class UserQueryRepository implements Base.QueryRepository<ViewModels.User> {
   }
 
   public async getWithPagination() {
-    const { page, pageSize } = this.paginationService.value;
+    const { pageNumber, pageSize } = this.paginationService.value;
 
-    const result = await this.dbService.findWithPagination(this.dbService.usersCollection, { page, pageSize });
+    const result = await this.dbService.findWithPagination(this.dbService.usersCollection, { pageNumber, pageSize });
     const collectionLength = await this.dbService.usersCollection.countDocuments();
 
     return {
-      page,
+      pageNumber,
       pageSize,
       totalCount: collectionLength,
       items: this.mapToViewModels(result),

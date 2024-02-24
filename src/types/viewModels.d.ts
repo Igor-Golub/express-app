@@ -1,6 +1,4 @@
-import { VideoQuality } from "../enums/VideoQuality";
-
-declare global {
+export declare global {
   namespace ViewModels {
     interface BaseModel {
       id: string;
@@ -20,15 +18,6 @@ declare global {
       content: string;
       blogId: string;
       blogName: string;
-    }
-
-    interface Video extends BaseModel {
-      title: string;
-      author: string;
-      canBeDownloaded: boolean;
-      minAgeRestriction: number | null;
-      publicationDate: string;
-      availableResolutions: VideoQuality[];
     }
 
     interface User extends BaseModel {

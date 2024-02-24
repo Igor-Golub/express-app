@@ -2,18 +2,29 @@ import { Response } from "express";
 import BlogService from "../services/blogService";
 import { BlogQueryRepository } from "../repositories/query";
 import { StatusCodes } from "../enums/StatusCodes";
+import SortingService from "../services/sortingService";
+import FilterService from "../services/filterService";
 
 class BlogController implements Base.Controller {
   constructor(
     private blogQueryRepository: Base.QueryRepository<ViewModels.Blog>,
     private blogService: typeof BlogService,
+    private sortingService: Base.SortingService<ViewModels.Blog>,
+    private filterService: Base.FilterService<ViewModels.Blog>,
   ) {}
 
   public getAll = async (
-    req: Utils.ReqWithQuery<Params.PaginationQueryParams>,
+    req: Utils.ReqWithQuery<Params.PaginationAndSortingQueryParams>,
     res: Response<ViewModels.ResponseWithPagination<ViewModels.Blog>>,
   ) => {
     const data = await this.blogQueryRepository.getWithPagination();
+
+    const {
+      query: { sortBy, sortDirection, searchNameTerm },
+    } = req;
+
+    this.filterService.setValue(searchNameTerm);
+    this.sortingService.setValue(sortBy as keyof ViewModels.Blog, sortDirection);
 
     res.status(StatusCodes.Ok_200).send(data);
   };
@@ -58,4 +69,4 @@ class BlogController implements Base.Controller {
   };
 }
 
-export default new BlogController(BlogQueryRepository, BlogService);
+export default new BlogController(BlogQueryRepository, BlogService, SortingService, FilterService);

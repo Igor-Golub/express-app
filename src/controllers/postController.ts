@@ -10,7 +10,7 @@ class PostController implements Base.Controller {
   ) {}
 
   public getAll = async (
-    req: Utils.ReqWithQuery<Params.PaginationQueryParams>,
+    req: Utils.ReqWithQuery<Params.PaginationAndSortingQueryParams>,
     res: Response<ViewModels.ResponseWithPagination<ViewModels.Post>>,
   ) => {
     const data = await this.postQueryRepository.getWithPagination();
