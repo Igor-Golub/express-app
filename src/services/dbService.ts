@@ -8,29 +8,11 @@ dotenv.config();
 class DBService {
   private client = new MongoClient(String(process.env.MONGO_URL));
 
-  private rootUser = {
-    name: process.env.ROOT_USER_NAME,
-    password: process.env.ROOT_USER_PASSWORD,
-  };
-
   public connect() {
     this.client
       .connect()
       .then(() => console.log("DB connected"))
-      .then(() => this.createRootUser.call(this))
       .catch(console.dir);
-  }
-
-  private async createRootUser() {
-    const userCollection = await this.client
-      .db(process.env.DB_NAME)
-      .collection(DataBaseEntities.Users)
-      .find({})
-      .toArray();
-
-    if (userCollection.length) return;
-
-    await this.client.db(process.env.DB_NAME).collection(DataBaseEntities.Users).insertOne(this.rootUser);
   }
 
   public blogsCollection = this.client.db(process.env.DB_NAME).collection<DBModels.Blog>(DataBaseEntities.Blogs);
@@ -65,7 +47,8 @@ class DBService {
   }
 
   public async clear() {
-    await this.client.db(process.env.DB_NAME).dropDatabase();
+    await this.client.db(process.env.DB_NAME).dropCollection(DataBaseEntities.Blogs);
+    await this.client.db(process.env.DB_NAME).dropCollection(DataBaseEntities.Posts);
   }
 }
 

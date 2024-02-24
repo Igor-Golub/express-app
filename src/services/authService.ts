@@ -1,18 +1,16 @@
 import { AuthorizationTypes } from "../enums/AuthorizationTypes";
-import { UserQueryRepository } from "../repositories/query";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 class AuthService {
-  constructor(private userQueryRepository: typeof UserQueryRepository) {}
-
   public async basicVerification(token: string) {
     const [authorizationType, secretToken] = token.split(" ");
 
     if (authorizationType !== AuthorizationTypes.Basic) return false;
 
-    const users = await this.userQueryRepository.get();
-
-    return users.map(({ password }) => password).includes(secretToken);
+    return process.env.ROOT_USER_PASSWORD === secretToken;
   }
 }
 
-export default new AuthService(UserQueryRepository);
+export default new AuthService();
