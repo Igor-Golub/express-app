@@ -5,6 +5,7 @@ import { StatusCodes } from "../enums/StatusCodes";
 import SortingService from "../services/sortingService";
 import FilterService from "../services/filterService";
 import { FiltersType } from "../enums/Filters";
+import PaginationService from "../services/paginationService";
 
 class BlogController implements Base.Controller {
   constructor(
@@ -13,6 +14,7 @@ class BlogController implements Base.Controller {
     private blogService: typeof BlogService,
     private sortingService: Base.SortingService<ViewModels.Blog>,
     private filterService: Base.FilterService<ViewModels.Blog>,
+    private paginationService: typeof PaginationService,
   ) {}
 
   public getAll = async (
@@ -20,9 +22,10 @@ class BlogController implements Base.Controller {
     res: Response<ViewModels.ResponseWithPagination<ViewModels.Blog>>,
   ) => {
     const {
-      query: { sortBy, sortDirection, searchNameTerm },
+      query: { sortBy, sortDirection, searchNameTerm, pageSize, pageNumber },
     } = req;
 
+    this.paginationService.setValues({ pageSize, pageNumber });
     this.filterService.setValue("name", searchNameTerm, FiltersType.InnerText);
     this.sortingService.setValue(sortBy as keyof ViewModels.Blog, sortDirection);
 
@@ -49,9 +52,10 @@ class BlogController implements Base.Controller {
   ) => {
     const {
       params: { id },
-      query: { sortBy, sortDirection },
+      query: { sortBy, sortDirection, pageSize, pageNumber },
     } = req;
 
+    this.paginationService.setValues({ pageSize, pageNumber });
     this.sortingService.setValue(sortBy as keyof ViewModels.Blog, sortDirection);
     this.filterService.setValue("blogId", String(id), FiltersType.ById);
 
@@ -111,4 +115,11 @@ class BlogController implements Base.Controller {
   };
 }
 
-export default new BlogController(BlogQueryRepository, PostQueryRepository, BlogService, SortingService, FilterService);
+export default new BlogController(
+  BlogQueryRepository,
+  PostQueryRepository,
+  BlogService,
+  SortingService,
+  FilterService,
+  PaginationService,
+);

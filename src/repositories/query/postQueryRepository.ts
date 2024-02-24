@@ -1,8 +1,6 @@
 import DbService from "../../services/dbService";
 import PaginationService from "../../services/paginationService";
 import { Filter, ObjectId, Sort } from "mongodb";
-import SortingService from "../../services/sortingService";
-import FilterService from "../../services/filterService";
 
 class PostQueryRepository implements Base.QueryRepository<ViewModels.Post> {
   constructor(
@@ -31,7 +29,7 @@ class PostQueryRepository implements Base.QueryRepository<ViewModels.Post> {
   }
 
   public async getWithPagination(sort: Sort, filters: Filter<any> = {}) {
-    const { pageNumber, pageSize } = this.paginationService.value;
+    const { pageNumber, pageSize } = this.paginationService.getPagination();
 
     const result = await this.dbService.findWithPaginationAndSorting(
       this.dbService.postsCollection,

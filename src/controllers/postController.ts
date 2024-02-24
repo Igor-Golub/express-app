@@ -1,26 +1,30 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import PostService from "../services/postService";
 import { PostQueryRepository } from "../repositories/query";
 import { StatusCodes } from "../enums/StatusCodes";
 import SortingService from "../services/sortingService";
-import FilterService from "../services/filterService";
+import PaginationService from "../services/paginationService";
 
 class PostController implements Base.Controller {
   constructor(
     private postQueryRepository: typeof PostQueryRepository,
     private postService: typeof PostService,
-    private sortingService: Base.SortingService<ViewModels.Blog>,
-    private filterService: Base.FilterService<ViewModels.Blog>,
+    private sortingService: Base.SortingService<ViewModels.Post>,
+    private paginationService: typeof PaginationService,
   ) {}
 
   public getAll = async (
     req: Utils.ReqWithQuery<Params.PaginationAndSortingQueryParams>,
     res: Response<ViewModels.ResponseWithPagination<ViewModels.Post>>,
   ) => {
-    const data = await this.postQueryRepository.getWithPagination(
-      this.sortingService.createSortCondition(),
-      this.filterService.getFilters(),
-    );
+    const {
+      query: { sortBy, sortDirection, pageSize, pageNumber },
+    } = req;
+
+    this.paginationService.setValues({ pageSize, pageNumber });
+    this.sortingService.setValue(sortBy as keyof ViewModels.Post, sortDirection);
+
+    const data = await this.postQueryRepository.getWithPagination(this.sortingService.createSortCondition());
 
     res.status(StatusCodes.Ok_200).send(data);
   };
@@ -64,4 +68,4 @@ class PostController implements Base.Controller {
   };
 }
 
-export default new PostController(PostQueryRepository, PostService, SortingService, FilterService);
+export default new PostController(PostQueryRepository, PostService, SortingService, PaginationService);

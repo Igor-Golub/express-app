@@ -1,10 +1,12 @@
 class PaginationService {
-  public value: Base.Pagination = {
+  private defaultValues = {
     pageNumber: 1,
     pageSize: 10,
     pagesCount: 0,
     totalCount: 0,
   };
+
+  public value: Base.Pagination = { ...this.defaultValues };
 
   public setValue(key: keyof Base.Pagination, value: number) {
     this.value[key] = value;
@@ -12,10 +14,15 @@ class PaginationService {
 
   public setValues(values: Partial<Params.PaginationQueryParams>) {
     Object.entries(values).forEach(([key, value]) => {
-      if (!value) return;
+      const field = key as keyof Base.Pagination;
 
-      this.value[key as keyof Base.Pagination] = Number(value);
+      if (!value) this.value[field] = this.defaultValues[field];
+      else this.value[field] = Number(value);
     });
+  }
+
+  public getPagination() {
+    return this.value;
   }
 }
 

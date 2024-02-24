@@ -4,7 +4,6 @@ import { validation } from "../middlewares/validation";
 import { blogValidators } from "../validators/blog";
 import { auth } from "../middlewares/auth";
 import BlogController from "../controllers/blogController";
-import { pagination } from "../middlewares/pagination";
 import { postValidators } from "../validators/post";
 import { sortingValidators } from "../validators/sotting";
 import { paginationValidators } from "../validators/pagination";
@@ -13,7 +12,7 @@ import { filterValidators } from "../validators/filter";
 export const blogRouter = Router({});
 
 blogRouter
-  .get(Routs.Root, sortingValidators, paginationValidators, validation, pagination, BlogController.getAll)
+  .get(Routs.Root, sortingValidators, paginationValidators, validation, BlogController.getAll)
   .get(Routs.RootWithId, BlogController.getById)
   .get(
     `${Routs.RootWithId}/posts`,
@@ -21,7 +20,6 @@ blogRouter
     filterValidators,
     paginationValidators,
     validation,
-    pagination,
     BlogController.getPostsByBlogId,
   )
   .post(`${Routs.RootWithId}/posts`, auth, postValidators.createForBlog, BlogController.createPostForBlog)
