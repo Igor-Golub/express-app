@@ -12,7 +12,8 @@ dotenv.config();
 
 export const app = express();
 
-app.use(bodyParser({}));
+app.use(bodyParser.urlencoded());
+app.use(bodyParser.json());
 
 app
   .use(Resources.Blogs, blogRouter)
