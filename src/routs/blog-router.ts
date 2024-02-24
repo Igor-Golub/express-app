@@ -6,14 +6,25 @@ import { auth } from "../middlewares/auth";
 import BlogController from "../controllers/blogController";
 import { pagination } from "../middlewares/pagination";
 import { postValidators } from "../validators/post";
+import { sortingValidators } from "../validators/sotting";
+import { paginationValidators } from "../validators/pagination";
+import { filterValidators } from "../validators/filter";
 
 export const blogRouter = Router({});
 
 blogRouter
-  .get(Routs.Root, pagination, BlogController.getAll)
+  .get(Routs.Root, sortingValidators, paginationValidators, validation, pagination, BlogController.getAll)
   .get(Routs.RootWithId, BlogController.getById)
-  .get(`${Routs.RootWithId}/posts`, pagination, BlogController.getPostsByBlogId)
-  .post(`${Routs.RootWithId}/posts`, auth, BlogController.createPostForBlog)
-  .post(Routs.Root, auth, ...blogValidators.create, postValidators.createForBlog, validation, BlogController.create)
+  .get(
+    `${Routs.RootWithId}/posts`,
+    sortingValidators,
+    filterValidators,
+    paginationValidators,
+    validation,
+    pagination,
+    BlogController.getPostsByBlogId,
+  )
+  .post(`${Routs.RootWithId}/posts`, auth, postValidators.createForBlog, BlogController.createPostForBlog)
+  .post(Routs.Root, auth, ...blogValidators.create, validation, BlogController.create)
   .put(Routs.RootWithId, auth, ...blogValidators.update, validation, BlogController.update)
   .delete(Routs.RootWithId, auth, BlogController.delete);

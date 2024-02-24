@@ -19,7 +19,7 @@ class PostCommandRepository implements Base.CommandRepository<DBModels.Post, Vie
   }
 
   public async update(id: string, entity: DBModels.Post) {
-    const { acknowledged, upsertedId } = await this.dbService.postsCollection.updateOne(
+    const result = await this.dbService.postsCollection.findOneAndUpdate(
       {
         _id: new ObjectId(id),
       },
@@ -28,11 +28,11 @@ class PostCommandRepository implements Base.CommandRepository<DBModels.Post, Vie
       },
     );
 
-    if (!acknowledged || !upsertedId) return null;
+    if (!result) return null;
 
     return {
-      id: upsertedId.toString(),
-      createdAt: upsertedId?.getTimestamp().toISOString(),
+      id: result._id.toString(),
+      createdAt: result._id.getTimestamp().toISOString(),
       ...entity,
     };
   }

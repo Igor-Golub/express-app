@@ -19,7 +19,7 @@ class BlogCommandRepository implements Base.CommandRepository<DBModels.Blog, Vie
   }
 
   public async update(id: string, entity: DBModels.Blog) {
-    const { acknowledged, upsertedId } = await this.dbService.blogsCollection.updateOne(
+    const res = await this.dbService.blogsCollection.findOneAndUpdate(
       {
         _id: new ObjectId(id),
       },
@@ -28,11 +28,11 @@ class BlogCommandRepository implements Base.CommandRepository<DBModels.Blog, Vie
       },
     );
 
-    if (!acknowledged || !upsertedId) return null;
+    if (!res) return null;
 
     return {
-      id: upsertedId.toString(),
-      createdAt: upsertedId?.getTimestamp().toISOString(),
+      id: res._id.toString(),
+      createdAt: res._id.getTimestamp().toISOString(),
       ...entity,
     };
   }

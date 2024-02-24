@@ -16,8 +16,6 @@ class ClientFilterService<ViewEntity> implements Base.FilterService<ViewEntity> 
   public value: Filter<any> = {};
 
   public setValue(filed: string, value: string, type: FiltersType) {
-    if (!value) return;
-
     this.value = mangoMapper[type](filed, value);
   }
 

@@ -10,10 +10,9 @@ const convertErrorToContract = (errors: Record<string, { msg: string }>) => {
   };
 };
 
-export const validation = (req: Request, res: Response, next: NextFunction) => {
+export const validation = (req: any, res: any, next: NextFunction) => {
   const result = validationResult(req);
 
-  if (!result.isEmpty())
-    res.status(400).send(convertErrorToContract(result.mapped()));
+  if (!result.isEmpty()) res.status(400).send(convertErrorToContract(result.mapped()));
   else next();
 };
