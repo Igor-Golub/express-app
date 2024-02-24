@@ -11,5 +11,7 @@ export declare global {
     type ReqWithReqBody<ReqBody> = Request<ParamsDictionary, any, ReqBody, Query>;
 
     type ReqWithQuery<QueryParams> = Request<ParamsDictionary, any, any, QueryParams>;
+
+    type ReqWithParamsAndQuery<Params, QueryParams> = Request<Partial<Params>, any, any, QueryParams>;
   }
 }

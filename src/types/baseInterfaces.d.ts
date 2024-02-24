@@ -18,7 +18,7 @@ export declare global {
     interface QueryRepository<Entity> {
       get(): Promise<Entity[]>;
       getId(id: string): Promise<Entity | null>;
-      getWithPagination(): Promise<ViewModels.ResponseWithPagination<Entity>>;
+      getWithPagination(sort: Sort, filters: Filter<any> = {}): Promise<ViewModels.ResponseWithPagination<Entity>>;
     }
 
     interface CommandRepository<DBEntity, ViewEntity> {
@@ -41,7 +41,7 @@ export declare global {
     }
 
     interface FilterService<ViewEntity> {
-      setValue(value: string);
+      setValue(filed: string, value: string, type: FiltersType);
       getFilters(): Filter<any>;
     }
   }

@@ -55,6 +55,13 @@ class BlogQueryRepository implements Base.QueryRepository<ViewModels.Blog> {
     };
   }
 
+  public async getPostsForBlog(id: string) {
+    const { pageNumber, pageSize } = this.paginationService.value;
+    const sort = this.sortingService.createSortCondition();
+
+    const result = await this.dbService.blogsCollection.findOne({ _id: new ObjectId(id) });
+  }
+
   private mapToViewModels(data: DBModels.MongoResponseEntity<DBModels.Blog>[]): ViewModels.Blog[] {
     return data.map(({ _id, ...entity }) => ({
       id: _id.toString(),

@@ -1,6 +1,6 @@
 import DbService from "../../services/dbService";
 import PaginationService from "../../services/paginationService";
-import { ObjectId } from "mongodb";
+import { Filter, ObjectId, Sort } from "mongodb";
 import SortingService from "../../services/sortingService";
 import FilterService from "../../services/filterService";
 
@@ -8,8 +8,6 @@ class PostQueryRepository implements Base.QueryRepository<ViewModels.Post> {
   constructor(
     private dbService: typeof DbService,
     private paginationService: typeof PaginationService,
-    private sortingService: Base.SortingService<ViewModels.Post>,
-    private filterService: Base.FilterService<ViewModels.Post>,
   ) {}
 
   public async get() {
@@ -32,16 +30,14 @@ class PostQueryRepository implements Base.QueryRepository<ViewModels.Post> {
     };
   }
 
-  public async getWithPagination() {
+  public async getWithPagination(sort: Sort, filters: Filter<any> = {}) {
     const { pageNumber, pageSize } = this.paginationService.value;
-    const sort = this.sortingService.createSortCondition();
-    const filter = this.filterService.getFilters();
 
     const result = await this.dbService.findWithPaginationAndSorting(
       this.dbService.postsCollection,
       { pageNumber, pageSize },
       sort,
-      filter,
+      filters,
     );
 
     const collectionLength = await this.dbService.postsCollection.countDocuments();
@@ -64,4 +60,4 @@ class PostQueryRepository implements Base.QueryRepository<ViewModels.Post> {
   }
 }
 
-export default new PostQueryRepository(DbService, PaginationService, SortingService, FilterService);
+export default new PostQueryRepository(DbService, PaginationService);

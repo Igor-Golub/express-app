@@ -1,7 +1,11 @@
-import blogCommandRepository from "../repositories/command/blogCommandRepository";
+import BlogCommandRepository from "../repositories/command/blogCommandRepository";
+import PostService from "../services/postService";
 
 class BlogService {
-  constructor(private blogCommandRepository: Base.CommandRepository<DBModels.Blog, ViewModels.Blog>) {}
+  constructor(
+    private blogCommandRepository: Base.CommandRepository<DBModels.Blog, ViewModels.Blog>,
+    private postService: typeof PostService,
+  ) {}
 
   public async create(blogEntity: DTO.BlogCreateAndUpdate) {
     const newEntity: DBModels.Blog = {
@@ -10,6 +14,10 @@ class BlogService {
     };
 
     return this.blogCommandRepository.create(newEntity);
+  }
+
+  public async createPostForBlog(entity: DTO.PostCreateAndUpdate) {
+    await this.postService.create(entity);
   }
 
   public async update(id: string, blogEntity: DTO.BlogCreateAndUpdate) {
@@ -21,4 +29,4 @@ class BlogService {
   }
 }
 
-export default new BlogService(blogCommandRepository);
+export default new BlogService(BlogCommandRepository, PostService);
