@@ -9,7 +9,7 @@ import dbService from "./services/dbService";
 
 dotenv.config();
 
-export const app = express();
+const app = express();
 
 app.use(express.json());
 app.use(
@@ -26,6 +26,6 @@ app
 
 dbService.connect();
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT ?? 5000, () => {
   console.log("Server started!");
 });
