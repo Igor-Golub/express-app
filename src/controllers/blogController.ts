@@ -82,7 +82,8 @@ class BlogController implements Base.Controller {
       blogId: String(id),
     });
 
-    res.status(StatusCodes.Created_201).send(result);
+    if (!entity) res.status(StatusCodes.NotFound_404).end();
+    else res.status(StatusCodes.Ok_200).send(entity);
   };
 
   public create = async (req: Utils.ReqWithReqBody<DTO.BlogCreateAndUpdate>, res: Response) => {

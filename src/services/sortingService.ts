@@ -8,9 +8,7 @@ class ClientSortingService implements Base.SortingService {
   };
 
   public setValue(key: string | undefined, value: SortingDirectionStrings | undefined) {
-    if (!key) return;
-
-    this.value.sortBy = key;
+    this.value.sortBy = key ?? "_id";
     this.value.sortDirection = value ?? SortingDirectionStrings.DESC;
   }
 
