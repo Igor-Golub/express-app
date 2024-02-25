@@ -8,6 +8,7 @@ const mangoMapper: Record<FiltersType, (field: string, value: string) => Partial
   [FiltersType.InnerText]: (field, value) => ({
     [field]: {
       $regex: value ?? "",
+      $options: "i",
     },
   }),
 };
