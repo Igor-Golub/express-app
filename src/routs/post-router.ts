@@ -11,7 +11,7 @@ export const postRouter = Router({});
 
 postRouter
   .get(Routs.Root, sortingValidators, paginationValidators, validation, PostController.getAll)
-  .get(Routs.RootWithId, PostController.getById)
+  .get(Routs.RootWithId, postValidators.getById, validation, PostController.getById)
   .post(Routs.Root, auth, ...postValidators.create, validation, PostController.create)
   .put(Routs.RootWithId, auth, ...postValidators.update, validation, PostController.update)
-  .delete(Routs.RootWithId, auth, PostController.delete);
+  .delete(Routs.RootWithId, auth, postValidators.deleteById, validation, PostController.delete);

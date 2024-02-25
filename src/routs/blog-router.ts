@@ -12,8 +12,8 @@ import { filterValidators } from "../validators/filter";
 export const blogRouter = Router({});
 
 blogRouter
-  .get(Routs.Root, sortingValidators, paginationValidators, validation, BlogController.getAll)
-  .get(Routs.RootWithId, BlogController.getById)
+  .get(Routs.Root, sortingValidators, paginationValidators, BlogController.getAll)
+  .get(Routs.RootWithId, postValidators.getById, validation, BlogController.getById)
   .get(
     `${Routs.RootWithId}/posts`,
     sortingValidators,
@@ -25,4 +25,4 @@ blogRouter
   .post(`${Routs.RootWithId}/posts`, auth, postValidators.createForBlog, validation, BlogController.createPostForBlog)
   .post(Routs.Root, auth, ...blogValidators.create, validation, BlogController.create)
   .put(Routs.RootWithId, auth, ...blogValidators.update, validation, BlogController.update)
-  .delete(Routs.RootWithId, auth, BlogController.delete);
+  .delete(Routs.RootWithId, auth, postValidators.deleteById, validation, BlogController.delete);
