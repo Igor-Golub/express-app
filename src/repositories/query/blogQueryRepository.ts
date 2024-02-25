@@ -38,7 +38,7 @@ class BlogQueryRepository implements Base.QueryRepository<ViewModels.Blog> {
       filters,
     );
 
-    const collectionLength = await this.dbService.blogsCollection.countDocuments();
+    const collectionLength = await this.dbService.blogsCollection.countDocuments(filters);
 
     return {
       page: pageNumber,

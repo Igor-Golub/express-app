@@ -12,7 +12,7 @@ class BlogController implements Base.Controller {
     private blogQueryRepository: Base.QueryRepository<ViewModels.Blog>,
     private postsQueryRepository: Base.QueryRepository<ViewModels.Post>,
     private blogService: typeof BlogService,
-    private sortingService: Base.SortingService<ViewModels.Blog>,
+    private sortingService: Base.SortingService,
     private filterService: Base.FilterService<ViewModels.Blog>,
     private paginationService: typeof PaginationService,
   ) {}
@@ -27,7 +27,7 @@ class BlogController implements Base.Controller {
 
     this.paginationService.setValues({ pageSize, pageNumber });
     this.filterService.setValue("name", searchNameTerm, FiltersType.InnerText);
-    this.sortingService.setValue(sortBy as keyof ViewModels.Blog, sortDirection);
+    this.sortingService.setValue(sortBy, sortDirection);
 
     const data = await this.blogQueryRepository.getWithPagination(
       this.sortingService.createSortCondition(),

@@ -9,7 +9,7 @@ class PostController implements Base.Controller {
   constructor(
     private postQueryRepository: typeof PostQueryRepository,
     private postService: typeof PostService,
-    private sortingService: Base.SortingService<ViewModels.Post>,
+    private sortingService: Base.SortingService,
     private paginationService: typeof PaginationService,
   ) {}
 

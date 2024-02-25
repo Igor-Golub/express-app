@@ -3,8 +3,8 @@ import { SortingDirectionStrings } from "../enums/Sorting";
 
 export declare global {
   namespace Base {
-    interface Sorting<Model> {
-      sortBy: keyof Model;
+    interface Sorting {
+      sortBy: string;
       sortDirection: SortDirection;
     }
 
@@ -39,8 +39,8 @@ export declare global {
       delete(req, res): Promise<void>;
     }
 
-    interface SortingService<ViewEntity> {
-      setValue(key: keyof ViewEntity | undefined, value: SortingDirectionStrings | undefined);
+    interface SortingService {
+      setValue(key: string | undefined, value: SortingDirectionStrings | undefined);
       createSortCondition(): Sort;
     }
 
