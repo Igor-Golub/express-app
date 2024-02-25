@@ -82,8 +82,8 @@ class BlogController implements Base.Controller {
       blogId: String(id),
     });
 
-    if (!entity) res.status(StatusCodes.NotFound_404).end();
-    else res.status(StatusCodes.Ok_200).send(entity);
+    if (!result) res.status(StatusCodes.NotFound_404).end();
+    else res.status(StatusCodes.Ok_200).send(result);
   };
 
   public create = async (req: Utils.ReqWithReqBody<DTO.BlogCreateAndUpdate>, res: Response) => {
@@ -91,6 +91,7 @@ class BlogController implements Base.Controller {
 
     const result = await this.blogService.create(entity);
 
+    if (!result) res.status(StatusCodes.NotFound_404).end();
     res.status(StatusCodes.Created_201).send(result);
   };
 
