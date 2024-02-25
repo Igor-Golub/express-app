@@ -17,7 +17,7 @@ class BlogService {
   }
 
   public async createPostForBlog(entity: DTO.PostCreateAndUpdate) {
-    await this.postService.create(entity);
+    return await this.postService.create(entity);
   }
 
   public async update(id: string, blogEntity: DTO.BlogCreateAndUpdate) {
