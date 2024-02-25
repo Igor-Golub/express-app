@@ -47,8 +47,8 @@ class DBService {
   }
 
   public async clear() {
-    await this.client.db(process.env.DB_NAME).dropCollection(DataBaseCollections.Blogs);
-    await this.client.db(process.env.DB_NAME).dropCollection(DataBaseCollections.Posts);
+    await this.client.db(process.env.DB_NAME).collection(DataBaseCollections.Blogs).deleteMany({});
+    await this.client.db(process.env.DB_NAME).collection(DataBaseCollections.Posts).deleteMany({});
   }
 }
 
