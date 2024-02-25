@@ -1,11 +1,11 @@
 import { SortingDirectionStrings } from "../enums/Sorting";
 import { Sort } from "mongodb";
 
-class ClientSortingService<Model extends Pick<ViewModels.BaseModel, "createdAt">>
+class ClientSortingService<Model extends Pick<DBModels.MongoResponseEntity<ViewModels.BaseModel>, "_id">>
   implements Base.SortingService<Model>
 {
   public value: Base.Sorting<Model> = {
-    sortBy: "createdAt",
+    sortBy: "_id",
     sortDirection: SortingDirectionStrings.DESC,
   };
 
