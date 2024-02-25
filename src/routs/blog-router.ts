@@ -22,7 +22,7 @@ blogRouter
     validation,
     BlogController.getPostsByBlogId,
   )
-  .post(`${Routs.RootWithId}/posts`, auth, postValidators.createForBlog, BlogController.createPostForBlog)
+  .post(`${Routs.RootWithId}/posts`, auth, postValidators.createForBlog, validation, BlogController.createPostForBlog)
   .post(Routs.Root, auth, ...blogValidators.create, validation, BlogController.create)
   .put(Routs.RootWithId, auth, ...blogValidators.update, validation, BlogController.update)
   .delete(Routs.RootWithId, auth, BlogController.delete);

@@ -65,7 +65,7 @@ class BlogController implements Base.Controller {
     );
 
     if (!data.items.length) res.status(StatusCodes.NotFound_404).end();
-    res.status(StatusCodes.Ok_200).send(data);
+    else res.status(StatusCodes.Ok_200).send(data);
   };
 
   public createPostForBlog = async (
