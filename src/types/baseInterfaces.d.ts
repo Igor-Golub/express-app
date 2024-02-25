@@ -15,6 +15,10 @@ export declare global {
       totalCount: number;
     }
 
+    interface PaginationView extends Omit<Pagination, "pageNumber"> {
+      page: number;
+    }
+
     interface QueryRepository<Entity> {
       get(): Promise<Entity[]>;
       getId(id: string): Promise<Entity | null>;

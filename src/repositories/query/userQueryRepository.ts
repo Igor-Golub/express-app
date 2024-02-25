@@ -35,7 +35,7 @@ class UserQueryRepository implements Base.QueryRepository<ViewModels.User> {
     const collectionLength = await this.dbService.usersCollection.countDocuments();
 
     return {
-      pageNumber,
+      page: pageNumber,
       pageSize,
       totalCount: collectionLength,
       items: this.mapToViewModels(result),

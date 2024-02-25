@@ -25,7 +25,7 @@ export declare global {
       password: string;
     }
 
-    interface ResponseWithPagination<Entity> extends Base.Pagination {
+    interface ResponseWithPagination<Entity> extends Base.PaginationView {
       items: Entity[];
     }
   }

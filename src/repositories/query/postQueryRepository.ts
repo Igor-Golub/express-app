@@ -41,7 +41,7 @@ class PostQueryRepository implements Base.QueryRepository<ViewModels.Post> {
     const collectionLength = await this.dbService.postsCollection.countDocuments();
 
     return {
-      pageNumber,
+      page: pageNumber,
       pageSize,
       totalCount: collectionLength,
       items: this.mapToViewModels(result),

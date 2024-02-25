@@ -41,7 +41,7 @@ class BlogQueryRepository implements Base.QueryRepository<ViewModels.Blog> {
     const collectionLength = await this.dbService.blogsCollection.countDocuments();
 
     return {
-      pageNumber,
+      page: pageNumber,
       pageSize,
       totalCount: collectionLength,
       items: this.mapToViewModels(result),
