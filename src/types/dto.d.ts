@@ -19,5 +19,10 @@ export declare global {
       password: string;
       email: string;
     }
+
+    interface Login {
+      loginOrEmail: string;
+      password: string;
+    }
   }
 }

@@ -24,7 +24,7 @@ class AuthService {
     return bcrypt.genSalt(10);
   }
 
-  private async createHash(password: string, salt: string) {
+  public async createHash(password: string, salt: string) {
     return await bcrypt.hash(password, salt);
   }
 }

@@ -15,18 +15,7 @@ class UserQueryRepository implements Base.QueryRepository<ViewModels.User> {
   }
 
   public async getId(id: string) {
-    const result = await this.dbService.usersCollection.findOne({ _id: new ObjectId(id) });
-
-    if (!result) return null;
-
-    const { _id, email, login } = result;
-
-    return {
-      id: _id.toString(),
-      createdAt: _id.getTimestamp().toISOString(),
-      email,
-      login,
-    };
+    return null;
   }
 
   public async getWithPagination(sort: Sort, filters: Filter<any> = {}) {
@@ -50,8 +39,19 @@ class UserQueryRepository implements Base.QueryRepository<ViewModels.User> {
     };
   }
 
+  public async findUserByLoginOrEmail(loginOrEmail: string) {
+    const user = await this.dbService.usersCollection.findOne({
+      $or: [{ email: loginOrEmail }, { login: loginOrEmail }],
+    });
+
+    if (!user) return null;
+    return {
+      id: user._id.toString(),
+      ...user,
+    };
+  }
+
   private mapToViewModels(data: DBModels.MongoResponseEntity<DBModels.User>[]): ViewModels.User[] {
-    console.log(data);
     return data.map(({ _id, email, login }) => ({
       email,
       login,
