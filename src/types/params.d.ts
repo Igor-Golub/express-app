@@ -22,6 +22,6 @@ export declare global {
       searchEmailTerm: string;
     }
 
-    type PaginationAndSortingQueryParams = Partial<PaginationQueryParams & SortingQueryParams> & FilterQueryParams;
+    type PaginationAndSortingQueryParams = Partial<PaginationQueryParams & SortingQueryParams & FilterQueryParams>;
   }
 }

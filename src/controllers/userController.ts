@@ -27,8 +27,13 @@ class UserController {
     } = req;
 
     this.paginationService.setValues({ pageSize, pageNumber });
-    this.filterService.setValue("login", searchLoginTerm, FiltersType.InnerText);
-    this.filterService.setValue("email", searchEmailTerm, FiltersType.InnerText);
+    this.filterService.setValues(
+      [
+        { filed: "login", value: searchLoginTerm },
+        { filed: "email", value: searchEmailTerm },
+      ],
+      FiltersType.OrAndInnerText,
+    );
     this.sortingService.setValue(sortBy, sortDirection);
 
     const data = await this.userQueryRepository.getWithPagination(
