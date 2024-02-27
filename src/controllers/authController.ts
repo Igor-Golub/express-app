@@ -10,7 +10,7 @@ class AuthController {
 
     const result = await this.userService.findUserByLoginOrEmail(body);
 
-    if (!result) res.status(StatusCodes.NotFound_404).end();
+    if (!result) res.status(StatusCodes.Unauthorized_401).end();
     else res.status(StatusCodes.NoContent_204).end();
   };
 }
