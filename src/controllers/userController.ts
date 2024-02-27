@@ -4,26 +4,58 @@ import { UserQueryRepository } from "../repositories/query";
 import DBService from "../services/dbService";
 import { UserCommandRepository } from "../repositories/command";
 import { StatusCodes } from "../enums/StatusCodes";
+import { FiltersType } from "../enums/Filters";
+import PaginationService from "../services/paginationService";
+import SortingService from "../services/sortingService";
+import FilterService from "../services/filterService";
 
 class UserController {
   constructor(
     private userQueryRepository: typeof UserQueryRepository,
     private userService: typeof UserService,
+    private sortingService: Base.SortingService,
+    private filterService: Base.FilterService<ViewModels.Blog>,
+    private paginationService: typeof PaginationService,
   ) {}
 
-  public getAll = async (req: Request, res: Response<ViewModels.User[]>) => {
-    const data = await this.userQueryRepository.get();
+  public getAll = async (
+    req: Utils.ReqWithQuery<Params.PaginationAndSortingQueryParams>,
+    res: Response<ViewModels.ResponseWithPagination<ViewModels.User>>,
+  ) => {
+    const {
+      query: { sortBy, sortDirection, searchLoginTerm, searchEmailTerm, pageSize, pageNumber },
+    } = req;
+
+    this.paginationService.setValues({ pageSize, pageNumber });
+    this.filterService.setValue("login", searchLoginTerm, FiltersType.InnerText);
+    this.filterService.setValue("email", searchEmailTerm, FiltersType.InnerText);
+    this.sortingService.setValue(sortBy, sortDirection);
+
+    const data = await this.userQueryRepository.getWithPagination(
+      this.sortingService.createSortCondition(),
+      this.filterService.getFilters(),
+    );
 
     res.status(StatusCodes.Ok_200).send(data);
   };
 
-  public create = async (req: Utils.ReqWithReqBody<ViewModels.User>, res: Response) => {
+  public create = async (req: Utils.ReqWithReqBody<DTO.UserCreate>, res: Response) => {
     const entity = req.body;
 
-    const result = await this.userService.create(entity);
+    const result = await this.userService.createUser(entity);
 
-    res.status(StatusCodes.Created_201).send(result);
+    if (!result) res.status(StatusCodes.BadRequest_400).end();
+    else res.status(StatusCodes.Created_201).send(result);
+  };
+
+  public delete = async (req: Utils.ReqWithParams<Params.URIId>, res: Response) => {
+    const id = req.params.id;
+
+    const result = await this.userService.delete(String(id));
+
+    if (!result) res.status(StatusCodes.NotFound_404).end();
+    else res.status(StatusCodes.NoContent_204).end();
   };
 }
 
-export default new UserController(UserQueryRepository, UserService);
+export default new UserController(UserQueryRepository, UserService, SortingService, FilterService, PaginationService);

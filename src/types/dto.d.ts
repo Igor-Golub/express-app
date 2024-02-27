@@ -13,5 +13,11 @@ export declare global {
       content: string;
       blogId: string;
     }
+
+    interface UserCreate {
+      login: string;
+      password: string;
+      email: string;
+    }
   }
 }

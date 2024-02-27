@@ -18,6 +18,8 @@ export declare global {
 
     interface FilterQueryParams {
       searchNameTerm: string;
+      searchLoginTerm: string;
+      searchEmailTerm: string;
     }
 
     type PaginationAndSortingQueryParams = Partial<PaginationQueryParams & SortingQueryParams> & FilterQueryParams;

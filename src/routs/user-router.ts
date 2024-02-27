@@ -8,4 +8,5 @@ export const userRouter = Router({});
 
 userRouter
   .get(Routs.Root, UserController.getAll)
-  .post(Routs.Root, ...userValidators.create, validation, UserController.create);
+  .post(Routs.Root, ...userValidators.create, validation, UserController.create)
+  .delete(Routs.Root, userValidators.delete, validation, UserController.delete);

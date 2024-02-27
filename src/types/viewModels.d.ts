@@ -21,8 +21,8 @@ export declare global {
     }
 
     interface User extends BaseModel {
-      name: string;
-      password: string;
+      login: string;
+      email: string;
     }
 
     interface ResponseWithPagination<Entity> extends Base.PaginationView {

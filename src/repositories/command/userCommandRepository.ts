@@ -12,29 +12,15 @@ class UserCommandRepository implements Base.CommandRepository<DBModels.User, Vie
     const newEntity: ViewModels.User = {
       id: insertedId.toString(),
       createdAt: insertedId.getTimestamp().toISOString(),
-      ...entity,
+      email: entity.email,
+      login: entity.login,
     };
 
     return newEntity;
   }
 
-  public async update(id: string, entity: DBModels.User) {
-    const { acknowledged, upsertedId } = await this.dbService.usersCollection.updateOne(
-      {
-        _id: new ObjectId(id),
-      },
-      {
-        $set: { ...entity },
-      },
-    );
-
-    if (!acknowledged || !upsertedId) return null;
-
-    return {
-      id: upsertedId.toString(),
-      createdAt: upsertedId?.getTimestamp().toISOString(),
-      ...entity,
-    };
+  public async update() {
+    return null;
   }
 
   public async delete(id: string) {

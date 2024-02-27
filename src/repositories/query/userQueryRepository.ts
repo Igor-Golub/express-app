@@ -1,5 +1,5 @@
 import DbService from "../../services/dbService";
-import { ObjectId } from "mongodb";
+import { Filter, ObjectId, Sort } from "mongodb";
 import PaginationService from "../../services/paginationService";
 
 class UserQueryRepository implements Base.QueryRepository<ViewModels.User> {
@@ -19,20 +19,27 @@ class UserQueryRepository implements Base.QueryRepository<ViewModels.User> {
 
     if (!result) return null;
 
-    const { _id, ...entity } = result;
+    const { _id, email, login } = result;
 
     return {
       id: _id.toString(),
       createdAt: _id.getTimestamp().toISOString(),
-      ...entity,
+      email,
+      login,
     };
   }
 
-  public async getWithPagination() {
-    const { pageNumber, pageSize } = this.paginationService.value;
+  public async getWithPagination(sort: Sort, filters: Filter<any> = {}) {
+    const { pageNumber, pageSize } = this.paginationService.getPagination();
 
-    const result = await this.dbService.findWithPagination(this.dbService.usersCollection, { pageNumber, pageSize });
-    const collectionLength = await this.dbService.usersCollection.countDocuments();
+    const result = await this.dbService.findWithPaginationAndSorting(
+      this.dbService.usersCollection,
+      { pageNumber, pageSize },
+      sort,
+      filters,
+    );
+
+    const collectionLength = await this.dbService.usersCollection.countDocuments(filters);
 
     return {
       page: pageNumber,
@@ -44,10 +51,12 @@ class UserQueryRepository implements Base.QueryRepository<ViewModels.User> {
   }
 
   private mapToViewModels(data: DBModels.MongoResponseEntity<DBModels.User>[]): ViewModels.User[] {
-    return data.map(({ _id, ...entity }) => ({
+    console.log(data);
+    return data.map(({ _id, email, login }) => ({
+      email,
+      login,
       id: _id.toString(),
       createdAt: _id.getTimestamp().toISOString(),
-      ...entity,
     }));
   }
 }

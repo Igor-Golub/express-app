@@ -24,8 +24,10 @@ export declare global {
     }
 
     interface User {
-      name: string;
-      password: string;
+      login: string;
+      email: string;
+      salt: string;
+      hash: string;
     }
   }
 }
