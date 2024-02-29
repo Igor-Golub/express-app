@@ -19,7 +19,7 @@ class ClientFilterService<ViewEntity> implements Base.FilterService<ViewEntity> 
           [field]: { $regex: value ?? "", $options: "i" },
         }));
 
-      return { $or: filter };
+      return filter.length ? { $or: filter } : {};
     },
   };
 

@@ -46,7 +46,7 @@ export declare global {
     }
 
     interface FilterService<ViewEntity> {
-      setValue(filed: string, value: string, type: FiltersType);
+      setValue(filed: string, value: string | undefined, type: FiltersType);
       setValues(data: Record<string, string | undefined>, type: FiltersType);
       getFilters(): Filter<any>;
     }

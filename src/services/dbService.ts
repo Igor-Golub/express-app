@@ -21,17 +21,6 @@ class DBService {
 
   public usersCollection = this.client.db(process.env.DB_NAME).collection<DBModels.User>(DataBaseCollections.Users);
 
-  public async findWithPagination<TSchema extends Document = Document>(
-    collection: Collection<TSchema>,
-    { pageNumber, pageSize }: Omit<Base.Pagination, "totalCount" | "pagesCount">,
-  ) {
-    return collection
-      .find({})
-      .skip((pageNumber - 1) * pageSize)
-      .limit(pageSize)
-      .toArray();
-  }
-
   public async findWithPaginationAndSorting<TSchema extends Document = Document>(
     collection: Collection<TSchema>,
     { pageNumber, pageSize }: Omit<Base.Pagination, "totalCount" | "pagesCount">,
