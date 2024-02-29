@@ -28,10 +28,10 @@ class UserController {
 
     this.paginationService.setValues({ pageSize, pageNumber });
     this.filterService.setValues(
-      [
-        { filed: "login", value: searchLoginTerm },
-        { filed: "email", value: searchEmailTerm },
-      ],
+      {
+        login: searchLoginTerm,
+        email: searchEmailTerm,
+      },
       FiltersType.OrAndInnerText,
     );
     this.sortingService.setValue(sortBy, sortDirection);

@@ -1,35 +1,36 @@
 import { Filter } from "mongodb";
 import { FiltersType } from "../enums/Filters";
 
-const mangoMapper: Record<FiltersType, (...args: any) => Partial<Filter<any>>> = {
-  [FiltersType.ById]: (field, value) => ({
-    [field]: value,
-  }),
-  [FiltersType.InnerText]: (field, value) => ({
-    [field]: {
-      $regex: value ?? "",
-      $options: "i",
-    },
-  }),
-  [FiltersType.OrAndInnerText]: (data: { field: string; value: string }[]) => ({
-    $or: data.map(({ field, value }) => ({
+class ClientFilterService<ViewEntity> implements Base.FilterService<ViewEntity> {
+  private mangoMapper: Record<FiltersType, (...args: any) => Partial<Filter<any>>> = {
+    [FiltersType.ById]: (field, value) => ({
+      [field]: value,
+    }),
+    [FiltersType.InnerText]: (field, value) => ({
       [field]: {
         $regex: value ?? "",
         $options: "i",
       },
-    })),
-  }),
-};
+    }),
+    [FiltersType.OrAndInnerText]: (data: Record<string, string | undefined>) => {
+      const filter = Object.entries(data)
+        .filter(([, value]) => Boolean(value))
+        .map(([field, value]) => ({
+          [field]: { $regex: value ?? "", $options: "i" },
+        }));
 
-class ClientFilterService<ViewEntity> implements Base.FilterService<ViewEntity> {
+      return { $or: filter };
+    },
+  };
+
   public value: Filter<any> = {};
 
   public setValue(filed: string, value: string, type: FiltersType) {
-    this.value = mangoMapper[type](filed, value);
+    this.value = this.mangoMapper[type](filed, value);
   }
 
-  public setValues(data: { filed: string; value: string }[], type: FiltersType) {
-    this.value = mangoMapper[type](data);
+  public setValues(data: Record<string, string | undefined>, type: FiltersType) {
+    this.value = this.mangoMapper[type](data);
   }
 
   public getFilters(): Filter<any> {

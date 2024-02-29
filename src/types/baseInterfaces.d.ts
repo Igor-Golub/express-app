@@ -1,5 +1,6 @@
 import { Filter, Sort, SortDirection } from "mongodb";
 import { SortingDirectionStrings } from "../enums/Sorting";
+import { FiltersType } from "../enums/Filters";
 
 export declare global {
   namespace Base {
@@ -46,7 +47,7 @@ export declare global {
 
     interface FilterService<ViewEntity> {
       setValue(filed: string, value: string, type: FiltersType);
-      setValues(data: { filed: string; value: string }[], type: FiltersType);
+      setValues(data: Record<string, string | undefined>, type: FiltersType);
       getFilters(): Filter<any>;
     }
   }

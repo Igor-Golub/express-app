@@ -10,4 +10,4 @@ export const userRouter = Router({});
 userRouter
   .get(Routs.Root, auth, UserController.getAll)
   .post(Routs.Root, auth, ...userValidators.create, validation, UserController.create)
-  .delete(Routs.Root, auth, userValidators.delete, validation, UserController.delete);
+  .delete(Routs.RootWithId, auth, userValidators.delete, validation, UserController.delete);
