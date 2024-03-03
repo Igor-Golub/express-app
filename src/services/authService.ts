@@ -20,6 +20,10 @@ class AuthService {
     return { salt, hash };
   }
 
+  public compareCredential(password: string, hash: string) {
+    return bcrypt.compareSync(password, hash);
+  }
+
   private async createSalt() {
     return bcrypt.genSalt(10);
   }

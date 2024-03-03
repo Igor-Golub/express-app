@@ -10,12 +10,11 @@ class UserService {
   ) {}
 
   public async createUser({ login, email, password }: DTO.UserCreate) {
-    const { hash, salt } = await this.authService.createSaltAndHash(password);
+    const { hash } = await this.authService.createSaltAndHash(password);
 
     return this.userCommandRepository.create({
       login,
       email,
-      salt,
       hash,
     });
   }
@@ -25,9 +24,7 @@ class UserService {
 
     if (!user) return null;
 
-    const hash = await this.authService.createHash(password, user.salt);
-
-    return user.hash === hash;
+    return this.authService.compareCredential(password, user.hash);
   }
 
   public async delete(id: string) {
