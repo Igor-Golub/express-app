@@ -2,8 +2,8 @@ import { Response } from "express";
 import PostService from "../services/postService";
 import { PostQueryRepository } from "../repositories/query";
 import { StatusCodes } from "../enums/StatusCodes";
-import SortingService from "../services/sortingService";
-import PaginationService from "../services/paginationService";
+import SortingService from "../application/sortingService";
+import PaginationService from "../application/paginationService";
 
 class PostController implements Base.Controller {
   constructor(

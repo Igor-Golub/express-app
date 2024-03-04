@@ -2,10 +2,10 @@ import { Response } from "express";
 import BlogService from "../services/blogService";
 import { BlogQueryRepository, PostQueryRepository } from "../repositories/query";
 import { StatusCodes } from "../enums/StatusCodes";
-import SortingService from "../services/sortingService";
-import FilterService from "../services/filterService";
+import SortingService from "../application/sortingService";
+import FilterService from "../application/filterService";
 import { FiltersType } from "../enums/Filters";
-import PaginationService from "../services/paginationService";
+import PaginationService from "../application/paginationService";
 
 class BlogController implements Base.Controller {
   constructor(

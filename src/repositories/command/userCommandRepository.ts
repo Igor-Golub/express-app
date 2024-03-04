@@ -1,4 +1,4 @@
-import DbService from "../../services/dbService";
+import DbService from "../../application/dbService";
 import { ObjectId } from "mongodb";
 
 class UserCommandRepository implements Base.CommandRepository<DBModels.User, ViewModels.User> {

@@ -1,16 +1,17 @@
 import { UserCommandRepository } from "../repositories/command";
 import { UserQueryRepository } from "../repositories/query";
-import AuthService from "./authService";
+import AuthService from "../application/authService";
+import CryptographyService from "../application/cryptographyService";
 
 class UserService {
   constructor(
     private readonly userCommandRepository: Base.CommandRepository<DBModels.User, ViewModels.User>,
     private readonly userQueryRepository: typeof UserQueryRepository,
-    private readonly authService: typeof AuthService,
+    private readonly cryptographyService: typeof CryptographyService,
   ) {}
 
   public async createUser({ login, email, password }: DTO.UserCreate) {
-    const { hash } = await this.authService.createSaltAndHash(password);
+    const { hash } = await this.cryptographyService.createSaltAndHash(password);
 
     return this.userCommandRepository.create({
       login,
@@ -24,7 +25,7 @@ class UserService {
 
     if (!user) return null;
 
-    return this.authService.compareCredential(password, user.hash);
+    return this.cryptographyService.compareCredential(password, user.hash);
   }
 
   public async delete(id: string) {
@@ -32,4 +33,4 @@ class UserService {
   }
 }
 
-export default new UserService(UserCommandRepository, UserQueryRepository, AuthService);
+export default new UserService(UserCommandRepository, UserQueryRepository, CryptographyService);

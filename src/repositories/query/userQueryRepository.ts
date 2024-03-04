@@ -1,6 +1,6 @@
-import DbService from "../../services/dbService";
+import DbService from "../../application/dbService";
 import { Filter, ObjectId, Sort } from "mongodb";
-import PaginationService from "../../services/paginationService";
+import PaginationService from "../../application/paginationService";
 
 class UserQueryRepository implements Base.QueryRepository<ViewModels.User> {
   constructor(

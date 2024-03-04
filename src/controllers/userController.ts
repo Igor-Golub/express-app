@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import UserService from "../services/userService";
 import { UserQueryRepository } from "../repositories/query";
-import DBService from "../services/dbService";
+import DBService from "../application/dbService";
 import { UserCommandRepository } from "../repositories/command";
 import { StatusCodes } from "../enums/StatusCodes";
 import { FiltersType } from "../enums/Filters";
-import PaginationService from "../services/paginationService";
-import SortingService from "../services/sortingService";
-import FilterService from "../services/filterService";
+import PaginationService from "../application/paginationService";
+import SortingService from "../application/sortingService";
+import FilterService from "../application/filterService";
 
 class UserController {
   constructor(

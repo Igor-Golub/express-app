@@ -1,18 +1,6 @@
-import { AuthorizationTypes } from "../enums/AuthorizationTypes";
-import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 
-dotenv.config();
-
-class AuthService {
-  public async basicVerification(token: string) {
-    const [authorizationType, secretToken] = token.split(" ");
-
-    if (authorizationType !== AuthorizationTypes.Basic) return false;
-
-    return process.env.ROOT_USER_PASSWORD === secretToken;
-  }
-
+class CryptographyService {
   public async createSaltAndHash(password: string) {
     const salt = await this.createSalt();
     const hash = await this.createHash(password, salt);
@@ -33,4 +21,4 @@ class AuthService {
   }
 }
 
-export default new AuthService();
+export default new CryptographyService();

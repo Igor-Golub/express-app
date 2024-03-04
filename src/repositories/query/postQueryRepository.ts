@@ -1,5 +1,5 @@
-import DbService from "../../services/dbService";
-import PaginationService from "../../services/paginationService";
+import DbService from "../../application/dbService";
+import PaginationService from "../../application/paginationService";
 import { Filter, ObjectId, Sort } from "mongodb";
 
 class PostQueryRepository implements Base.QueryRepository<ViewModels.Post> {

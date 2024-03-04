@@ -6,7 +6,7 @@ import { userRouter } from "./routs/user-router";
 import { blogRouter } from "./routs/blog-router";
 import { authRouter } from "./routs/auth-router";
 import { Resources } from "./enums/Resources";
-import dbService from "./services/dbService";
+import dbService from "./application/dbService";
 
 dotenv.config();
 
