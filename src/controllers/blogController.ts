@@ -40,7 +40,7 @@ class BlogController implements Base.Controller {
   public getById = async (req: Utils.ReqWithParams<Params.URIId>, res: Response) => {
     const id = req.params.id;
 
-    const entity = await this.blogQueryRepository.getId(String(id));
+    const entity = await this.blogQueryRepository.getById(String(id));
 
     if (!entity) res.status(StatusCodes.NotFound_404).end();
     else res.status(StatusCodes.Ok_200).send(entity);

@@ -21,8 +21,7 @@ export declare global {
     }
 
     interface QueryRepository<Entity> {
-      get(): Promise<Entity[]>;
-      getId(id: string): Promise<Entity | null>;
+      getById(id: string): Promise<Entity | null>;
       getWithPagination(sort: Sort, filters: Filter<any> = {}): Promise<ViewModels.ResponseWithPagination<Entity>>;
     }
 

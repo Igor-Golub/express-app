@@ -1,5 +1,5 @@
 import { body, param } from "express-validator";
-import { BlogQueryRepository } from "../repositories/query";
+import { BlogQueryRepository, PostQueryRepository } from "../repositories/query";
 import { ObjectId } from "mongodb";
 
 const commonFields = [
@@ -12,7 +12,7 @@ const blogIdValidation = body("blogId")
   .isString()
   .trim()
   .custom(async (blogId: string) => {
-    const blog = await BlogQueryRepository.getId(blogId);
+    const blog = await BlogQueryRepository.getById(blogId);
     if (!blog) throw new Error("Blog not exist!");
     else return true;
   });
@@ -24,5 +24,20 @@ export const postValidators = {
   deleteById: [idValidation],
   create: [...commonFields, blogIdValidation],
   createForBlog: commonFields,
+  getComments: [
+    idValidation.custom(async (postId: string) => {
+      const post = await PostQueryRepository.getById(postId);
+      if (!post) throw new Error("Post not exist!");
+      else return true;
+    }),
+  ],
+  createComment: [
+    idValidation.custom(async (postId: string) => {
+      const post = await PostQueryRepository.getById(postId);
+      if (!post) throw new Error("Post not exist!");
+      else return true;
+    }),
+    body("content").isString().trim().isLength({ min: 20, max: 300 }),
+  ],
   update: [...commonFields, blogIdValidation],
 };

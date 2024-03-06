@@ -8,7 +8,7 @@ class PostService {
   ) {}
 
   public async create(postEntity: DTO.PostCreateAndUpdate) {
-    const blogEntity = await this.blogQueryRepository.getId(postEntity.blogId);
+    const blogEntity = await this.blogQueryRepository.getById(postEntity.blogId);
 
     if (!blogEntity?.name) return null;
 

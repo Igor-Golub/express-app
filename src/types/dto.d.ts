@@ -30,5 +30,9 @@ export declare global {
       login: string;
       userId: string;
     }
+
+    interface Comment {
+      content: string;
+    }
   }
 }

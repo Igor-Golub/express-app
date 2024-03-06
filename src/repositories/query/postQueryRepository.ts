@@ -8,13 +8,7 @@ class PostQueryRepository implements Base.QueryRepository<ViewModels.Post> {
     private paginationService: typeof PaginationService,
   ) {}
 
-  public async get() {
-    const result = await this.dbService.postsCollection.find({}).toArray();
-
-    return this.mapToViewModels(result);
-  }
-
-  public async getId(id: string) {
+  public async getById(id: string) {
     const result = await this.dbService.postsCollection.findOne({ _id: new ObjectId(id) });
 
     if (!result) return null;

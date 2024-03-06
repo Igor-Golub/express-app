@@ -28,5 +28,13 @@ export declare global {
       email: string;
       hash: string;
     }
+
+    interface Comment {
+      content: string;
+      commentatorInfo: {
+        userId: string;
+        userLogin: string;
+      };
+    }
   }
 }

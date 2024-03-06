@@ -11,7 +11,7 @@ class AuthController {
 
   public me = async (req: Request, res: Response) => {
     console.log(req.context.user.id);
-    const result = await this.userQueryRepository.getId(req.context.user.id);
+    const result = await this.userQueryRepository.getById(req.context.user.id);
 
     console.log(result);
 

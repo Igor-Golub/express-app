@@ -28,5 +28,13 @@ export declare global {
     interface ResponseWithPagination<Entity> extends Base.PaginationView {
       items: Entity[];
     }
+
+    interface Comment extends BaseModel {
+      content: string;
+      commentatorInfo: {
+        userId: string;
+        userLogin: string;
+      };
+    }
   }
 }

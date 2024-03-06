@@ -1,15 +1,18 @@
 import { Response } from "express";
 import PostService from "../services/postService";
-import { PostQueryRepository } from "../repositories/query";
+import { PostQueryRepository, CommentsQueryRepository } from "../repositories/query";
 import { StatusCodes } from "../enums/StatusCodes";
 import SortingService from "../application/sortingService";
 import PaginationService from "../application/paginationService";
+import FilterService from "../application/filterService";
 
 class PostController implements Base.Controller {
   constructor(
     private postQueryRepository: typeof PostQueryRepository,
+    private commentsQueryRepository: typeof CommentsQueryRepository,
     private postService: typeof PostService,
     private sortingService: Base.SortingService,
+    private filterService: Base.FilterService<ViewModels.Comment>,
     private paginationService: typeof PaginationService,
   ) {}
 
@@ -31,7 +34,7 @@ class PostController implements Base.Controller {
 
   public getById = async (req: Utils.ReqWithParams<Params.URIId>, res: Response) => {
     const id = req.params.id;
-    const entity = await this.postQueryRepository.getId(String(id));
+    const entity = await this.postQueryRepository.getById(String(id));
 
     if (!entity) res.status(StatusCodes.NotFound_404).end();
     else res.status(StatusCodes.Ok_200).send(entity);
@@ -66,6 +69,35 @@ class PostController implements Base.Controller {
     if (!result) res.status(StatusCodes.NotFound_404).end();
     else res.status(StatusCodes.NoContent_204).end();
   };
+
+  public getComments = async (
+    req: Utils.ReqWithParamsAndQuery<Params.URIId, Params.PaginationAndSortingQueryParams>,
+    res: Response<ViewModels.ResponseWithPagination<ViewModels.Comment>>,
+  ) => {
+    const {
+      params: { id },
+      query: { sortBy, sortDirection, pageNumber, pageSize },
+    } = req;
+
+    this.paginationService.setValues({ pageSize, pageNumber });
+    this.sortingService.setValue(sortBy as keyof ViewModels.Comment, sortDirection);
+
+    const data = await this.commentsQueryRepository.getWithPagination(
+      this.sortingService.createSortCondition(),
+      this.filterService.getFilters(),
+    );
+
+    res.status(StatusCodes.Ok_200).send(data);
+  };
+
+  public createComment = async () => {};
 }
 
-export default new PostController(PostQueryRepository, PostService, SortingService, PaginationService);
+export default new PostController(
+  PostQueryRepository,
+  CommentsQueryRepository,
+  PostService,
+  SortingService,
+  FilterService,
+  PaginationService,
+);

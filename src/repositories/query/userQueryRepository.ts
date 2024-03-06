@@ -8,13 +8,7 @@ class UserQueryRepository implements Base.QueryRepository<ViewModels.User> {
     private paginationService: typeof PaginationService,
   ) {}
 
-  public async get() {
-    const result = await this.dbService.usersCollection.find({}).toArray();
-
-    return this.mapToViewModels(result);
-  }
-
-  public async getId(id: string): Promise<ViewModels.User | null> {
+  public async getById(id: string): Promise<ViewModels.User | null> {
     const user = await this.dbService.usersCollection.findOne({ _id: new ObjectId(id) });
 
     if (!user) return null;
