@@ -24,5 +24,11 @@ export declare global {
       loginOrEmail: string;
       password: string;
     }
+
+    interface Me {
+      email: string;
+      login: string;
+      userId: string;
+    }
   }
 }

@@ -2,8 +2,8 @@ import jwt from "jsonwebtoken";
 import mainConfig from "../configs/mainConfig";
 
 class JwtService {
-  public generateAccessToken(userId: string) {
-    return jwt.sign(userId, mainConfig.jwtSecret, { expiresIn: "1h" });
+  public generateAccessToken(userId: string, userLogin: string) {
+    return jwt.sign({ userId, userLogin }, mainConfig.jwtSecret, { expiresIn: "1h" });
   }
 
   public verifyByAccessToken(token: string) {

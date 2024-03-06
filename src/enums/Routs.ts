@@ -3,4 +3,5 @@ export enum Routs {
   RootWithId = "/:id",
   AllData = "/all-data",
   Login = "/login",
+  Me = "/me",
 }

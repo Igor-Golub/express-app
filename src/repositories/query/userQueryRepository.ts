@@ -14,8 +14,12 @@ class UserQueryRepository implements Base.QueryRepository<ViewModels.User> {
     return this.mapToViewModels(result);
   }
 
-  public async getId(id: string) {
-    return null;
+  public async getId(id: string): Promise<ViewModels.User | null> {
+    const user = await this.dbService.usersCollection.findOne({ _id: new ObjectId(id) });
+
+    if (!user) return null;
+
+    return this.mapToViewModels([user])[0];
   }
 
   public async getWithPagination(sort: Sort, filters: Filter<any> = {}) {
@@ -39,15 +43,31 @@ class UserQueryRepository implements Base.QueryRepository<ViewModels.User> {
     };
   }
 
-  public async findUserByLoginOrEmail(loginOrEmail: string) {
+  public async findUserByLoginOrEmail(loginOrEmail: string): Promise<ViewModels.User | null> {
     const user = await this.dbService.usersCollection.findOne({
       $or: [{ email: loginOrEmail }, { login: loginOrEmail }],
     });
 
     if (!user) return null;
+
+    return this.mapToViewModels([user])[0];
+  }
+
+  public async findUserByLoginOrEmailWithHash(
+    loginOrEmail: string,
+  ): Promise<(ViewModels.User & { hash: string }) | null> {
+    const user = await this.dbService.usersCollection.findOne({
+      $or: [{ email: loginOrEmail }, { login: loginOrEmail }],
+    });
+
+    if (!user) return null;
+
     return {
+      email: user.email,
+      login: user.login,
+      hash: user.hash,
       id: user._id.toString(),
-      ...user,
+      createdAt: user._id.getTimestamp().toISOString(),
     };
   }
 
