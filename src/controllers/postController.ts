@@ -1,19 +1,22 @@
 import { Response } from "express";
 import PostService from "../services/postService";
+import CommentsService from "../services/commentsService";
 import { PostQueryRepository, CommentsQueryRepository } from "../repositories/query";
 import { StatusCodes } from "../enums/StatusCodes";
 import SortingService from "../application/sortingService";
 import PaginationService from "../application/paginationService";
 import FilterService from "../application/filterService";
+import { FiltersType } from "../enums/Filters";
 
 class PostController implements Base.Controller {
   constructor(
-    private postQueryRepository: typeof PostQueryRepository,
-    private commentsQueryRepository: typeof CommentsQueryRepository,
-    private postService: typeof PostService,
-    private sortingService: Base.SortingService,
-    private filterService: Base.FilterService<ViewModels.Comment>,
-    private paginationService: typeof PaginationService,
+    private readonly postQueryRepository: typeof PostQueryRepository,
+    private readonly commentsQueryRepository: typeof CommentsQueryRepository,
+    private readonly postService: typeof PostService,
+    private readonly sortingService: Base.SortingService,
+    private readonly filterService: Base.FilterService<ViewModels.Comment>,
+    private readonly paginationService: typeof PaginationService,
+    private readonly commentsService: typeof CommentsService,
   ) {}
 
   public getAll = async (
@@ -81,6 +84,7 @@ class PostController implements Base.Controller {
 
     this.paginationService.setValues({ pageSize, pageNumber });
     this.sortingService.setValue(sortBy as keyof ViewModels.Comment, sortDirection);
+    this.filterService.setValue("postId", id, FiltersType.ById);
 
     const data = await this.commentsQueryRepository.getWithPagination(
       this.sortingService.createSortCondition(),
@@ -90,7 +94,17 @@ class PostController implements Base.Controller {
     res.status(StatusCodes.Ok_200).send(data);
   };
 
-  public createComment = async () => {};
+  public createComment = async (req: Utils.RequestWithParamsAndReqBody<Params.URIId, DTO.Comment>, res: any) => {
+    const {
+      body,
+      params: { id },
+      context: { user },
+    } = req;
+
+    const result = await this.commentsService.create(body, user.id, user.login, String(id));
+
+    res.status(StatusCodes.Created_201).send(result);
+  };
 }
 
 export default new PostController(
@@ -100,4 +114,5 @@ export default new PostController(
   SortingService,
   FilterService,
   PaginationService,
+  CommentsService,
 );

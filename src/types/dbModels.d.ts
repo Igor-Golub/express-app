@@ -30,6 +30,7 @@ export declare global {
     }
 
     interface Comment {
+      postId: string;
       content: string;
       commentatorInfo: {
         userId: string;

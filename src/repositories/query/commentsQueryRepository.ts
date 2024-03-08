@@ -45,7 +45,8 @@ class CommentsQueryRepository implements Base.QueryRepository<ViewModels.Comment
     return data.map(({ _id, ...entity }) => ({
       id: _id.toString(),
       createdAt: _id.getTimestamp().toISOString(),
-      ...entity,
+      content: entity.content,
+      commentatorInfo: entity.commentatorInfo,
     }));
   }
 }
