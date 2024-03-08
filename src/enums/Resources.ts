@@ -3,5 +3,6 @@ export enum Resources {
   Posts = "/posts",
   Users = "/users",
   Auth = "/auth",
+  Comments = "/comments",
   Testing = "/testing",
 }

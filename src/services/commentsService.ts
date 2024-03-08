@@ -17,6 +17,14 @@ class CommentsService {
 
     return this.commentsCommandRepository.create(newComment);
   }
+
+  public async update(id: string, entity: DTO.Comment) {
+    return this.commentsCommandRepository.update(id, entity);
+  }
+
+  public async delete(id: string) {
+    return this.commentsCommandRepository.delete(id);
+  }
 }
 
 export default new CommentsService(CommentsCommandRepository);

@@ -13,6 +13,7 @@ const blogIdValidation = body("blogId")
   .trim()
   .custom(async (blogId: string) => {
     const blog = await BlogQueryRepository.getById(blogId);
+
     if (!blog) throw new Error("Blog not exist!");
     else return true;
   });
@@ -27,6 +28,7 @@ export const postValidators = {
   getComments: [
     idValidation.custom(async (postId: string) => {
       const post = await PostQueryRepository.getById(postId);
+
       if (!post) throw new Error("Post not exist!");
       else return true;
     }),
@@ -34,6 +36,7 @@ export const postValidators = {
   createComment: [
     idValidation.custom(async (postId: string) => {
       const post = await PostQueryRepository.getById(postId);
+
       if (!post) throw new Error("Post not exist!");
       else return true;
     }),

@@ -1,4 +1,5 @@
 import DbService from "../../application/dbService";
+import { ObjectId } from "mongodb";
 
 class CommentsCommandRepository implements Base.CommandRepository<DBModels.Comment, ViewModels.Comment> {
   constructor(private dbService: typeof DbService) {}
@@ -16,6 +17,33 @@ class CommentsCommandRepository implements Base.CommandRepository<DBModels.Comme
     };
 
     return newEntity;
+  }
+
+  public async update(id: string, entity: DBModels.Comment) {
+    const res = await this.dbService.commentsCollection.findOneAndUpdate(
+      {
+        _id: new ObjectId(id),
+      },
+      {
+        $set: { ...entity },
+      },
+    );
+
+    if (!res) return null;
+
+    return {
+      id: res._id.toString(),
+      createdAt: res._id.getTimestamp().toISOString(),
+      ...entity,
+    };
+  }
+
+  public async delete(id: string) {
+    const { deletedCount } = await this.dbService.commentsCollection.deleteOne({
+      _id: new ObjectId(id),
+    });
+
+    return Boolean(deletedCount);
   }
 }
 
