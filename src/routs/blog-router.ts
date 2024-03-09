@@ -1,35 +1,19 @@
 import { Router } from "express";
-import { Routs } from "../enums/Routs";
+import { BlogRouts } from "../enums/Routs";
 import { validation } from "../middlewares/validation";
 import { blogValidators } from "../validators/blog";
 import { basicAuth } from "../middlewares/basicAuth";
 import BlogController from "../controllers/blogController";
-import { postValidators } from "../validators/post";
 import { sortingValidators } from "../validators/sotting";
 import { paginationValidators } from "../validators/pagination";
-import { filterValidators } from "../validators/filter";
 
 export const blogRouter = Router({});
 
 blogRouter
-  .get(Routs.Root, sortingValidators, paginationValidators, BlogController.getAll)
-  .get(Routs.RootWithId, blogValidators.getById, validation, BlogController.getById)
-  .get(
-    `${Routs.RootWithId}/posts`,
-    sortingValidators,
-    filterValidators,
-    paginationValidators,
-    postValidators.getById,
-    validation,
-    BlogController.getPostsByBlogId,
-  )
-  .post(
-    `${Routs.RootWithId}/posts`,
-    basicAuth,
-    postValidators.createForBlog,
-    validation,
-    BlogController.createPostForBlog,
-  )
-  .post(Routs.Root, basicAuth, ...blogValidators.create, validation, BlogController.create)
-  .put(Routs.RootWithId, basicAuth, ...blogValidators.update, validation, BlogController.update)
-  .delete(Routs.RootWithId, basicAuth, postValidators.deleteById, validation, BlogController.delete);
+  .get(BlogRouts.Root, sortingValidators, paginationValidators, BlogController.getAll)
+  .get(BlogRouts.RootWithId, ...blogValidators.getById, BlogController.getById)
+  .get(BlogRouts.BlogPosts, ...blogValidators.getBlogPostsById, BlogController.getPostsByBlogId)
+  .post(BlogRouts.BlogPosts, basicAuth, blogValidators.createPostForBlog, BlogController.createPostForBlog)
+  .post(BlogRouts.Root, basicAuth, ...blogValidators.create, BlogController.create)
+  .put(BlogRouts.RootWithId, basicAuth, ...blogValidators.update, BlogController.update)
+  .delete(BlogRouts.RootWithId, basicAuth, ...blogValidators.deleteById, validation, BlogController.delete);
