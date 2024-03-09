@@ -82,7 +82,7 @@ class BlogController implements Base.Controller {
       blogId: String(id),
     });
 
-    if (!result) res.status(StatusCodes.NotFound_404).end();
+    if (!result) res.status(StatusCodes.BadRequest_400).end();
     else res.status(StatusCodes.Created_201).send(result);
   };
 
