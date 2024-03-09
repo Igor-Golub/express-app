@@ -23,7 +23,7 @@ const idValidation = param("id").isString().custom(ObjectId.isValid);
 export const postValidators = {
   readAll: [sortingValidators, paginationValidators, validation],
   readById: [idValidation, validation],
-  create: [...commonFields, validation],
+  create: [...commonFields, body("blogId").isString().trim().custom(checkBlogId), validation],
   update: [...commonFields, body("blogId").isString().trim().custom(checkBlogId), validation],
   delete: [idValidation, validation],
 

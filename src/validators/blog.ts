@@ -34,7 +34,7 @@ export const blogValidators = {
     sortingValidators,
     filterValidators,
     paginationValidators,
-    param("id").isString().custom(ObjectId.isValid).custom(checkBlogId),
+    param("id").isString().custom(ObjectId.isValid),
     validation,
   ],
   createPostForBlog: [
