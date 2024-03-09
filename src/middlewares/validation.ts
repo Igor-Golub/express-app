@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
+import { StatusCodes } from "../enums/StatusCodes";
 
 const convertErrorToContract = (errors: Record<string, { msg: string }>) => {
   return {
@@ -13,6 +14,6 @@ const convertErrorToContract = (errors: Record<string, { msg: string }>) => {
 export const validation = (req: any, res: any, next: NextFunction) => {
   const result = validationResult(req);
 
-  if (!result.isEmpty()) res.status(400).send(convertErrorToContract(result.mapped()));
+  if (!result.isEmpty()) res.status(StatusCodes.BadRequest_400).send(convertErrorToContract(result.mapped()));
   else next();
 };

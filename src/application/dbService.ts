@@ -43,6 +43,7 @@ class DBService {
     await this.client.db(process.env.DB_NAME).collection(DataBaseCollections.Blogs).deleteMany({});
     await this.client.db(process.env.DB_NAME).collection(DataBaseCollections.Posts).deleteMany({});
     await this.client.db(process.env.DB_NAME).collection(DataBaseCollections.Users).deleteMany({});
+    await this.client.db(process.env.DB_NAME).collection(DataBaseCollections.Comments).deleteMany({});
   }
 }
 

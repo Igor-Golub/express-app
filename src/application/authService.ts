@@ -14,7 +14,9 @@ class AuthService {
   }
 
   public async jwtVerification(token: string) {
-    const accessToken = token.split(" ")[1];
+    const [authorizationType, accessToken] = token.split(" ")[1];
+
+    if (authorizationType !== AuthorizationTypes.Basic) return false;
 
     return this.jwtService.verifyByAccessToken(accessToken);
   }
