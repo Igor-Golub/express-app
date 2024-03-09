@@ -29,6 +29,6 @@ blogRouter
     validation,
     BlogController.createPostForBlog,
   )
-  .post(Routs.RootWithId, basicAuth, ...blogValidators.create, validation, BlogController.create)
+  .post(Routs.Root, basicAuth, ...blogValidators.create, validation, BlogController.create)
   .put(Routs.RootWithId, basicAuth, ...blogValidators.update, validation, BlogController.update)
   .delete(Routs.RootWithId, basicAuth, postValidators.deleteById, validation, BlogController.delete);
