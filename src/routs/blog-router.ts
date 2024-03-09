@@ -13,12 +13,13 @@ export const blogRouter = Router({});
 
 blogRouter
   .get(Routs.Root, sortingValidators, paginationValidators, BlogController.getAll)
-  .get(Routs.RootWithId, postValidators.getById, validation, BlogController.getById)
+  .get(Routs.RootWithId, blogValidators.getById, validation, BlogController.getById)
   .get(
     `${Routs.RootWithId}/posts`,
     sortingValidators,
     filterValidators,
     paginationValidators,
+    postValidators.getById,
     validation,
     BlogController.getPostsByBlogId,
   )

@@ -16,6 +16,6 @@ const idValidation = param("id").isString().custom(ObjectId.isValid);
 export const blogValidators = {
   create: commonFields,
   update: commonFields,
-  getById: [idValidation],
-  deleteById: [idValidation],
+  getById: idValidation,
+  deleteById: idValidation,
 };
