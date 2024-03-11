@@ -1,17 +1,9 @@
 import { body, param } from "express-validator";
 import { ObjectId } from "mongodb";
-import { BlogQueryRepository } from "../repositories/query";
 import { sortingValidators } from "./sotting";
 import { filterValidators } from "./filter";
 import { paginationValidators } from "./pagination";
 import { validation } from "../middlewares/validation";
-
-const checkBlogId = async (blogId: string) => {
-  const blog = await BlogQueryRepository.getById(blogId);
-
-  if (!blog) throw new Error("Blog not exist!");
-  else return true;
-};
 
 const commonFields = [
   body("name").isString().trim().isLength({ min: 1, max: 15 }),
@@ -38,7 +30,7 @@ export const blogValidators = {
     validation,
   ],
   createPostForBlog: [
-    param("id").isString().custom(ObjectId.isValid).custom(checkBlogId),
+    param("id").isString().custom(ObjectId.isValid),
     body("title").isString().trim().isLength({ min: 1, max: 30 }),
     body("shortDescription").isString().trim().isLength({ min: 1, max: 100 }),
     body("content").isString().trim().isLength({ min: 1, max: 1000 }),

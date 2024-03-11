@@ -77,13 +77,19 @@ class BlogController implements Base.Controller {
       body: entity,
     } = req;
 
-    const result = await this.blogService.createPostForBlog({
-      ...entity,
-      blogId: String(id),
-    });
+    const blog = await BlogQueryRepository.getById(String(id));
 
-    if (!result) res.status(StatusCodes.BadRequest_400).end();
-    else res.status(StatusCodes.Created_201).send(result);
+    if (!blog) {
+      res.status(StatusCodes.NotFound_404).end();
+    } else {
+      const result = await this.blogService.createPostForBlog({
+        ...entity,
+        blogId: String(id),
+      });
+
+      if (!result) res.status(StatusCodes.BadRequest_400).end();
+      else res.status(StatusCodes.Created_201).send(result);
+    }
   };
 
   public create = async (req: Utils.ReqWithReqBody<DTO.BlogCreateAndUpdate>, res: Response) => {

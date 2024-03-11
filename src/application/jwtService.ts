@@ -7,7 +7,11 @@ class JwtService {
   }
 
   public verifyByAccessToken(token: string) {
-    return jwt.verify(token, mainConfig.jwtSecret);
+    try {
+      return jwt.verify(token, mainConfig.jwtSecret);
+    } catch {
+      return false;
+    }
   }
 }
 

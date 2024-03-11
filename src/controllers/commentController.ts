@@ -12,7 +12,9 @@ class CommentController implements Base.Controller {
   public getAll = async () => {};
 
   public getById = async (req: Utils.ReqWithParams<Params.URIId>, res: Response) => {
-    const id = req.params.id;
+    const {
+      params: { id },
+    } = req;
 
     const entity = await this.commentsQueryRepository.getById(String(id));
 
@@ -23,17 +25,28 @@ class CommentController implements Base.Controller {
   public create = async () => {};
 
   public update = async (req: Utils.RequestWithParamsAndReqBody<Params.URIId, DTO.Comment>, res: Response) => {
-    const id = req.params.id;
-    const commentEntity = req.body;
+    const {
+      params: { id },
+      body: commentDTO,
+      context: { user },
+    } = req;
 
-    const result = await this.commentsService.update(String(id), commentEntity);
+    const commentEntity = await this.commentsQueryRepository.getById(String(id));
 
-    if (!result) res.status(StatusCodes.NotFound_404).end();
-    else res.status(StatusCodes.NoContent_204).send(result);
+    if (commentEntity?.commentatorInfo.userId !== user.id) {
+      res.status(StatusCodes.Forbidden_403).end();
+    } else {
+      const result = await this.commentsService.update(String(id), commentDTO);
+
+      if (!result) res.status(StatusCodes.NotFound_404).end();
+      else res.status(StatusCodes.NoContent_204).send(result);
+    }
   };
 
   public delete = async (req: Utils.ReqWithParams<Params.URIId>, res: Response) => {
-    const id = req.params.id;
+    const {
+      params: { id },
+    } = req;
 
     const result = await this.commentsService.delete(String(id));
 

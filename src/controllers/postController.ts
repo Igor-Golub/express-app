@@ -101,9 +101,16 @@ class PostController implements Base.Controller {
       context: { user },
     } = req;
 
-    const result = await this.commentsService.create(body, user.id, user.login, String(id));
+    const postEntity = await this.postQueryRepository.getById(String(id));
 
-    res.status(StatusCodes.Created_201).send(result);
+    if (!postEntity) {
+      res.status(StatusCodes.NotFound_404).end();
+    } else {
+      const result = await this.commentsService.create(body, user.id, user.login, String(id));
+
+      if (!result) res.status(StatusCodes.BadRequest_400).end();
+      else res.status(StatusCodes.Created_201).send(result);
+    }
   };
 }
 
