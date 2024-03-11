@@ -46,12 +46,19 @@ class CommentController implements Base.Controller {
   public delete = async (req: Utils.ReqWithParams<Params.URIId>, res: Response) => {
     const {
       params: { id },
+      context: { user },
     } = req;
 
-    const result = await this.commentsService.delete(String(id));
+    const commentEntity = await this.commentsQueryRepository.getById(String(id));
 
-    if (!result) res.status(StatusCodes.NotFound_404).end();
-    else res.status(StatusCodes.NoContent_204).end();
+    if (commentEntity && commentEntity?.commentatorInfo.userId !== user.id) {
+      res.status(StatusCodes.Forbidden_403).end();
+    } else {
+      const result = await this.commentsService.delete(String(id));
+
+      if (!result) res.status(StatusCodes.NotFound_404).end();
+      else res.status(StatusCodes.NoContent_204).end();
+    }
   };
 }
 
