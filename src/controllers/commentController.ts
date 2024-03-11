@@ -33,7 +33,7 @@ class CommentController implements Base.Controller {
 
     const commentEntity = await this.commentsQueryRepository.getById(String(id));
 
-    if (commentEntity?.commentatorInfo.userId !== user.id) {
+    if (commentEntity && commentEntity?.commentatorInfo.userId !== user.id) {
       res.status(StatusCodes.Forbidden_403).end();
     } else {
       const result = await this.commentsService.update(String(id), commentDTO);
