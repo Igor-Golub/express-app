@@ -91,7 +91,8 @@ class PostController implements Base.Controller {
       this.filterService.getFilters(),
     );
 
-    res.status(StatusCodes.Ok_200).send(data);
+    if (!data.items.length) res.status(StatusCodes.NotFound_404).end();
+    else res.status(StatusCodes.Ok_200).send(data);
   };
 
   public createComment = async (req: Utils.RequestWithParamsAndReqBody<Params.URIId, DTO.Comment>, res: any) => {
