@@ -1,5 +1,6 @@
 import { body, param } from "express-validator";
 import { ObjectId } from "mongodb";
+import { validation } from "../middlewares/validation";
 
 export const userValidators = {
   create: [
@@ -14,6 +15,7 @@ export const userValidators = {
       .isLength({ min: 6, max: 30 })
       .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/),
     body("password").isString().trim().isLength({ min: 6, max: 20 }),
+    validation,
   ],
-  delete: param("id").isString().custom(ObjectId.isValid),
+  delete: [param("id").isString().custom(ObjectId.isValid), validation],
 };

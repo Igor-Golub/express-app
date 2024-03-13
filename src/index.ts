@@ -1,5 +1,4 @@
 import express from "express";
-import dotenv from "dotenv";
 import { postRouter } from "./routs/post-router";
 import { testingRouter } from "./routs/testing-router";
 import { userRouter } from "./routs/user-router";
@@ -8,17 +7,12 @@ import { authRouter } from "./routs/auth-router";
 import { commentsRouter } from "./routs/comments-router";
 import { Resources } from "./enums/Resources";
 import dbService from "./application/dbService";
-
-dotenv.config();
+import mainConfig from "./configs/mainConfig";
 
 const app = express();
 
 app.use(express.json());
-app.use(
-  express.urlencoded({
-    extended: true,
-  }),
-);
+app.use(express.urlencoded({ extended: true }));
 
 app
   .use(Resources.Blogs, blogRouter)
@@ -30,6 +24,6 @@ app
 
 dbService.connect();
 
-app.listen(process.env.PORT ?? 5000, () => {
+app.listen(mainConfig.port, () => {
   console.log("Server started!");
 });

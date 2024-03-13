@@ -38,7 +38,9 @@ class BlogController implements Base.Controller {
   };
 
   public getById = async (req: Utils.ReqWithParams<Params.URIId>, res: Response) => {
-    const id = req.params.id;
+    const {
+      params: { id },
+    } = req;
 
     const entity = await this.blogQueryRepository.getById(String(id));
 
@@ -93,7 +95,7 @@ class BlogController implements Base.Controller {
   };
 
   public create = async (req: Utils.ReqWithReqBody<DTO.BlogCreateAndUpdate>, res: Response) => {
-    const entity = req.body;
+    const { body: entity } = req;
 
     const result = await this.blogService.create(entity);
 
@@ -105,8 +107,10 @@ class BlogController implements Base.Controller {
     req: Utils.RequestWithParamsAndReqBody<Params.URIId, DTO.BlogCreateAndUpdate>,
     res: Response,
   ) => {
-    const id = req.params.id;
-    const blogEntity = req.body;
+    const {
+      params: { id },
+      body: blogEntity,
+    } = req;
 
     const result = await this.blogService.update(String(id), blogEntity);
 
@@ -115,7 +119,9 @@ class BlogController implements Base.Controller {
   };
 
   public delete = async (req: Utils.ReqWithParams<Params.URIId>, res: Response) => {
-    const id = req.params.id;
+    const {
+      params: { id },
+    } = req;
 
     const result = await this.blogService.delete(String(id));
 

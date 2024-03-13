@@ -10,10 +10,7 @@ class AuthController {
   ) {}
 
   public me = async (req: Request, res: Response) => {
-    console.log(req.context.user.id);
     const result = await this.userQueryRepository.getById(req.context.user.id);
-
-    console.log(result);
 
     if (!result) res.status(StatusCodes.Unauthorized_401).end();
     else res.status(StatusCodes.Ok_200).send(result);
@@ -26,6 +23,22 @@ class AuthController {
 
     if (!result) res.status(StatusCodes.Unauthorized_401).end();
     else res.status(StatusCodes.Ok_200).send({ accessToken: result });
+  };
+
+  public confirmation = async (req: Utils.ReqWithReqBody<DTO.Confirmation>, res: Response) => {
+    const { body } = req;
+  };
+
+  public registration = async (req: Utils.ReqWithReqBody<DTO.Registration>, res: Response) => {
+    const { body } = req;
+
+    await this.userService.createUser(body);
+
+    res.status(StatusCodes.NoContent_204).end();
+  };
+
+  public resending = async (req: Utils.ReqWithReqBody<DTO.Resending>, res: Response) => {
+    const { body } = req;
   };
 }
 

@@ -8,4 +8,7 @@ export const authRouter = Router({});
 
 authRouter
   .get(AuthRouts.Me, jwtAuth, AuthController.me)
-  .post(AuthRouts.Login, ...authValidators.login, AuthController.login);
+  .post(AuthRouts.Login, ...authValidators.login, AuthController.login)
+  .post(AuthRouts.Confirmation, ...authValidators.confirmation, AuthController.confirmation)
+  .post(AuthRouts.Registration, ...authValidators.registration, AuthController.registration)
+  .post(AuthRouts.Resending, ...authValidators.resending, AuthController.resending);

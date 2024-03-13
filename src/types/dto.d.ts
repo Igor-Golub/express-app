@@ -25,10 +25,18 @@ export declare global {
       password: string;
     }
 
-    interface Me {
-      email: string;
+    interface Confirmation {
+      code: string;
+    }
+
+    interface Registration {
       login: string;
-      userId: string;
+      password: string;
+      email: string;
+    }
+
+    interface Resending {
+      email: string;
     }
 
     interface Comment {

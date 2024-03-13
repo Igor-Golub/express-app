@@ -14,6 +14,9 @@ export enum BlogRouts {
 
 export enum AuthRouts {
   Login = "/login",
+  Confirmation = "/registration-confirmation",
+  Registration = "/registration",
+  Resending = "/registration-email-resending",
   Me = "/me",
 }
 

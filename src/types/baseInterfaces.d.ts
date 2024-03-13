@@ -49,5 +49,16 @@ export declare global {
       setValues(data: Record<string, string | undefined>, type: FiltersType);
       getFilters(): Filter<any>;
     }
+
+    interface NotifyOptions {
+      from: string;
+      address: string;
+      subject: string;
+      template: string;
+    }
+
+    interface Notify {
+      send(options: NotifyOptions): Promise<{ messageId: string }>;
+    }
   }
 }

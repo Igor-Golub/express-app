@@ -1,7 +1,10 @@
+import { v4 as uuidv4 } from "uuid";
+import { add } from "date-fns";
 import { UserCommandRepository } from "../repositories/command";
 import { UserQueryRepository } from "../repositories/query";
 import JWTService from "../application/jwtService";
 import CryptographyService from "../application/cryptographyService";
+import NotifyManager from "../managers/NotifyManager";
 
 class UserService {
   constructor(
@@ -9,16 +12,26 @@ class UserService {
     private readonly userQueryRepository: typeof UserQueryRepository,
     private readonly cryptographyService: typeof CryptographyService,
     private readonly jwtService: typeof JWTService,
+    private readonly notifyManager: typeof NotifyManager,
   ) {}
 
-  public async createUser({ login, email, password }: DTO.UserCreate) {
+  public async createUser({ login, email, password }: DTO.UserCreate | DTO.Registration) {
     const { hash } = await this.cryptographyService.createSaltAndHash(password);
 
-    return this.userCommandRepository.create({
+    const confirmationCode = uuidv4();
+
+    await this.userCommandRepository.create({
       login,
       email,
       hash,
+      confirmation: {
+        isConfirmed: false,
+        code: confirmationCode,
+        expirationDate: add(new Date(), { minutes: 3 }),
+      },
     });
+
+    await this.notifyManager.sendRegistrationEmail(login, email, confirmationCode);
   }
 
   public async login({ loginOrEmail, password }: DTO.Login) {
@@ -38,4 +51,10 @@ class UserService {
   }
 }
 
-export default new UserService(UserCommandRepository, UserQueryRepository, CryptographyService, JWTService);
+export default new UserService(
+  UserCommandRepository,
+  UserQueryRepository,
+  CryptographyService,
+  JWTService,
+  NotifyManager,
+);
