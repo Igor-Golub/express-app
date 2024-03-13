@@ -47,6 +47,12 @@ class UserQueryRepository implements Base.QueryRepository<ViewModels.User> {
     return this.mapToViewModels([user])[0];
   }
 
+  public async findUserByConfirmationCode(confirmationCode: string) {
+    return this.dbService.usersCollection.findOne({
+      "confirmation.code": confirmationCode,
+    });
+  }
+
   public async findUserByLoginOrEmailWithHash(
     loginOrEmail: string,
   ): Promise<(ViewModels.User & { hash: string }) | null> {

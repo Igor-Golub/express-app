@@ -30,6 +30,19 @@ class UserCommandRepository implements Base.CommandRepository<DBModels.User, Vie
 
     return Boolean(deletedCount);
   }
+
+  public async confirmUser(id: ObjectId) {
+    return this.dbService.usersCollection.findOneAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          "confirmation.isConfirmed": true,
+          "confirmation.expirationDate": "",
+          "confirmation.code": "",
+        },
+      },
+    );
+  }
 }
 
 export default new UserCommandRepository(DbService);

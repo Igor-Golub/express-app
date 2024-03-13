@@ -8,7 +8,7 @@ import NotifyManager from "../managers/NotifyManager";
 
 class UserService {
   constructor(
-    private readonly userCommandRepository: Base.CommandRepository<DBModels.User, ViewModels.User>,
+    private readonly userCommandRepository: typeof UserCommandRepository,
     private readonly userQueryRepository: typeof UserQueryRepository,
     private readonly cryptographyService: typeof CryptographyService,
     private readonly jwtService: typeof JWTService,
@@ -34,6 +34,18 @@ class UserService {
     await this.notifyManager.sendRegistrationEmail(login, email, confirmationCode);
   }
 
+  public async confirmUser(confirmationCode: string) {
+    const user = await this.userQueryRepository.findUserByConfirmationCode(confirmationCode);
+
+    if (!user) return false;
+
+    // TODO add condition of confirmation
+
+    await this.userCommandRepository.confirmUser(user._id);
+
+    return true;
+  }
+
   public async login({ loginOrEmail, password }: DTO.Login) {
     const user = await this.userQueryRepository.findUserByLoginOrEmailWithHash(loginOrEmail);
 
@@ -44,6 +56,13 @@ class UserService {
     if (!compareResult) return null;
 
     return this.jwtService.generateAccessToken(user.id, user.login);
+  }
+
+  public async resendConfirmationCode(email: string) {
+    const user = await this.userQueryRepository.findUserByLoginOrEmail(email);
+
+    if (!user) return null;
+    return null;
   }
 
   public async delete(id: string) {

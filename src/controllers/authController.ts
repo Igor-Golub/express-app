@@ -26,7 +26,14 @@ class AuthController {
   };
 
   public confirmation = async (req: Utils.ReqWithReqBody<DTO.Confirmation>, res: Response) => {
-    const { body } = req;
+    const {
+      body: { code },
+    } = req;
+
+    const result = await this.userService.confirmUser(code);
+
+    if (!result) res.status(StatusCodes.BadRequest_400).end();
+    else res.status(StatusCodes.NoContent_204).end();
   };
 
   public registration = async (req: Utils.ReqWithReqBody<DTO.Registration>, res: Response) => {
@@ -38,7 +45,13 @@ class AuthController {
   };
 
   public resending = async (req: Utils.ReqWithReqBody<DTO.Resending>, res: Response) => {
-    const { body } = req;
+    const {
+      body: { email },
+    } = req;
+
+    await this.userService.resendConfirmationCode(email);
+
+    res.status(StatusCodes.NoContent_204).end();
   };
 }
 
