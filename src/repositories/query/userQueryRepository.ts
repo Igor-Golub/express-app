@@ -2,7 +2,7 @@ import DbService from "../../application/dbService";
 import { Filter, ObjectId, Sort } from "mongodb";
 import PaginationService from "../../application/paginationService";
 
-class UserQueryRepository implements Base.QueryRepository<ViewModels.User> {
+class UserQueryRepository {
   constructor(
     private dbService: typeof DbService,
     private paginationService: typeof PaginationService,
@@ -45,30 +45,6 @@ class UserQueryRepository implements Base.QueryRepository<ViewModels.User> {
     if (!user) return null;
 
     return this.mapToViewModels([user])[0];
-  }
-
-  public async findUserByConfirmationCode(confirmationCode: string) {
-    return this.dbService.usersCollection.findOne({
-      "confirmation.code": confirmationCode,
-    });
-  }
-
-  public async findUserByLoginOrEmailWithHash(
-    loginOrEmail: string,
-  ): Promise<(ViewModels.User & { hash: string }) | null> {
-    const user = await this.dbService.usersCollection.findOne({
-      $or: [{ email: loginOrEmail }, { login: loginOrEmail }],
-    });
-
-    if (!user) return null;
-
-    return {
-      email: user.email,
-      login: user.login,
-      hash: user.hash,
-      id: user._id.toString(),
-      createdAt: user._id.getTimestamp().toISOString(),
-    };
   }
 
   private mapToViewModels(data: DBModels.MongoResponseEntity<DBModels.User>[]): ViewModels.User[] {
