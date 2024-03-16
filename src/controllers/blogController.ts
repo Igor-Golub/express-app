@@ -9,8 +9,8 @@ import PaginationService from "../application/paginationService";
 
 class BlogController implements Base.Controller {
   constructor(
-    private blogQueryRepository: Base.QueryRepository<ViewModels.Blog>,
-    private postsQueryRepository: Base.QueryRepository<ViewModels.Post>,
+    private blogQueryRepository: typeof BlogQueryRepository,
+    private postsQueryRepository: typeof PostQueryRepository,
     private blogService: typeof BlogService,
     private sortingService: Base.SortingService,
     private filterService: Base.FilterService<ViewModels.Blog>,
@@ -29,10 +29,7 @@ class BlogController implements Base.Controller {
     this.filterService.setValue("name", searchNameTerm, FiltersType.InnerText);
     this.sortingService.setValue(sortBy, sortDirection);
 
-    const data = await this.blogQueryRepository.getWithPagination(
-      this.sortingService.createSortCondition(),
-      this.filterService.getFilters(),
-    );
+    const data = await this.blogQueryRepository.getWithPagination();
 
     res.status(StatusCodes.Ok_200).send(data);
   };
@@ -61,10 +58,7 @@ class BlogController implements Base.Controller {
     this.sortingService.setValue(sortBy as keyof ViewModels.Blog, sortDirection);
     this.filterService.setValue("blogId", String(id), FiltersType.ById);
 
-    const data = await this.postsQueryRepository.getWithPagination(
-      this.sortingService.createSortCondition(),
-      this.filterService.getFilters(),
-    );
+    const data = await this.postsQueryRepository.getWithPagination();
 
     if (!data.items.length) res.status(StatusCodes.NotFound_404).end();
     else res.status(StatusCodes.Ok_200).send(data);

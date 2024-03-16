@@ -36,25 +36,23 @@ class UserController {
     );
     this.sortingService.setValue(sortBy, sortDirection);
 
-    const data = await this.userQueryRepository.getWithPagination(
-      this.sortingService.createSortCondition(),
-      this.filterService.getFilters(),
-    );
+    const data = await this.userQueryRepository.getWithPagination();
 
     res.status(StatusCodes.Ok_200).send(data);
   };
 
   public create = async (req: Utils.ReqWithReqBody<DTO.UserCreate>, res: Response) => {
-    const entity = req.body;
+    const { body: entity } = req;
 
     const result = await this.userService.createUser(entity);
 
-    if (!result) res.status(StatusCodes.BadRequest_400).end();
-    else res.status(StatusCodes.Created_201).send(result);
+    res.status(StatusCodes.Created_201).send(result);
   };
 
   public delete = async (req: Utils.ReqWithParams<Params.URIId>, res: Response) => {
-    const id = req.params.id;
+    const {
+      params: { id },
+    } = req;
 
     const result = await this.userService.delete(String(id));
 
