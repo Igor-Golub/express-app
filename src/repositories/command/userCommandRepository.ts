@@ -51,7 +51,7 @@ class UserCommandRepository {
       { _id: id },
       {
         $set: {
-          "confirmation.expirationDate": add(new Date(), { minutes: mainConfig.confirmation.expirationDateTimeout }),
+          "confirmation.expirationDate": add(new Date(), { minutes: mainConfig.registration.expirationDateTimeout }),
           "confirmation.code": confirmationCode,
         },
       },

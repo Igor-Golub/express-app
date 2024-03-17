@@ -21,6 +21,23 @@ class UserService {
 
     const { hash } = await this.cryptographyService.createSaltAndHash(password);
 
+    await this.userCommandRepository.create({
+      login,
+      email,
+      hash,
+      confirmation: { isConfirmed: true, code: "", expirationDate: new Date() },
+    });
+
+    return true;
+  }
+
+  public async registerUser({ login, email, password }: DTO.UserCreate | DTO.Registration) {
+    const isUserWithLoginOrEmailExist = await this.userCommandRepository.isUserWithLoginOrEmailExist(login, email);
+
+    if (isUserWithLoginOrEmailExist) return false;
+
+    const { hash } = await this.cryptographyService.createSaltAndHash(password);
+
     const confirmationCode = uuidv4();
 
     await this.createUserInRepository(login, email, hash, confirmationCode);
@@ -79,7 +96,7 @@ class UserService {
         isConfirmed: false,
         code: confirmationCode,
         expirationDate: add(new Date(), {
-          minutes: mainConfig.confirmation.expirationDateTimeout,
+          minutes: mainConfig.registration.expirationDateTimeout,
         }),
       },
     });

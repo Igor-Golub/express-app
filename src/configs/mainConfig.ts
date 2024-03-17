@@ -14,7 +14,8 @@ const mainConfig = {
       password: String(process.env.SMTP_PASSWORD),
     },
   },
-  confirmation: {
+  registration: {
+    successMessage: String(process.env.REGISTRATION_SUCCESS_MESSAGE),
     expirationDateTimeout: Number(process.env.CONFIRMATION_EXPIRATION_TIMEOUT),
   },
 };

@@ -1,7 +1,8 @@
 import UserService from "../services/userService";
 import UserQueryRepository from "../repositories/query/userQueryRepository";
 import { StatusCodes } from "../enums/StatusCodes";
-import { Response, Request } from "express";
+import { Request, Response } from "express";
+import mainConfig from "../configs/mainConfig";
 
 class AuthController {
   constructor(
@@ -39,10 +40,10 @@ class AuthController {
   public registration = async (req: Utils.ReqWithReqBody<DTO.Registration>, res: Response) => {
     const { body } = req;
 
-    const result = await this.userService.createUser(body);
+    const result = await this.userService.registerUser(body);
 
     if (!result) res.status(StatusCodes.BadRequest_400).end();
-    else res.status(StatusCodes.NoContent_204).end();
+    else res.status(StatusCodes.NoContent_204).send(mainConfig.registration.successMessage);
   };
 
   public resending = async (req: Utils.ReqWithReqBody<DTO.Resending>, res: Response) => {
