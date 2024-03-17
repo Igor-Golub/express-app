@@ -39,8 +39,6 @@ class UserCommandRepository {
       {
         $set: {
           "confirmation.isConfirmed": true,
-          "confirmation.expirationDate": "",
-          "confirmation.code": "",
         },
       },
     );

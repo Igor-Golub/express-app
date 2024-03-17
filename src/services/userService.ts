@@ -55,7 +55,7 @@ class UserService {
 
     const result = await this.checkConfirmationCode(user);
 
-    if (result.status) return generateInnerResult(ResultStatuses.NotFound, { data: false });
+    if (result.status) return result;
 
     await this.userCommandRepository.confirmUser(user!._id);
 
@@ -79,7 +79,7 @@ class UserService {
 
     const result = await this.checkConfirmationCode(user);
 
-    if (result.status) return generateInnerResult(ResultStatuses.NotFound, { data: false });
+    if (result.status) return result;
 
     const confirmationCode = uuidv4();
 
