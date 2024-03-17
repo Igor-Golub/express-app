@@ -14,6 +14,9 @@ const mainConfig = {
       password: String(process.env.SMTP_PASSWORD),
     },
   },
+  confirmation: {
+    expirationDateTimeout: Number(process.env.CONFIRMATION_EXPIRATION_TIMEOUT),
+  },
 };
 
 export default mainConfig;

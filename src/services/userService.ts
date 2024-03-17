@@ -1,9 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
-import { add } from "date-fns";
+import { add, isAfter, isBefore } from "date-fns";
 import { UserCommandRepository } from "../repositories/command";
 import JWTService from "../application/jwtService";
 import CryptographyService from "../application/cryptographyService";
 import NotifyManager from "../managers/NotifyManager";
+import mainConfig from "../configs/mainConfig";
 
 class UserService {
   constructor(
@@ -26,7 +27,7 @@ class UserService {
   public async confirmUser(confirmationCode: string) {
     const user = await this.userCommandRepository.findUserByConfirmationCode(confirmationCode);
 
-    if (!user || user.confirmation.isConfirmed) return false;
+    if (!user || user.confirmation.isConfirmed || isAfter(new Date(), user.confirmation.expirationDate)) return false;
 
     await this.userCommandRepository.confirmUser(user._id);
 
@@ -48,7 +49,7 @@ class UserService {
   public async resendConfirmationCode(email: string) {
     const user = await this.userCommandRepository.findUserByLoginOrEmail(email);
 
-    if (!user || user.confirmation.isConfirmed) return false;
+    if (!user || user.confirmation.isConfirmed || isBefore(new Date(), user.confirmation.expirationDate)) return false;
 
     const confirmationCode = uuidv4();
 
@@ -71,7 +72,9 @@ class UserService {
       confirmation: {
         isConfirmed: false,
         code: confirmationCode,
-        expirationDate: add(new Date(), { minutes: 3 }),
+        expirationDate: add(new Date(), {
+          minutes: mainConfig.confirmation.expirationDateTimeout,
+        }),
       },
     });
   }

@@ -1,6 +1,7 @@
 import DbService from "../../application/dbService";
 import { ObjectId } from "mongodb";
 import { add } from "date-fns";
+import mainConfig from "../../configs/mainConfig";
 
 class UserCommandRepository {
   constructor(private dbService: typeof DbService) {}
@@ -50,7 +51,7 @@ class UserCommandRepository {
       { _id: id },
       {
         $set: {
-          "confirmation.expirationDate": add(new Date(), { minutes: 3 }),
+          "confirmation.expirationDate": add(new Date(), { minutes: mainConfig.confirmation.expirationDateTimeout }),
           "confirmation.code": confirmationCode,
         },
       },

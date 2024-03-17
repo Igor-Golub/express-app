@@ -30,7 +30,7 @@ class PostController implements Base.Controller {
     this.paginationService.setValues({ pageSize, pageNumber });
     this.sortingService.setValue(sortBy as keyof ViewModels.Post, sortDirection);
 
-    const data = await this.postQueryRepository.getWithPagination(this.sortingService.createSortCondition());
+    const data = await this.postQueryRepository.getWithPagination();
 
     res.status(StatusCodes.Ok_200).send(data);
   };

@@ -49,9 +49,10 @@ class AuthController {
       body: { email },
     } = req;
 
-    await this.userService.resendConfirmationCode(email);
+    const result = await this.userService.resendConfirmationCode(email);
 
-    res.status(StatusCodes.NoContent_204).end();
+    if (!result) res.status(StatusCodes.BadRequest_400).end();
+    else res.status(StatusCodes.NoContent_204).end();
   };
 }
 
