@@ -15,6 +15,10 @@ class UserService {
   ) {}
 
   public async createUser({ login, email, password }: DTO.UserCreate | DTO.Registration) {
+    const isUserWithLoginOrEmailExist = await this.userCommandRepository.isUserWithLoginOrEmailExist(login, email);
+
+    if (isUserWithLoginOrEmailExist) return false;
+
     const { hash } = await this.cryptographyService.createSaltAndHash(password);
 
     const confirmationCode = uuidv4();
@@ -22,6 +26,8 @@ class UserService {
     await this.createUserInRepository(login, email, hash, confirmationCode);
 
     await this.notifyManager.sendRegistrationEmail(login, email, confirmationCode);
+
+    return true;
   }
 
   public async confirmUser(confirmationCode: string) {
@@ -35,7 +41,7 @@ class UserService {
   }
 
   public async login({ loginOrEmail, password }: DTO.Login) {
-    const user = await this.userCommandRepository.findUserByLoginOrEmailWithHash(loginOrEmail);
+    const user = await this.userCommandRepository.findUserByLoginOrEmail(loginOrEmail);
 
     if (!user) return null;
 

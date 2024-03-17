@@ -39,9 +39,10 @@ class AuthController {
   public registration = async (req: Utils.ReqWithReqBody<DTO.Registration>, res: Response) => {
     const { body } = req;
 
-    await this.userService.createUser(body);
+    const result = await this.userService.createUser(body);
 
-    res.status(StatusCodes.NoContent_204).end();
+    if (!result) res.status(StatusCodes.BadRequest_400).end();
+    else res.status(StatusCodes.NoContent_204).end();
   };
 
   public resending = async (req: Utils.ReqWithReqBody<DTO.Resending>, res: Response) => {

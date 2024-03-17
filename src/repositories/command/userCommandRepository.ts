@@ -65,23 +65,15 @@ class UserCommandRepository {
   }
 
   public async findUserByLoginOrEmail(loginOrEmail: string) {
-    const user = await this.dbService.usersCollection.findOne({
+    return await this.dbService.usersCollection.findOne({
       $or: [{ email: loginOrEmail }, { login: loginOrEmail }],
     });
-
-    if (!user) return null;
-
-    return user;
   }
 
-  public async findUserByLoginOrEmailWithHash(loginOrEmail: string) {
-    const user = await this.dbService.usersCollection.findOne({
-      $or: [{ email: loginOrEmail }, { login: loginOrEmail }],
+  public async isUserWithLoginOrEmailExist(login: string, email: string) {
+    return this.dbService.usersCollection.findOne({
+      $or: [{ email, login }],
     });
-
-    if (!user) return null;
-
-    return user;
   }
 }
 
