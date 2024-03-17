@@ -53,7 +53,7 @@ class UserService {
   public async confirmUser(confirmationCode: string) {
     const user = await this.userCommandRepository.findUserByConfirmationCode(confirmationCode);
 
-    const result = await this.checkConfirmationCode(user);
+    const result = await this.checkConfirmationCode(user, "code");
 
     if (result.status) return result;
 
@@ -77,7 +77,7 @@ class UserService {
   public async resendConfirmationCode(email: string) {
     const user = await this.userCommandRepository.findUserByLoginOrEmail(email);
 
-    const result = await this.checkConfirmationCode(user);
+    const result = await this.checkConfirmationCode(user, "email");
 
     if (result.status) return result;
 
@@ -132,7 +132,7 @@ class UserService {
     return generateInnerResult(ResultStatuses.Success, { data: true });
   }
 
-  private async checkConfirmationCode(user: WithId<DBModels.User> | null) {
+  private async checkConfirmationCode(user: WithId<DBModels.User> | null, type: "email" | "code") {
     if (!user) {
       return generateInnerResult(ResultStatuses.NotFound, {
         data: false,
@@ -143,9 +143,9 @@ class UserService {
 
     if (user.confirmation.isConfirmed) {
       return generateInnerResult(ResultStatuses.Forbidden, {
-        field: "code",
+        field: type,
         data: false,
-        errorMessage: ErrorMessages.ConfirmationCodeAlreadyConfirmed,
+        errorMessage: ErrorMessages.UserAlreadyConfirmed,
       });
     }
 
