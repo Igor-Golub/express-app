@@ -33,7 +33,7 @@ class AuthController {
 
     const result = await this.userService.confirmUser(code);
 
-    if (!result) res.status(StatusCodes.BadRequest_400).end();
+    if (result.status) generateErrorResponse(res, result);
     else res.status(StatusCodes.NoContent_204).end();
   };
 
@@ -53,7 +53,7 @@ class AuthController {
 
     const result = await this.userService.resendConfirmationCode(email);
 
-    if (!result) res.status(StatusCodes.BadRequest_400).end();
+    if (result.status) generateErrorResponse(res, result);
     else res.status(StatusCodes.NoContent_204).end();
   };
 }

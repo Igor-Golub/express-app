@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { add, isAfter, isBefore } from "date-fns";
+import { add, isAfter } from "date-fns";
 import { UserCommandRepository } from "../repositories/command";
 import JWTService from "../application/jwtService";
 import CryptographyService from "../application/cryptographyService";
@@ -7,6 +7,7 @@ import NotifyManager from "../managers/NotifyManager";
 import mainConfig from "../configs/mainConfig";
 import generateInnerResult from "../utils/generateInnerResult";
 import { ErrorMessages, ResultStatuses } from "../enums/Inner";
+import { WithId } from "mongodb";
 
 class UserService {
   constructor(
@@ -52,11 +53,13 @@ class UserService {
   public async confirmUser(confirmationCode: string) {
     const user = await this.userCommandRepository.findUserByConfirmationCode(confirmationCode);
 
-    if (!user || user.confirmation.isConfirmed || isAfter(new Date(), user.confirmation.expirationDate)) return false;
+    const result = await this.checkConfirmationCode(user);
 
-    await this.userCommandRepository.confirmUser(user._id);
+    if (result.status) return generateInnerResult(ResultStatuses.NotFound, { data: false });
 
-    return true;
+    await this.userCommandRepository.confirmUser(user!._id);
+
+    return generateInnerResult(ResultStatuses.Success, { data: true });
   }
 
   public async login({ loginOrEmail, password }: DTO.Login) {
@@ -74,15 +77,17 @@ class UserService {
   public async resendConfirmationCode(email: string) {
     const user = await this.userCommandRepository.findUserByLoginOrEmail(email);
 
-    if (!user || user.confirmation.isConfirmed || isBefore(new Date(), user.confirmation.expirationDate)) return false;
+    const result = await this.checkConfirmationCode(user);
+
+    if (result.status) return generateInnerResult(ResultStatuses.NotFound, { data: false });
 
     const confirmationCode = uuidv4();
 
-    await this.userCommandRepository.updateConfirmationCode(user._id, confirmationCode);
+    await this.userCommandRepository.updateConfirmationCode(user!._id, confirmationCode);
 
-    await this.notifyManager.sendRegistrationEmail(user.login, email, confirmationCode);
+    await this.notifyManager.sendRegistrationEmail(user!.login, email, confirmationCode);
 
-    return true;
+    return generateInnerResult(ResultStatuses.Success, { data: true });
   }
 
   public async delete(id: string) {
@@ -105,7 +110,7 @@ class UserService {
   }
 
   private async checkUserExisting(login: string, email: string) {
-    const isUserWithLoginExist = await this.userCommandRepository.findUserByEmail(login);
+    const isUserWithLoginExist = await this.userCommandRepository.findUserByLogin(login);
     const isUserWithEmailExist = await this.userCommandRepository.findUserByEmail(email);
 
     if (isUserWithLoginExist) {
@@ -121,6 +126,34 @@ class UserService {
         errorMessage: ErrorMessages.EmailAlreadyExist,
         field: "email",
         data: false,
+      });
+    }
+
+    return generateInnerResult(ResultStatuses.Success, { data: true });
+  }
+
+  private async checkConfirmationCode(user: WithId<DBModels.User> | null) {
+    if (!user) {
+      return generateInnerResult(ResultStatuses.NotFound, {
+        data: false,
+        errorMessage: ErrorMessages.UserNotFound,
+        field: "email",
+      });
+    }
+
+    if (user.confirmation.isConfirmed) {
+      return generateInnerResult(ResultStatuses.Forbidden, {
+        field: "code",
+        data: false,
+        errorMessage: ErrorMessages.ConfirmationCodeAlreadyConfirmed,
+      });
+    }
+
+    if (isAfter(new Date(), user.confirmation.expirationDate)) {
+      return generateInnerResult(ResultStatuses.Forbidden, {
+        field: "code",
+        data: false,
+        errorMessage: ErrorMessages.ConfirmationCodeExpired,
       });
     }
 
