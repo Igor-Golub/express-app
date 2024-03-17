@@ -1,8 +1,6 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import UserService from "../services/userService";
 import { UserQueryRepository } from "../repositories/query";
-import DBService from "../application/dbService";
-import { UserCommandRepository } from "../repositories/command";
 import { StatusCodes } from "../enums/StatusCodes";
 import { FiltersType } from "../enums/Filters";
 import PaginationService from "../application/paginationService";
@@ -14,7 +12,7 @@ class UserController {
     private userQueryRepository: typeof UserQueryRepository,
     private userService: typeof UserService,
     private sortingService: Base.SortingService,
-    private filterService: Base.FilterService<ViewModels.Blog>,
+    private filterService: Base.FilterService<DBModels.User>,
     private paginationService: typeof PaginationService,
   ) {}
 

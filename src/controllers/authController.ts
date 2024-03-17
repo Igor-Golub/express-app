@@ -2,7 +2,7 @@ import UserService from "../services/userService";
 import UserQueryRepository from "../repositories/query/userQueryRepository";
 import { StatusCodes } from "../enums/StatusCodes";
 import { Request, Response } from "express";
-import mainConfig from "../configs/mainConfig";
+import generateErrorResponse from "../utils/generateError";
 
 class AuthController {
   constructor(
@@ -42,7 +42,7 @@ class AuthController {
 
     const result = await this.userService.registerUser(body);
 
-    if (!result) res.status(StatusCodes.BadRequest_400).end();
+    if (result.status) generateErrorResponse(res, result);
     else res.status(StatusCodes.NoContent_204).end();
   };
 

@@ -5,6 +5,8 @@ import JWTService from "../application/jwtService";
 import CryptographyService from "../application/cryptographyService";
 import NotifyManager from "../managers/NotifyManager";
 import mainConfig from "../configs/mainConfig";
+import generateInnerResult from "../utils/generateInnerResult";
+import { ErrorMessages, ResultStatuses } from "../enums/Inner";
 
 class UserService {
   constructor(
@@ -15,9 +17,9 @@ class UserService {
   ) {}
 
   public async createUser({ login, email, password }: DTO.UserCreate | DTO.Registration) {
-    const isUserWithLoginOrEmailExist = await this.userCommandRepository.isUserWithLoginOrEmailExist(login, email);
+    const result = await this.checkUserExisting(login, email);
 
-    if (isUserWithLoginOrEmailExist) return false;
+    if (result.status) return result;
 
     const { hash } = await this.cryptographyService.createSaltAndHash(password);
 
@@ -28,13 +30,13 @@ class UserService {
       confirmation: { isConfirmed: true, code: "", expirationDate: new Date() },
     });
 
-    return true;
+    return generateInnerResult(ResultStatuses.Success, { data: true });
   }
 
   public async registerUser({ login, email, password }: DTO.UserCreate | DTO.Registration) {
-    const isUserWithLoginOrEmailExist = await this.userCommandRepository.isUserWithLoginOrEmailExist(login, email);
+    const result = await this.checkUserExisting(login, email);
 
-    if (isUserWithLoginOrEmailExist) return false;
+    if (result.status) return result;
 
     const { hash } = await this.cryptographyService.createSaltAndHash(password);
 
@@ -44,7 +46,7 @@ class UserService {
 
     await this.notifyManager.sendRegistrationEmail(login, email, confirmationCode);
 
-    return true;
+    return generateInnerResult(ResultStatuses.Success, { data: true });
   }
 
   public async confirmUser(confirmationCode: string) {
@@ -100,6 +102,29 @@ class UserService {
         }),
       },
     });
+  }
+
+  private async checkUserExisting(login: string, email: string) {
+    const isUserWithLoginExist = await this.userCommandRepository.findUserByEmail(login);
+    const isUserWithEmailExist = await this.userCommandRepository.findUserByEmail(email);
+
+    if (isUserWithLoginExist) {
+      return generateInnerResult(ResultStatuses.Forbidden, {
+        errorMessage: ErrorMessages.LoginAlreadyExist,
+        field: "login",
+        data: false,
+      });
+    }
+
+    if (isUserWithEmailExist) {
+      return generateInnerResult(ResultStatuses.Forbidden, {
+        errorMessage: ErrorMessages.EmailAlreadyExist,
+        field: "email",
+        data: false,
+      });
+    }
+
+    return generateInnerResult(ResultStatuses.Success, { data: true });
   }
 }
 

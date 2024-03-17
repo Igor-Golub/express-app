@@ -70,9 +70,15 @@ class UserCommandRepository {
     });
   }
 
-  public async isUserWithLoginOrEmailExist(login: string, email: string) {
+  public async findUserByLogin(login: string) {
     return this.dbService.usersCollection.findOne({
-      $or: [{ email, login }],
+      login,
+    });
+  }
+
+  public async findUserByEmail(email: string) {
+    return this.dbService.usersCollection.findOne({
+      email,
     });
   }
 }
