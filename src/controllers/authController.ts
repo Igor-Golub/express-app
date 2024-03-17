@@ -43,7 +43,7 @@ class AuthController {
     const result = await this.userService.registerUser(body);
 
     if (!result) res.status(StatusCodes.BadRequest_400).end();
-    else res.status(StatusCodes.NoContent_204).send(mainConfig.registration.successMessage);
+    else res.status(StatusCodes.NoContent_204).end();
   };
 
   public resending = async (req: Utils.ReqWithReqBody<DTO.Resending>, res: Response) => {
