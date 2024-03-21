@@ -1,4 +1,4 @@
-import { AuthorizationTypes } from "../enums/AuthorizationTypes";
+import { Authorization, TokensType } from "../enums/Authorization";
 import mainConfig from "../configs/mainConfig";
 import JWTService from "./jwtService";
 import { UserQueryRepository } from "src/repositories/query";
@@ -12,7 +12,7 @@ class AuthService {
   public async basicVerification(token: string) {
     const [authorizationType, secretToken] = token.split(" ");
 
-    if (authorizationType !== AuthorizationTypes.Basic) return false;
+    if (authorizationType !== Authorization.Basic) return false;
 
     return mainConfig.rootUser.password === secretToken;
   }
@@ -20,9 +20,9 @@ class AuthService {
   public async jwtVerification(token: string) {
     const [authorizationType, accessToken] = token.split(" ");
 
-    if (authorizationType !== AuthorizationTypes.Bearer) return false;
+    if (authorizationType !== Authorization.Bearer) return false;
 
-    const result = this.jwtService.verifyByAccessToken(accessToken);
+    const result = this.jwtService.verify(accessToken, TokensType.Access);
 
     if (!result || typeof result === "string") return false;
 

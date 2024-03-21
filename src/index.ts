@@ -1,4 +1,5 @@
 import express from "express";
+import cookieParser from "cookie-parser";
 import { postRouter } from "./routs/post-router";
 import { testingRouter } from "./routs/testing-router";
 import { userRouter } from "./routs/user-router";
@@ -13,6 +14,7 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app
   .use(Resources.Blogs, blogRouter)

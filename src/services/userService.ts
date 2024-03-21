@@ -71,7 +71,9 @@ class UserService {
 
     if (!compareResult) return null;
 
-    return this.jwtService.generateAccessToken(user._id.toString(), user.login);
+    const { access, refresh } = this.jwtService.generateTokenPare(user._id.toString(), user.login);
+
+    return access;
   }
 
   public async resendConfirmationCode(email: string) {
