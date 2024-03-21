@@ -56,6 +56,10 @@ class AuthController {
     if (result.status) generateErrorResponse(res, result);
     else res.status(StatusCodes.NoContent_204).end();
   };
+
+  public refreshToken = async (req: Request, res: Response) => {
+    res.status(StatusCodes.NoContent_204).end();
+  };
 }
 
 export default new AuthController(UserService, UserQueryRepository);
