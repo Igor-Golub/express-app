@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction } from "express";
 import { validationResult } from "express-validator";
 import { StatusCodes } from "../enums/StatusCodes";
 
-const convertErrorToContract = (errors: Record<string, { msg: string }>) => {
+const convertErrorToContract = (errors: Record<string, { msg: string }>): Base.ErrorViewResponse => {
   return {
     errorsMessages: Object.entries(errors).map(([field, { msg }]) => ({
       field,

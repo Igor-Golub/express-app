@@ -60,5 +60,12 @@ export declare global {
     interface Notify {
       send(options: NotifyOptions): Promise<{ messageId: string }>;
     }
+
+    interface ErrorViewResponse {
+      errorsMessages: {
+        field: string;
+        message: string;
+      }[];
+    }
   }
 }
