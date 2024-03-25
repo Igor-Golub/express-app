@@ -8,6 +8,8 @@ import mainConfig from "../configs/mainConfig";
 import generateInnerResult from "../utils/generateInnerResult";
 import { ErrorMessages, ResultStatuses } from "../enums/Inner";
 import { WithId } from "mongodb";
+import { TokensType } from "../enums/Authorization";
+import { isString } from "../utils/typesCheck";
 
 class UserService {
   constructor(
@@ -88,6 +90,20 @@ class UserService {
     await this.notifyManager.sendRegistrationEmail(user!.login, email, confirmationCode);
 
     return generateInnerResult(ResultStatuses.Success, { data: true });
+  }
+
+  public async refreshTokenPairs(refreshToken: string) {
+    const result = this.jwtService.verify(refreshToken, TokensType.Refresh);
+
+    if (!result || isString(result)) return generateInnerResult(ResultStatuses.Unauthorized, { data: null });
+
+    const user = await this.userCommandRepository.findUserByLoginOrEmail(result!.userLogin);
+
+    if (!user) return generateInnerResult(ResultStatuses.Unauthorized, { data: null });
+
+    return generateInnerResult(ResultStatuses.Success, {
+      data: this.jwtService.generateTokenPare(user._id.toString(), user.login),
+    });
   }
 
   public async delete(id: string) {

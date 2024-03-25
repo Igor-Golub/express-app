@@ -9,7 +9,16 @@ class JwtService {
   };
 
   public generateAccessToken(userId: string, userLogin: string) {
-    return jwt.sign({ userId, userLogin }, this.secrets.access, { expiresIn: "1h" });
+    return jwt.sign(
+      {
+        userId,
+        userLogin,
+      },
+      this.secrets.access,
+      {
+        expiresIn: mainConfig.jwt.accessLifeTime,
+      },
+    );
   }
 
   public generateTokenPare(userId: string, userLogin: string) {

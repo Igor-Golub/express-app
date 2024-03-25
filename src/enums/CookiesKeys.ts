@@ -1,3 +1,3 @@
 export enum CookiesKeys {
-  refresh = "refresh",
+  Refresh = "refresh",
 }

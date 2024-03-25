@@ -28,7 +28,7 @@ class AuthController {
     if (!result) res.status(StatusCodes.Unauthorized_401).end();
     else
       this.cookiesService
-        .wright(res, CookiesKeys.refresh, result.refresh, { httpOnly: true, secure: true })
+        .wright(res, CookiesKeys.Refresh, result.refresh, { httpOnly: true, secure: true })
         .status(StatusCodes.Ok_200)
         .send({ accessToken: result.access });
   };
@@ -65,7 +65,16 @@ class AuthController {
   };
 
   public refreshToken = async (req: Request, res: Response) => {
-    res.status(StatusCodes.NoContent_204).end();
+    const refreshToken = this.cookiesService.read(req, CookiesKeys.Refresh);
+
+    const result = await this.userService.refreshTokenPairs(refreshToken);
+
+    if (!result.meta.data) generateErrorResponse(res, result);
+    else
+      this.cookiesService
+        .wright(res, CookiesKeys.Refresh, result.meta.data.refresh, { httpOnly: true, secure: true })
+        .status(StatusCodes.Ok_200)
+        .send({ accessToken: result.meta.data.access });
   };
 }
 
