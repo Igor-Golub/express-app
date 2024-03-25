@@ -4,11 +4,11 @@ import { StatusCodes } from "../enums/StatusCodes";
 
 class BaseDomainService {
   public innerUnauthorizedResult() {
-    return generateInnerResult(ResultStatuses.Unauthorized, { data: null });
+    return generateInnerResult(ResultStatuses.Unauthorized, { data: null, status: StatusCodes.Unauthorized_401 });
   }
 
   public innerSuccessResult<T>(data: T) {
-    return generateInnerResult<T>(ResultStatuses.Success, { data });
+    return generateInnerResult<T>(ResultStatuses.Success, { data, status: StatusCodes.Ok_200 });
   }
 
   public innerNotFoundResult() {

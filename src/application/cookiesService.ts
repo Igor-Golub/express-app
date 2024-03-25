@@ -3,7 +3,7 @@ import { CookiesKeys } from "../enums/CookiesKeys";
 import { CookieOptions } from "express-serve-static-core";
 
 class CookiesService {
-  public wright(res: Response, key: CookiesKeys, payload: string, options?: Partial<CookieOptions>) {
+  public write(res: Response, key: CookiesKeys, payload: string, options?: Partial<CookieOptions>) {
     return res.cookie(key, payload, { ...options });
   }
 

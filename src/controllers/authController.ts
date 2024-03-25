@@ -28,7 +28,7 @@ class AuthController {
     if (!result?.meta.data) res.status(StatusCodes.Unauthorized_401).end();
     else
       this.cookiesService
-        .wright(res, CookiesKeys.Refresh, result.meta.data.refresh, { httpOnly: true, secure: true })
+        .write(res, CookiesKeys.Refresh, result.meta.data.refresh, { httpOnly: true, secure: true })
         .status(StatusCodes.Ok_200)
         .send({ accessToken: result.meta.data.access });
   };
@@ -72,7 +72,7 @@ class AuthController {
     if (!result.meta.data) generateErrorResponse(res, result);
     else
       this.cookiesService
-        .wright(res, CookiesKeys.Refresh, result.meta.data.refresh, { httpOnly: true, secure: true })
+        .write(res, CookiesKeys.Refresh, result.meta.data.refresh, { httpOnly: true, secure: true })
         .status(StatusCodes.Ok_200)
         .send({ accessToken: result.meta.data.access });
   };
