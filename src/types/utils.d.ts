@@ -13,5 +13,7 @@ export declare global {
     type ReqWithQuery<QueryParams> = Request<ParamsDictionary, any, any, QueryParams>;
 
     type ReqWithParamsAndQuery<Params, QueryParams> = Request<Partial<Params>, any, any, QueryParams>;
+
+    type AnyFunction = (...args: any[]) => any;
   }
 }

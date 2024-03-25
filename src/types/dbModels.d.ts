@@ -42,5 +42,9 @@ export declare global {
         userLogin: string;
       };
     }
+
+    interface BlackList {
+      token: string;
+    }
   }
 }

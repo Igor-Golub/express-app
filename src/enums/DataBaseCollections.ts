@@ -3,4 +3,5 @@ export enum DataBaseCollections {
   Posts = "posts",
   Users = "users",
   Comments = "comments",
+  BlackList = "blackList",
 }

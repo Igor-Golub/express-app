@@ -10,14 +10,19 @@ import { ErrorMessages, ResultStatuses } from "../enums/Inner";
 import { WithId } from "mongodb";
 import { TokensType } from "../enums/Authorization";
 import { isString } from "../utils/typesCheck";
+import BaseDomainService from "./baseDomainService";
+import BlackListCommandRepository from "../repositories/command/blackListCommandRepository";
 
-class UserService {
+class UserService extends BaseDomainService {
   constructor(
     private readonly userCommandRepository: typeof UserCommandRepository,
     private readonly cryptographyService: typeof CryptographyService,
     private readonly jwtService: typeof JWTService,
     private readonly notifyManager: typeof NotifyManager,
-  ) {}
+    private readonly blackListCommandRepository: typeof BlackListCommandRepository,
+  ) {
+    super();
+  }
 
   public async createUser({ login, email, password }: DTO.UserCreate | DTO.Registration) {
     const result = await this.checkUserExisting(login, email);
@@ -33,7 +38,7 @@ class UserService {
       confirmation: { isConfirmed: true, code: "", expirationDate: new Date() },
     });
 
-    return generateInnerResult(ResultStatuses.Success, { data: true });
+    return this.innerSuccessResult(true);
   }
 
   public async registerUser({ login, email, password }: DTO.UserCreate | DTO.Registration) {
@@ -49,7 +54,7 @@ class UserService {
 
     await this.notifyManager.sendRegistrationEmail(login, email, confirmationCode);
 
-    return generateInnerResult(ResultStatuses.Success, { data: true });
+    return this.innerSuccessResult(true);
   }
 
   public async confirmUser(confirmationCode: string) {
@@ -61,7 +66,7 @@ class UserService {
 
     await this.userCommandRepository.confirmUser(user!._id);
 
-    return generateInnerResult(ResultStatuses.Success, { data: true });
+    return this.innerSuccessResult(true);
   }
 
   public async login({ loginOrEmail, password }: DTO.Login) {
@@ -73,7 +78,7 @@ class UserService {
 
     if (!compareResult) return null;
 
-    return this.jwtService.generateTokenPare(user._id.toString(), user.login);
+    return this.innerSuccessResult(this.jwtService.generateTokenPare(user._id.toString(), user.login));
   }
 
   public async resendConfirmationCode(email: string) {
@@ -89,21 +94,25 @@ class UserService {
 
     await this.notifyManager.sendRegistrationEmail(user!.login, email, confirmationCode);
 
-    return generateInnerResult(ResultStatuses.Success, { data: true });
+    return this.innerSuccessResult(true);
   }
 
   public async refreshTokenPairs(refreshToken: string) {
+    const isTokenValid = await this.blackListCommandRepository.checkIsTokenValid(refreshToken);
+
+    if (!isTokenValid) return this.innerUnauthorizedResult();
+
     const result = this.jwtService.verify(refreshToken, TokensType.Refresh);
 
-    if (!result || isString(result)) return generateInnerResult(ResultStatuses.Unauthorized, { data: null });
+    if (!result || isString(result)) return this.innerUnauthorizedResult();
+
+    await this.blackListCommandRepository.create({ token: refreshToken });
 
     const user = await this.userCommandRepository.findUserByLoginOrEmail(result!.userLogin);
 
-    if (!user) return generateInnerResult(ResultStatuses.Unauthorized, { data: null });
+    if (!user) return this.innerUnauthorizedResult();
 
-    return generateInnerResult(ResultStatuses.Success, {
-      data: this.jwtService.generateTokenPare(user._id.toString(), user.login),
-    });
+    return this.innerSuccessResult(this.jwtService.generateTokenPare(user._id.toString(), user.login));
   }
 
   public async delete(id: string) {
@@ -177,4 +186,10 @@ class UserService {
   }
 }
 
-export default new UserService(UserCommandRepository, CryptographyService, JWTService, NotifyManager);
+export default new UserService(
+  UserCommandRepository,
+  CryptographyService,
+  JWTService,
+  NotifyManager,
+  BlackListCommandRepository,
+);

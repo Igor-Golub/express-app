@@ -10,5 +10,11 @@ export declare global {
         expirationDate: Date;
       };
     }
+
+    interface BlackList {
+      id: string;
+      token: string;
+      createdAt: string;
+    }
   }
 }

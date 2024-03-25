@@ -25,12 +25,12 @@ class AuthController {
 
     const result = await this.userService.login(body);
 
-    if (!result) res.status(StatusCodes.Unauthorized_401).end();
+    if (!result?.meta.data) res.status(StatusCodes.Unauthorized_401).end();
     else
       this.cookiesService
-        .wright(res, CookiesKeys.Refresh, result.refresh, { httpOnly: true, secure: true })
+        .wright(res, CookiesKeys.Refresh, result.meta.data.refresh, { httpOnly: true, secure: true })
         .status(StatusCodes.Ok_200)
-        .send({ accessToken: result.access });
+        .send({ accessToken: result.meta.data.access });
   };
 
   public confirmation = async (req: Utils.ReqWithReqBody<DTO.Confirmation>, res: Response) => {

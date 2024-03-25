@@ -21,6 +21,10 @@ class DBService {
 
   public usersCollection = this.client.db(process.env.DB_NAME).collection<DBModels.User>(DataBaseCollections.Users);
 
+  public blackListCollection = this.client
+    .db(process.env.DB_NAME)
+    .collection<DBModels.BlackList>(DataBaseCollections.BlackList);
+
   public commentsCollection = this.client
     .db(process.env.DB_NAME)
     .collection<DBModels.Comment>(DataBaseCollections.Comments);
@@ -44,6 +48,7 @@ class DBService {
     await this.client.db(process.env.DB_NAME).collection(DataBaseCollections.Posts).deleteMany({});
     await this.client.db(process.env.DB_NAME).collection(DataBaseCollections.Users).deleteMany({});
     await this.client.db(process.env.DB_NAME).collection(DataBaseCollections.Comments).deleteMany({});
+    await this.client.db(process.env.DB_NAME).collection(DataBaseCollections.BlackList).deleteMany({});
   }
 }
 
