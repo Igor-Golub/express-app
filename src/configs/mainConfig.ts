@@ -4,8 +4,12 @@ dotenv.config();
 
 const mainConfig = {
   port: process.env.PORT ?? 5000,
-  jwtAccessSecret: process.env.JWT_ACCESS_SECRET ?? "12345678",
-  jwtRefreshSecret: process.env.JWT_REFRESH_SECRET ?? "87654321",
+  jwt: {
+    accessSecret: String(process.env.JWT_ACCESS_SECRET),
+    accessLifeTime: String(process.env.JWT_ACCESS_LIFE_TIME),
+    refreshSecret: String(process.env.JWT_REFRESH_SECRET),
+    refreshLifeTime: String(process.env.JWT_REFRESH_LIFE_TIME),
+  },
   rootUser: {
     password: process.env.ROOT_USER_PASSWORD,
   },

@@ -1,7 +1,7 @@
 import { Authorization, TokensType } from "../enums/Authorization";
 import mainConfig from "../configs/mainConfig";
 import JWTService from "./jwtService";
-import { UserQueryRepository } from "src/repositories/query";
+import UserQueryRepository from "../repositories/query/userQueryRepository";
 
 class AuthService {
   constructor(

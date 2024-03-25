@@ -4,8 +4,8 @@ import { TokensType } from "../enums/Authorization";
 
 class JwtService {
   private secrets = {
-    [TokensType.Access]: mainConfig.jwtAccessSecret,
-    [TokensType.Refresh]: mainConfig.jwtRefreshSecret,
+    [TokensType.Access]: mainConfig.jwt.accessSecret,
+    [TokensType.Refresh]: mainConfig.jwt.refreshSecret,
   };
 
   public generateAccessToken(userId: string, userLogin: string) {
@@ -14,8 +14,26 @@ class JwtService {
 
   public generateTokenPare(userId: string, userLogin: string) {
     return {
-      access: jwt.sign({ userId, userLogin }, this.secrets.access, { expiresIn: "10s" }),
-      refresh: jwt.sign({ userId, userLogin }, this.secrets.refresh, { expiresIn: "1m" }),
+      access: jwt.sign(
+        {
+          userId,
+          userLogin,
+        },
+        this.secrets.access,
+        {
+          expiresIn: mainConfig.jwt.accessLifeTime,
+        },
+      ),
+      refresh: jwt.sign(
+        {
+          userId,
+          userLogin,
+        },
+        this.secrets.refresh,
+        {
+          expiresIn: mainConfig.jwt.refreshLifeTime,
+        },
+      ),
     };
   }
 
