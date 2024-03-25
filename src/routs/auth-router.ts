@@ -13,4 +13,4 @@ authRouter
   .post(AuthRouts.Registration, ...authValidators.registration, AuthController.registration)
   .post(AuthRouts.Resending, ...authValidators.resending, AuthController.resending)
   .post(AuthRouts.Refresh, AuthController.refreshToken)
-  .post(AuthRouts.Refresh, AuthController.logout);
+  .post(AuthRouts.Logout, AuthController.logout);
