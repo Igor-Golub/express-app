@@ -31,14 +31,14 @@ class UserService extends BaseDomainService {
 
     const { hash } = await this.cryptographyService.createSaltAndHash(password);
 
-    await this.userCommandRepository.create({
+    const newUser = await this.userCommandRepository.create({
       login,
       email,
       hash,
       confirmation: { isConfirmed: true, code: "", expirationDate: new Date() },
     });
 
-    return this.innerSuccessResult(true);
+    return this.innerSuccessResult(newUser);
   }
 
   public async registerUser({ login, email, password }: DTO.UserCreate | DTO.Registration) {

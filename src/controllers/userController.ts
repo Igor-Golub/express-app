@@ -44,7 +44,8 @@ class UserController {
 
     const result = await this.userService.createUser(entity);
 
-    res.status(StatusCodes.Created_201).send(result);
+    if (result.status) res.status(StatusCodes.NotFound_404).end();
+    else res.status(StatusCodes.Created_201).send(result.meta.data);
   };
 
   public delete = async (req: Utils.ReqWithParams<Params.URIId>, res: Response) => {
