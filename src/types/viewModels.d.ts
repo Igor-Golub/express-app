@@ -25,6 +25,12 @@ export declare global {
       email: string;
     }
 
+    interface UserMe {
+      login: string;
+      email: string;
+      userId: string;
+    }
+
     interface ResponseWithPagination<Entity> extends Base.PaginationView {
       items: Entity[];
     }

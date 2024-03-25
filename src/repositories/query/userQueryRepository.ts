@@ -12,6 +12,18 @@ class UserQueryRepository {
     private filterService: Base.FilterService<ViewModels.User>,
   ) {}
 
+  public async getMe(id: string): Promise<ViewModels.UserMe | null> {
+    const user = await this.dbService.usersCollection.findOne({ _id: new ObjectId(id) });
+
+    if (!user) return null;
+
+    return {
+      email: user.email,
+      login: user.login,
+      userId: user._id.toString(),
+    };
+  }
+
   public async getById(id: string): Promise<ViewModels.User | null> {
     const user = await this.dbService.usersCollection.findOne({ _id: new ObjectId(id) });
 
