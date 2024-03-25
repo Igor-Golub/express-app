@@ -115,6 +115,16 @@ class UserService extends BaseDomainService {
     return this.innerSuccessResult(this.jwtService.generateTokenPare(user._id.toString(), user.login));
   }
 
+  public async logout(refreshToken: string) {
+    const isTokenValid = await this.blackListCommandRepository.checkIsTokenValid(refreshToken);
+
+    if (!isTokenValid) return this.innerUnauthorizedResult();
+
+    await this.blackListCommandRepository.create({ token: refreshToken });
+
+    return this.innerSuccessResult(true);
+  }
+
   public async delete(id: string) {
     return this.userCommandRepository.delete(id);
   }

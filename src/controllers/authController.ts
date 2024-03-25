@@ -76,6 +76,15 @@ class AuthController {
         .status(StatusCodes.Ok_200)
         .send({ accessToken: result.meta.data.access });
   };
+
+  public logout = async (req: Request, res: Response) => {
+    const refreshToken = this.cookiesService.read(req, CookiesKeys.Refresh);
+
+    const result = await this.userService.logout(refreshToken);
+
+    if (result.status) generateErrorResponse(res, result);
+    else res.status(StatusCodes.NoContent_204).end();
+  };
 }
 
 export default new AuthController(UserService, UserQueryRepository, CookiesService);
