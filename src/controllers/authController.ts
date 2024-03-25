@@ -14,7 +14,7 @@ class AuthController {
   ) {}
 
   public me = async (req: Request, res: Response) => {
-    const result = await this.userQueryRepository.getById(req.context.user.id);
+    const result = await this.userQueryRepository.getMe(req.context.user.id);
 
     if (!result) res.status(StatusCodes.Unauthorized_401).end();
     else res.status(StatusCodes.Ok_200).send(result);
