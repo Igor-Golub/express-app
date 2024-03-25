@@ -18,7 +18,7 @@ export enum AuthRouts {
   Registration = "/registration",
   Resending = "/registration-email-resending",
   Me = "/me",
-  Refresh = "/refresh",
+  Refresh = "/refresh-token",
   Logout = "/logout",
 }
 
