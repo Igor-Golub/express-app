@@ -100,7 +100,7 @@ class UserService extends BaseDomainService {
   public async refreshTokenPairs(refreshToken: string) {
     const isTokenValid = await this.blackListCommandRepository.checkIsTokenValid(refreshToken);
 
-    if (!isTokenValid) return this.innerNotFoundResult();
+    if (!isTokenValid) return this.innerUnauthorizedResult();
 
     const result = this.jwtService.verify(refreshToken, TokensType.Refresh);
 
@@ -119,6 +119,10 @@ class UserService extends BaseDomainService {
     const isTokenValid = await this.blackListCommandRepository.checkIsTokenValid(refreshToken);
 
     if (!isTokenValid) return this.innerUnauthorizedResult();
+
+    const result = this.jwtService.verify(refreshToken, TokensType.Refresh);
+
+    if (!result || isString(result)) return this.innerUnauthorizedResult();
 
     await this.blackListCommandRepository.create({ token: refreshToken });
 
