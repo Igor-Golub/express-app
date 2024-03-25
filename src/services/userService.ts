@@ -118,7 +118,7 @@ class UserService extends BaseDomainService {
   public async logout(refreshToken: string) {
     const isTokenValid = await this.blackListCommandRepository.checkIsTokenValid(refreshToken);
 
-    if (!isTokenValid) return this.innerUnauthorizedResult();
+    if (isTokenValid) return this.innerUnauthorizedResult();
 
     const result = this.jwtService.verify(refreshToken, TokensType.Refresh);
 
