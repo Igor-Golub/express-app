@@ -1,12 +1,15 @@
 import { Authorization, TokensType } from "../enums/Authorization";
 import mainConfig from "../configs/mainConfig";
 import JWTService from "./jwtService";
-import UserQueryRepository from "../repositories/query/userQueryRepository";
+import UserCommandRepository from "../repositories/command/userCommandRepository";
+import AuthSessionCommandRepository from "../repositories/command/authSessionCommandRepository";
+import { isString } from "../utils/typesCheck";
 
 class AuthService {
   constructor(
     private readonly jwtService: typeof JWTService,
-    private readonly userQueryRepository: typeof UserQueryRepository,
+    private readonly userCommandRepository: typeof UserCommandRepository,
+    private readonly authSessionCommandRepository: typeof AuthSessionCommandRepository,
   ) {}
 
   public async basicVerification(token: string) {
@@ -17,21 +20,31 @@ class AuthService {
     return mainConfig.rootUser.password === secretToken;
   }
 
-  public async jwtVerification(token: string) {
-    const [authorizationType, accessToken] = token.split(" ");
+  public async jwtAccessVerification(token: string) {
+    const [authorizationType, tokenPart] = token.split(" ");
 
-    if (authorizationType !== Authorization.Bearer) return false;
+    if (authorizationType !== Authorization.Bearer) return null;
 
-    const result = this.jwtService.verify(accessToken, TokensType.Access);
+    const result = this.jwtService.verify(tokenPart, TokensType.Access);
 
-    if (!result || typeof result === "string") return false;
+    if (!result) return null;
 
-    const user = await this.userQueryRepository.findUserByLoginOrEmail(result?.userLogin);
+    const user = await this.userCommandRepository.findUserByLogin(result?.userLogin);
 
-    if (!user) return false;
+    if (!user) return null;
 
     return user;
   }
+
+  public async jwtRefreshVerification(token: string) {
+    const result = this.jwtService.verify(token, TokensType.Refresh);
+
+    if (!result) return null;
+
+    const entity = await this.authSessionCommandRepository.checkIsTokenValid(Number(result.exp));
+
+    return entity ?? null;
+  }
 }
 
-export default new AuthService(JWTService, UserQueryRepository);
+export default new AuthService(JWTService, UserCommandRepository, AuthSessionCommandRepository);

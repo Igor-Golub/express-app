@@ -11,10 +11,13 @@ export declare global {
       };
     }
 
-    interface BlackList {
+    interface Session {
       id: string;
-      token: string;
-      createdAt: string;
+      version: number;
+      userId: string;
+      deviceId: string;
+      deviceName: string;
+      deviceIp: string;
     }
   }
 }

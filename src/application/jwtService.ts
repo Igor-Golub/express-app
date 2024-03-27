@@ -1,25 +1,13 @@
 import jwt from "jsonwebtoken";
 import mainConfig from "../configs/mainConfig";
 import { TokensType } from "../enums/Authorization";
+import { isString } from "../utils/typesCheck";
 
 class JwtService {
   private secrets = {
     [TokensType.Access]: mainConfig.jwt.accessSecret,
     [TokensType.Refresh]: mainConfig.jwt.refreshSecret,
   };
-
-  public generateAccessToken(userId: string, userLogin: string) {
-    return jwt.sign(
-      {
-        userId,
-        userLogin,
-      },
-      this.secrets.access,
-      {
-        expiresIn: mainConfig.jwt.accessLifeTime,
-      },
-    );
-  }
 
   public generateTokenPare(userId: string, userLogin: string) {
     return {
@@ -48,9 +36,13 @@ class JwtService {
 
   public verify(token: string, type: TokensType) {
     try {
-      return jwt.verify(token, this.secrets[type]);
+      const result = jwt.verify(token, this.secrets[type]);
+
+      if (!result || isString(result)) return null;
+
+      return result;
     } catch {
-      return false;
+      return null;
     }
   }
 }

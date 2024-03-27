@@ -62,6 +62,12 @@ class UserCommandRepository {
     });
   }
 
+  public async findUserById(id: string) {
+    return await this.dbService.usersCollection.findOne({
+      _id: new ObjectId(id),
+    });
+  }
+
   public async findUserByLoginOrEmail(loginOrEmail: string) {
     return await this.dbService.usersCollection.findOne({
       $or: [{ email: loginOrEmail }, { login: loginOrEmail }],

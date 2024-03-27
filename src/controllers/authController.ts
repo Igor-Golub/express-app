@@ -1,23 +1,22 @@
 import UserService from "../services/userService";
 import UserQueryRepository from "../repositories/query/userQueryRepository";
 import CookiesService from "../application/cookiesService";
-import { StatusCodes } from "../enums/StatusCodes";
 import { Request, Response } from "express";
-import generateErrorResponse from "../utils/generateError";
 import { CookiesKeys } from "../enums/CookiesKeys";
+import { noContentResponse, successResponse, unauthorizedResponse, generateErrorResponse } from "../utils/response";
 
 class AuthController {
   constructor(
-    private readonly userService: typeof UserService,
     private readonly userQueryRepository: typeof UserQueryRepository,
+    private readonly userService: typeof UserService,
     private readonly cookiesService: typeof CookiesService,
   ) {}
 
   public me = async (req: Request, res: Response) => {
     const result = await this.userQueryRepository.getMe(req.context.user.id);
 
-    if (!result) res.status(StatusCodes.Unauthorized_401).end();
-    else res.status(StatusCodes.Ok_200).send(result);
+    if (!result) unauthorizedResponse(res);
+    else successResponse(res, result);
   };
 
   public login = async (req: Utils.ReqWithReqBody<DTO.Login>, res: Response) => {
@@ -25,12 +24,11 @@ class AuthController {
 
     const result = await this.userService.login(body);
 
-    if (!result?.meta.data) res.status(StatusCodes.Unauthorized_401).end();
+    if (!result?.meta.data) unauthorizedResponse(res);
     else
-      this.cookiesService
-        .write(res, CookiesKeys.Refresh, result.meta.data.refresh, { httpOnly: true, secure: true })
-        .status(StatusCodes.Ok_200)
-        .send({ accessToken: result.meta.data.access });
+      successResponse(this.cookiesService.writeSecure(res, CookiesKeys.Refresh, result.meta.data.refresh), {
+        accessToken: result.meta.data.access,
+      });
   };
 
   public confirmation = async (req: Utils.ReqWithReqBody<DTO.Confirmation>, res: Response) => {
@@ -41,7 +39,7 @@ class AuthController {
     const result = await this.userService.confirmUser(code);
 
     if (result.status) generateErrorResponse(res, result);
-    else res.status(StatusCodes.NoContent_204).end();
+    else noContentResponse(res);
   };
 
   public registration = async (req: Utils.ReqWithReqBody<DTO.Registration>, res: Response) => {
@@ -50,7 +48,7 @@ class AuthController {
     const result = await this.userService.registerUser(body);
 
     if (result.status) generateErrorResponse(res, result);
-    else res.status(StatusCodes.NoContent_204).end();
+    else noContentResponse(res);
   };
 
   public resending = async (req: Utils.ReqWithReqBody<DTO.Resending>, res: Response) => {
@@ -61,20 +59,19 @@ class AuthController {
     const result = await this.userService.resendConfirmationCode(email);
 
     if (result.status) generateErrorResponse(res, result);
-    else res.status(StatusCodes.NoContent_204).end();
+    else noContentResponse(res);
   };
 
-  public refreshToken = async (req: Request, res: Response) => {
+  public refreshTokenPair = async (req: Request, res: Response) => {
     const refreshToken = this.cookiesService.read(req, CookiesKeys.Refresh);
 
     const result = await this.userService.refreshTokenPairs(refreshToken);
 
     if (!result.meta.data) generateErrorResponse(res, result);
     else
-      this.cookiesService
-        .write(res, CookiesKeys.Refresh, result.meta.data.refresh, { httpOnly: true, secure: true })
-        .status(StatusCodes.Ok_200)
-        .send({ accessToken: result.meta.data.access });
+      successResponse(this.cookiesService.writeSecure(res, CookiesKeys.Refresh, result.meta.data.refresh), {
+        accessToken: result.meta.data.access,
+      });
   };
 
   public logout = async (req: Request, res: Response) => {
@@ -83,8 +80,8 @@ class AuthController {
     const result = await this.userService.logout(refreshToken);
 
     if (result.status) generateErrorResponse(res, result);
-    else res.status(StatusCodes.NoContent_204).end();
+    else noContentResponse(res);
   };
 }
 
-export default new AuthController(UserService, UserQueryRepository, CookiesService);
+export default new AuthController(UserQueryRepository, UserService, CookiesService);

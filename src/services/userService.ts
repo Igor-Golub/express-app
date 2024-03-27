@@ -2,16 +2,17 @@ import { v4 as uuidv4 } from "uuid";
 import { add, isAfter } from "date-fns";
 import { UserCommandRepository } from "../repositories/command";
 import JWTService from "../application/jwtService";
+import AuthService from "../application/authService";
 import CryptographyService from "../application/cryptographyService";
 import NotifyManager from "../managers/NotifyManager";
 import mainConfig from "../configs/mainConfig";
 import generateInnerResult from "../utils/generateInnerResult";
 import { ErrorMessages, ResultStatuses } from "../enums/Inner";
 import { WithId } from "mongodb";
+import BaseDomainService from "./baseDomainService";
+import AuthSessionCommandRepository from "../repositories/command/authSessionCommandRepository";
 import { TokensType } from "../enums/Authorization";
 import { isString } from "../utils/typesCheck";
-import BaseDomainService from "./baseDomainService";
-import BlackListCommandRepository from "../repositories/command/blackListCommandRepository";
 
 class UserService extends BaseDomainService {
   constructor(
@@ -19,7 +20,8 @@ class UserService extends BaseDomainService {
     private readonly cryptographyService: typeof CryptographyService,
     private readonly jwtService: typeof JWTService,
     private readonly notifyManager: typeof NotifyManager,
-    private readonly blackListCommandRepository: typeof BlackListCommandRepository,
+    private readonly authSessionCommandRepository: typeof AuthSessionCommandRepository,
+    private readonly authService: typeof AuthService,
   ) {
     super();
   }
@@ -50,7 +52,7 @@ class UserService extends BaseDomainService {
 
     const confirmationCode = uuidv4();
 
-    await this.createUserInRepository(login, email, hash, confirmationCode);
+    await this.createUserInDB(login, email, hash, confirmationCode);
 
     await this.notifyManager.sendRegistrationEmail(login, email, confirmationCode);
 
@@ -59,6 +61,8 @@ class UserService extends BaseDomainService {
 
   public async confirmUser(confirmationCode: string) {
     const user = await this.userCommandRepository.findUserByConfirmationCode(confirmationCode);
+
+    if (!user) return this.innerUnauthorizedResult();
 
     const result = await this.checkConfirmationCode(user, "code");
 
@@ -72,17 +76,33 @@ class UserService extends BaseDomainService {
   public async login({ loginOrEmail, password }: DTO.Login) {
     const user = await this.userCommandRepository.findUserByLoginOrEmail(loginOrEmail);
 
-    if (!user) return null;
+    if (!user) return this.innerNotFoundResult();
 
     const compareResult = this.cryptographyService.compareCredential(password, user.hash);
 
-    if (!compareResult) return null;
+    if (!compareResult) return this.innerNotFoundResult();
 
-    return this.innerSuccessResult(this.jwtService.generateTokenPare(user._id.toString(), user.login));
+    const tokenPare = this.jwtService.generateTokenPare(user._id.toString(), user.login);
+
+    const verifyResult = this.jwtService.verify(tokenPare.refresh, TokensType.Refresh);
+
+    if (!verifyResult || isString(verifyResult)) return this.innerNotFoundResult();
+
+    await this.authSessionCommandRepository.create({
+      userId: user._id.toString(),
+      version: Number(verifyResult.exp),
+      deviceId: uuidv4(),
+      deviceIp: "",
+      deviceName: "",
+    });
+
+    return this.innerSuccessResult(tokenPare);
   }
 
   public async resendConfirmationCode(email: string) {
     const user = await this.userCommandRepository.findUserByLoginOrEmail(email);
+
+    if (!user) return this.innerNotFoundResult();
 
     const result = await this.checkConfirmationCode(user, "email");
 
@@ -98,33 +118,34 @@ class UserService extends BaseDomainService {
   }
 
   public async refreshTokenPairs(refreshToken: string) {
-    const isTokenValid = await this.blackListCommandRepository.checkIsTokenValid(refreshToken);
+    const session = await this.authService.jwtRefreshVerification(refreshToken);
 
-    if (isTokenValid) return this.innerUnauthorizedResult();
+    if (!session) return this.innerUnauthorizedResult();
 
-    const result = this.jwtService.verify(refreshToken, TokensType.Refresh);
-
-    if (!result || isString(result)) return this.innerUnauthorizedResult();
-
-    await this.blackListCommandRepository.create({ token: refreshToken });
-
-    const user = await this.userCommandRepository.findUserByLoginOrEmail(result!.userLogin);
+    const user = await this.userCommandRepository.findUserById(session.userId);
 
     if (!user) return this.innerUnauthorizedResult();
 
-    return this.innerSuccessResult(this.jwtService.generateTokenPare(user._id.toString(), user.login));
+    const tokensPare = this.jwtService.generateTokenPare(user._id.toString(), user.login);
+
+    const result = this.jwtService.verify(tokensPare.refresh, TokensType.Refresh);
+
+    if (!result) return this.innerUnauthorizedResult();
+
+    await this.authSessionCommandRepository.update(session._id.toString(), {
+      ...session,
+      version: Number(result.exp),
+    });
+
+    return this.innerSuccessResult(tokensPare);
   }
 
   public async logout(refreshToken: string) {
-    const isTokenValid = await this.blackListCommandRepository.checkIsTokenValid(refreshToken);
+    const session = await this.authService.jwtRefreshVerification(refreshToken);
 
-    if (isTokenValid) return this.innerUnauthorizedResult();
+    if (!session) return this.innerUnauthorizedResult();
 
-    const result = this.jwtService.verify(refreshToken, TokensType.Refresh);
-
-    if (!result || isString(result)) return this.innerUnauthorizedResult();
-
-    await this.blackListCommandRepository.create({ token: refreshToken });
+    await this.authSessionCommandRepository.delete(session._id.toString());
 
     return this.innerSuccessResult(true);
   }
@@ -133,7 +154,7 @@ class UserService extends BaseDomainService {
     return this.userCommandRepository.delete(id);
   }
 
-  private async createUserInRepository(login: string, email: string, hash: string, confirmationCode: string) {
+  private async createUserInDB(login: string, email: string, hash: string, confirmationCode: string) {
     return this.userCommandRepository.create({
       login,
       email,
@@ -205,5 +226,6 @@ export default new UserService(
   CryptographyService,
   JWTService,
   NotifyManager,
-  BlackListCommandRepository,
+  AuthSessionCommandRepository,
+  AuthService,
 );

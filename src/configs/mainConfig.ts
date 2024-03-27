@@ -23,6 +23,9 @@ const mainConfig = {
     successMessage: String(process.env.REGISTRATION_SUCCESS_MESSAGE),
     expirationDateTimeout: Number(process.env.CONFIRMATION_EXPIRATION_TIMEOUT),
   },
+  authSessions: {
+    secret: String(process.env.AUTH_SESSION_SECRET),
+  },
 };
 
 export default mainConfig;

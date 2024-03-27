@@ -1,5 +1,4 @@
 import { ResultStatuses } from "../enums/Inner";
-import { StatusCodes } from "../enums/StatusCodes";
 
 export declare global {
   namespace Inner {
@@ -7,7 +6,6 @@ export declare global {
       data: Data;
       errorMessage?: string;
       field?: string;
-      status?: StatusCodes;
     }
 
     interface Result<Data = null> {

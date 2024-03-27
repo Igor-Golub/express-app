@@ -7,6 +7,10 @@ class CookiesService {
     return res.cookie(key, payload, { ...options });
   }
 
+  public writeSecure(res: Response, key: CookiesKeys, payload: string, options?: Partial<CookieOptions>) {
+    return res.cookie(key, payload, { httpOnly: true, secure: true, ...options });
+  }
+
   public read(req: Request, key: CookiesKeys) {
     return req.cookies[key] ?? null;
   }

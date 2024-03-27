@@ -43,8 +43,12 @@ export declare global {
       };
     }
 
-    interface BlackList {
-      token: string;
+    interface Sessions {
+      version: number;
+      userId: string;
+      deviceId: string;
+      deviceName: string;
+      deviceIp: string;
     }
   }
 }

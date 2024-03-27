@@ -7,11 +7,18 @@ export const jwtAuth = async (req: Request, res: Response, next: NextFunction) =
 
   if (!authHeader) return res.status(StatusCodes.Unauthorized_401).end();
 
-  const payload = await AuthService.jwtVerification(authHeader);
+  const payload = await AuthService.jwtAccessVerification(authHeader);
 
   if (!payload) return res.status(StatusCodes.Unauthorized_401).end();
 
-  req.context = { user: payload };
+  req.context = {
+    user: {
+      id: payload._id.toString(),
+      email: payload.email,
+      login: payload.login,
+      createdAt: payload._id.getTimestamp().toISOString(),
+    },
+  };
 
   return next();
 };

@@ -42,5 +42,11 @@ export declare global {
     interface Comment {
       content: string;
     }
+
+    interface DeviceMetaInfo {
+      ip: string | undefined;
+      name: string | undefined;
+      userAgent: string | undefined;
+    }
   }
 }
