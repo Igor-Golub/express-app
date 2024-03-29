@@ -1,16 +1,13 @@
 import { v4 as uuidv4 } from "uuid";
 import { add, isAfter } from "date-fns";
-import { UserCommandRepository } from "../repositories/command";
-import JWTService from "../application/jwtService";
-import AuthService from "../application/authService";
-import CryptographyService from "../application/cryptographyService";
+import { UserCommandRepository, AuthSessionCommandRepository } from "../repositories/command";
+import { JWTService, AuthService, CryptographyService } from "../application";
 import NotifyManager from "../managers/NotifyManager";
 import mainConfig from "../configs/mainConfig";
 import generateInnerResult from "../utils/generateInnerResult";
 import { ErrorMessages, ResultStatuses } from "../enums/Inner";
 import { WithId } from "mongodb";
 import BaseDomainService from "./baseDomainService";
-import AuthSessionCommandRepository from "../repositories/command/authSessionCommandRepository";
 import { TokensType } from "../enums/Authorization";
 import { isString } from "../utils/typesCheck";
 
@@ -94,6 +91,7 @@ class UserService extends BaseDomainService {
       deviceId: uuidv4(),
       deviceIp: "",
       deviceName: "",
+      dateOfDeath: new Date(Number(verifyResult.exp) * 1000),
     });
 
     return this.innerSuccessResult(tokenPare);
@@ -145,7 +143,7 @@ class UserService extends BaseDomainService {
 
     if (!session) return this.innerUnauthorizedResult();
 
-    await this.authSessionCommandRepository.delete(session._id.toString());
+    await this.authSessionCommandRepository.delete(session.userId, session._id.toString());
 
     return this.innerSuccessResult(true);
   }

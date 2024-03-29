@@ -1,4 +1,13 @@
-export { default as BlogCommandRepository } from "./blogCommandRepository";
-export { default as PostCommandRepository } from "./postCommandRepository";
-export { default as UserCommandRepository } from "./userCommandRepository";
-export { default as CommentsCommandRepository } from "./commentsCommandRepository";
+import BlogCommandRepository from "./blogCommandRepository";
+import PostCommandRepository from "./postCommandRepository";
+import UserCommandRepository from "./userCommandRepository";
+import CommentsCommandRepository from "./commentsCommandRepository";
+import AuthSessionCommandRepository from "./authSessionCommandRepository";
+
+export {
+  BlogCommandRepository,
+  PostCommandRepository,
+  UserCommandRepository,
+  CommentsCommandRepository,
+  AuthSessionCommandRepository,
+};

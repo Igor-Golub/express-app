@@ -20,6 +20,10 @@ export declare global {
       page: number;
     }
 
+    interface ResponseWithPagination<Entity> extends PaginationView {
+      items: Entity[];
+    }
+
     interface QueryRepository<Entity> {
       getById(id: string): Promise<Entity | null>;
       getWithPagination(sort: Sort, filters: Filter<any> = {}): Promise<ViewModels.ResponseWithPagination<Entity>>;

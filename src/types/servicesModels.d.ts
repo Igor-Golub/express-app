@@ -18,6 +18,7 @@ export declare global {
       deviceId: string;
       deviceName: string;
       deviceIp: string;
+      dateOfDeath: Date;
     }
   }
 }

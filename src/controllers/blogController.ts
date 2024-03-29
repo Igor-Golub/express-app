@@ -19,7 +19,7 @@ class BlogController implements Base.Controller {
 
   public getAll = async (
     req: Utils.ReqWithQuery<Params.PaginationAndSortingQueryParams>,
-    res: Response<ViewModels.ResponseWithPagination<ViewModels.Blog>>,
+    res: Response<Base.ResponseWithPagination<ViewModels.Blog>>,
   ) => {
     const {
       query: { sortBy, sortDirection, searchNameTerm, pageSize, pageNumber },
@@ -47,7 +47,7 @@ class BlogController implements Base.Controller {
 
   public getPostsByBlogId = async (
     req: Utils.ReqWithParamsAndQuery<Params.URIId, Params.PaginationAndSortingQueryParams>,
-    res: Response<ViewModels.ResponseWithPagination<ViewModels.Post>>,
+    res: Response<Base.ResponseWithPagination<ViewModels.Post>>,
   ) => {
     const {
       params: { id },

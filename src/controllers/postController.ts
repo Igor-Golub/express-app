@@ -21,7 +21,7 @@ class PostController implements Base.Controller {
 
   public getAll = async (
     req: Utils.ReqWithQuery<Params.PaginationAndSortingQueryParams>,
-    res: Response<ViewModels.ResponseWithPagination<ViewModels.Post>>,
+    res: Response<Base.ResponseWithPagination<ViewModels.Post>>,
   ) => {
     const {
       query: { sortBy, sortDirection, pageSize, pageNumber },
@@ -75,7 +75,7 @@ class PostController implements Base.Controller {
 
   public getComments = async (
     req: Utils.ReqWithParamsAndQuery<Params.URIId, Params.PaginationAndSortingQueryParams>,
-    res: Response<ViewModels.ResponseWithPagination<ViewModels.Comment>>,
+    res: Response<Base.ResponseWithPagination<ViewModels.Comment>>,
   ) => {
     const {
       params: { id },

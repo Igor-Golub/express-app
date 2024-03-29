@@ -31,16 +31,19 @@ export declare global {
       userId: string;
     }
 
-    interface ResponseWithPagination<Entity> extends Base.PaginationView {
-      items: Entity[];
-    }
-
     interface Comment extends BaseModel {
       content: string;
       commentatorInfo: {
         userId: string;
         userLogin: string;
       };
+    }
+
+    interface Session {
+      ip: string;
+      title: string;
+      deviceId: string;
+      lastActiveDate: string;
     }
   }
 }

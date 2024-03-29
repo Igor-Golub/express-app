@@ -18,7 +18,7 @@ class UserController {
 
   public getAll = async (
     req: Utils.ReqWithQuery<Params.PaginationAndSortingQueryParams>,
-    res: Response<ViewModels.ResponseWithPagination<ViewModels.User>>,
+    res: Response<Base.ResponseWithPagination<ViewModels.User>>,
   ) => {
     const {
       query: { sortBy, sortDirection, searchLoginTerm, searchEmailTerm, pageSize, pageNumber },

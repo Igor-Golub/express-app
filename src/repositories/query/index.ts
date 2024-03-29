@@ -1,4 +1,13 @@
-export { default as BlogQueryRepository } from "./blogQueryRepository";
-export { default as PostQueryRepository } from "./postQueryRepository";
-export { default as UserQueryRepository } from "./userQueryRepository";
-export { default as CommentsQueryRepository } from "./commentsQueryRepository";
+import BlogQueryRepository from "./blogQueryRepository";
+import PostQueryRepository from "./postQueryRepository";
+import UserQueryRepository from "./userQueryRepository";
+import CommentsQueryRepository from "./commentsQueryRepository";
+import SessionQueryRepository from "./sessionQueryRepository";
+
+export {
+  BlogQueryRepository,
+  PostQueryRepository,
+  UserQueryRepository,
+  CommentsQueryRepository,
+  SessionQueryRepository,
+};
