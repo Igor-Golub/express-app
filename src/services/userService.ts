@@ -90,7 +90,7 @@ class UserService extends BaseDomainService {
 
     await this.authSessionCommandRepository.create({
       userId: user._id.toString(),
-      version: Number(verifyResult.exp),
+      version: Number(verifyResult.iat),
       deviceId: uuidv4(),
       deviceIp: "",
       deviceName: "",
@@ -134,7 +134,7 @@ class UserService extends BaseDomainService {
 
     await this.authSessionCommandRepository.update(session._id.toString(), {
       ...session,
-      version: Number(result.exp),
+      version: Number(result.iat),
     });
 
     return this.innerSuccessResult(tokensPare);

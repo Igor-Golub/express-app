@@ -1,5 +1,5 @@
 import { body, param } from "express-validator";
-import { BlogQueryRepository, PostQueryRepository } from "../repositories/query";
+import { BlogQueryRepository } from "../repositories/query";
 import { ObjectId } from "mongodb";
 import { validation } from "../middlewares/validation";
 import { sortingValidators } from "./sotting";

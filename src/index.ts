@@ -5,6 +5,7 @@ import { testingRouter } from "./routs/testing-router";
 import { userRouter } from "./routs/user-router";
 import { blogRouter } from "./routs/blog-router";
 import { authRouter } from "./routs/auth-router";
+import { sessionRouter } from "./routs/session-router";
 import { commentsRouter } from "./routs/comments-router";
 import { Resources } from "./enums/Resources";
 import dbService from "./application/dbService";
@@ -21,6 +22,7 @@ app
   .use(Resources.Posts, postRouter)
   .use(Resources.Users, userRouter)
   .use(Resources.Auth, authRouter)
+  .use(Resources.Sessions, sessionRouter)
   .use(Resources.Comments, commentsRouter)
   .use(Resources.Testing, testingRouter);
 

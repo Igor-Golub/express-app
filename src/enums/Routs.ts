@@ -31,3 +31,8 @@ export enum PostRouts {
   RootWithId = "/:id",
   Comments = "/:id/comments",
 }
+
+export enum SessionRoutes {
+  Devices = "/devices",
+  DevicesWithId = "/devices/:id",
+}
