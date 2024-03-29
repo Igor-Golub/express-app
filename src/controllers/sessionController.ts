@@ -1,12 +1,15 @@
 import { Request, Response } from "express";
 import { SessionsService } from "../services";
 import { SessionQueryRepository } from "../repositories/query";
+import { CookiesService } from "../application";
 import { generateErrorResponse, noContentResponse, successResponse } from "../utils/response";
+import { CookiesKeys } from "../enums/CookiesKeys";
 
 class SessionController {
   constructor(
     private readonly sessionQueryRepository: typeof SessionQueryRepository,
     private readonly sessionsService: typeof SessionsService,
+    private readonly cookiesService: typeof CookiesService,
   ) {}
 
   public getAllUserSessions = async (req: Request, res: Response<ViewModels.Session[]>) => {
@@ -20,11 +23,13 @@ class SessionController {
   };
 
   public removeAllUserSessions = async (req: Request, res: Response) => {
+    const currentSessionId = this.cookiesService.read(req, CookiesKeys.SessionId);
+
     const {
       context: { user },
     } = req;
 
-    const result = await this.sessionsService.removeAll(user.id);
+    const result = await this.sessionsService.removeAll(user.id, currentSessionId);
 
     if (result.status) generateErrorResponse(res, result);
     else noContentResponse(res);
@@ -43,4 +48,4 @@ class SessionController {
   };
 }
 
-export default new SessionController(SessionQueryRepository, SessionsService);
+export default new SessionController(SessionQueryRepository, SessionsService, CookiesService);

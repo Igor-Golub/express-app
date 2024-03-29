@@ -1,3 +1,5 @@
 export enum CookiesKeys {
-  Refresh = "refreshToken",
+  RefreshToken = "refreshToken",
+  SessionId = "sessionId",
+  DeviceId = "deviceId",
 }

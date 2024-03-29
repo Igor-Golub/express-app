@@ -11,8 +11,31 @@ class CookiesService {
     return res.cookie(key, payload, { httpOnly: true, secure: true, ...options });
   }
 
+  public writeManuSecure(
+    res: Response,
+    data: {
+      key: CookiesKeys;
+      payload: string | number;
+      options?: Partial<CookieOptions>;
+    }[],
+  ) {
+    data.forEach(({ key, payload, options }) => {
+      res.cookie(key, String(payload), {
+        httpOnly: true,
+        secure: true,
+        ...options,
+      });
+    });
+
+    return res;
+  }
+
   public read(req: Request, key: CookiesKeys) {
     return req.cookies[key] ?? null;
+  }
+
+  public readManu(req: Request, keys: CookiesKeys[]) {
+    return keys.map((key) => req.cookies[key]) ?? [];
   }
 }
 

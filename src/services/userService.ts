@@ -85,16 +85,25 @@ class UserService extends BaseDomainService {
 
     if (!verifyResult || isString(verifyResult)) return this.innerNotFoundResult();
 
+    const version = Number(verifyResult.iat);
+    const deviceId = uuidv4();
+
     await this.authSessionCommandRepository.create({
       userId: user._id.toString(),
-      version: Number(verifyResult.iat),
-      deviceId: uuidv4(),
+      version,
+      deviceId,
       deviceIp: "",
       deviceName: "",
       dateOfDeath: new Date(Number(verifyResult.exp) * 1000),
     });
 
-    return this.innerSuccessResult(tokenPare);
+    return this.innerSuccessResult({
+      tokenPare,
+      session: {
+        version,
+        deviceId,
+      },
+    });
   }
 
   public async resendConfirmationCode(email: string) {

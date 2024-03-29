@@ -47,19 +47,26 @@ class AuthSessionCommandRepository {
     return updatedEntity;
   }
 
-  public async delete(userId: string, sessionId: string) {
+  public async delete(userId: string, deviceId: string) {
     return this.dbService.authSessionsCollection.deleteOne({
-      _id: new ObjectId(sessionId),
+      deviceId,
       userId,
     });
   }
 
-  public async deleteMany(userId: string) {
+  public async deleteMany(userId: string, sessionsIds: ObjectId[]) {
     const { deletedCount } = await this.dbService.authSessionsCollection.deleteMany({
       userId,
+      _id: {
+        $in: sessionsIds,
+      },
     });
 
     return Boolean(deletedCount);
+  }
+
+  public async getAllSessionByUserId(userId: string) {
+    return this.dbService.authSessionsCollection.find({ userId }).toArray();
   }
 }
 
