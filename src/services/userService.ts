@@ -70,7 +70,16 @@ class UserService extends BaseDomainService {
     return this.innerSuccessResult(true);
   }
 
-  public async login({ loginOrEmail, password }: DTO.Login) {
+  public async login(
+    { loginOrEmail, password }: DTO.Login,
+    {
+      deviceIp,
+      deviceName,
+    }: {
+      deviceIp: string;
+      deviceName: string;
+    },
+  ) {
     const user = await this.userCommandRepository.findUserByLoginOrEmail(loginOrEmail);
 
     if (!user) return this.innerNotFoundResult();
@@ -79,21 +88,22 @@ class UserService extends BaseDomainService {
 
     if (!compareResult) return this.innerNotFoundResult();
 
-    const tokenPare = this.jwtService.generateTokenPare(user._id.toString(), user.login);
+    const deviceId = uuidv4();
+
+    const tokenPare = this.jwtService.generateTokenPare({ userId: user._id.toString(), login: user.login, deviceId });
 
     const verifyResult = this.jwtService.verify(tokenPare.refresh, TokensType.Refresh);
 
     if (!verifyResult || isString(verifyResult)) return this.innerNotFoundResult();
 
     const version = Number(verifyResult.iat);
-    const deviceId = uuidv4();
 
     await this.authSessionCommandRepository.create({
       userId: user._id.toString(),
       version,
       deviceId,
-      deviceIp: "",
-      deviceName: "",
+      deviceIp,
+      deviceName,
       dateOfDeath: new Date(Number(verifyResult.exp) * 1000),
     });
 
@@ -133,7 +143,11 @@ class UserService extends BaseDomainService {
 
     if (!user) return this.innerUnauthorizedResult();
 
-    const tokensPare = this.jwtService.generateTokenPare(user._id.toString(), user.login);
+    const tokensPare = this.jwtService.generateTokenPare({
+      userId: user._id.toString(),
+      login: user.login,
+      deviceId: session.deviceId,
+    });
 
     const result = this.jwtService.verify(tokensPare.refresh, TokensType.Refresh);
 

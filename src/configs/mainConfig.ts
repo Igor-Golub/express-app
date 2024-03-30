@@ -26,6 +26,10 @@ const mainConfig = {
   authSessions: {
     secret: String(process.env.AUTH_SESSION_SECRET),
   },
+  rateLimit: {
+    callsAmount: Number(process.env.RATE_LIMIT_CALLS_AMOUNT),
+    time: Number(process.env.RATE_LIMIT_TIME),
+  },
 };
 
 export default mainConfig;

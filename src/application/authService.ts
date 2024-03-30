@@ -29,7 +29,7 @@ class AuthService {
 
     if (!result) return null;
 
-    const user = await this.userCommandRepository.findUserByLogin(result?.userLogin);
+    const user = await this.userCommandRepository.findUserByLogin(result?.login);
 
     if (!user) return null;
 

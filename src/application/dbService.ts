@@ -25,6 +25,14 @@ class DBService {
     .db(process.env.DB_NAME)
     .collection<DBModels.Sessions>(DataBaseCollections.AuthSessions);
 
+  public unauthorizedSessionsCollection = this.client
+    .db(process.env.DB_NAME)
+    .collection<DBModels.UnauthorizedSessions>(DataBaseCollections.UnauthorizedSessions);
+
+  public endpointsLogCollection = this.client
+    .db(process.env.DB_NAME)
+    .collection<DBModels.EndpointsLogs>(DataBaseCollections.EndpointsLogs);
+
   public commentsCollection = this.client
     .db(process.env.DB_NAME)
     .collection<DBModels.Comment>(DataBaseCollections.Comments);
@@ -44,11 +52,13 @@ class DBService {
   }
 
   public async clear() {
-    await this.client.db(process.env.DB_NAME).collection(DataBaseCollections.Blogs).deleteMany({});
-    await this.client.db(process.env.DB_NAME).collection(DataBaseCollections.Posts).deleteMany({});
-    await this.client.db(process.env.DB_NAME).collection(DataBaseCollections.Users).deleteMany({});
-    await this.client.db(process.env.DB_NAME).collection(DataBaseCollections.Comments).deleteMany({});
-    await this.client.db(process.env.DB_NAME).collection(DataBaseCollections.AuthSessions).deleteMany({});
+    await Promise.all([
+      this.client.db(process.env.DB_NAME).collection(DataBaseCollections.Blogs).deleteMany({}),
+      this.client.db(process.env.DB_NAME).collection(DataBaseCollections.Posts).deleteMany({}),
+      this.client.db(process.env.DB_NAME).collection(DataBaseCollections.Users).deleteMany({}),
+      this.client.db(process.env.DB_NAME).collection(DataBaseCollections.Comments).deleteMany({}),
+      this.client.db(process.env.DB_NAME).collection(DataBaseCollections.AuthSessions).deleteMany({}),
+    ]);
   }
 }
 

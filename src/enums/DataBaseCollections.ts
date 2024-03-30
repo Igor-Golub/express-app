@@ -4,4 +4,6 @@ export enum DataBaseCollections {
   Users = "users",
   Comments = "comments",
   AuthSessions = "authSessions",
+  UnauthorizedSessions = "unauthorizedSessions",
+  EndpointsLogs = "endpointsLogs",
 }

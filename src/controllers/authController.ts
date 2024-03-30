@@ -1,6 +1,6 @@
 import UserService from "../services/userService";
 import UserQueryRepository from "../repositories/query/userQueryRepository";
-import CookiesService from "../application/cookiesService";
+import { CookiesService } from "../application";
 import { Request, Response } from "express";
 import { CookiesKeys } from "../enums/CookiesKeys";
 import { generateErrorResponse, noContentResponse, successResponse, unauthorizedResponse } from "../utils/response";
@@ -20,9 +20,12 @@ class AuthController {
   };
 
   public login = async (req: Utils.ReqWithReqBody<DTO.Login>, res: Response) => {
-    const { body } = req;
+    const { body, headers } = req;
 
-    const result = await this.userService.login(body);
+    const result = await this.userService.login(body, {
+      deviceIp: req.socket.remoteAddress ?? "Not found",
+      deviceName: headers["user-agent"] ?? "Not found",
+    });
 
     if (!result?.meta.data) unauthorizedResponse(res);
     else {

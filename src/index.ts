@@ -4,12 +4,14 @@ import { postRouter, testingRouter, userRouter, blogRouter, authRouter, sessionR
 import { Resources } from "./enums/Resources";
 import { DbService } from "./application";
 import mainConfig from "./configs/mainConfig";
+import { apiCallsLogger } from "./middlewares";
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(apiCallsLogger);
 
 app
   .use(Resources.Blogs, blogRouter)

@@ -51,5 +51,16 @@ export declare global {
       deviceIp: string;
       dateOfDeath: Date;
     }
+
+    interface UnauthorizedSessions {
+      deviceId: string;
+      dateOfDeath: Date;
+    }
+
+    interface EndpointsLogs {
+      ip: string;
+      lastCall: string;
+      endpoint: string;
+    }
   }
 }

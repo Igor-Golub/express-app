@@ -1,5 +1,4 @@
-import { body, param } from "express-validator";
-import { ObjectId } from "mongodb";
+import { body } from "express-validator";
 import { validation } from "../middlewares/validation";
 
 export const authValidators = {

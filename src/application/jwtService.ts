@@ -9,12 +9,13 @@ class JwtService {
     [TokensType.Refresh]: mainConfig.jwt.refreshSecret,
   };
 
-  public generateTokenPare(userId: string, userLogin: string) {
+  public generateTokenPare({ userId, login, deviceId }: { userId: string; login: string; deviceId: string }) {
     return {
       access: jwt.sign(
         {
           userId,
-          userLogin,
+          login,
+          deviceId,
         },
         this.secrets.access,
         {
@@ -24,7 +25,8 @@ class JwtService {
       refresh: jwt.sign(
         {
           userId,
-          userLogin,
+          login,
+          deviceId,
         },
         this.secrets.refresh,
         {
