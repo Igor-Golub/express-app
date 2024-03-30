@@ -4,13 +4,13 @@ import { StatusCodes } from "../enums/StatusCodes";
 import mainConfig from "../configs/mainConfig";
 
 export const rateLimit = async (req: Request, res: Response, next: NextFunction) => {
-  const { originalUrl, url, socket } = req;
+  const { originalUrl, url, ip } = req;
 
   const endpoint = originalUrl || url;
 
   const amountOfCalls = await RateLimitedService.getAllAttemptsEndpointForTime(
     endpoint,
-    socket.remoteAddress ?? "Not found",
+    ip ?? "Not found",
     mainConfig.rateLimit.time,
   );
 

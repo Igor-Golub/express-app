@@ -14,12 +14,12 @@ export enum BlogRouts {
 
 export enum AuthRouts {
   Login = "/login",
+  Refresh = "/refresh-token",
   Confirmation = "/registration-confirmation",
   Registration = "/registration",
   Resending = "/registration-email-resending",
-  Me = "/me",
-  Refresh = "/refresh-token",
   Logout = "/logout",
+  Me = "/me",
 }
 
 export enum CommentsRouts {
