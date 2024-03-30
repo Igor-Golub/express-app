@@ -41,7 +41,7 @@ class AuthService {
 
     if (!result) return null;
 
-    const entity = await this.authSessionCommandRepository.checkIsTokenValid(Number(result.exp));
+    const entity = await this.authSessionCommandRepository.checkIsTokenValid(Number(result.iat));
 
     return entity ?? null;
   }
