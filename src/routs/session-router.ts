@@ -2,7 +2,7 @@ import { Router } from "express";
 import SessionController from "../controllers/sessionController";
 import { SessionRoutes } from "../enums/Routs";
 import { sessionsValidators } from "../validators/sessions";
-import { jwtAuth } from "../middlewares/jwtAuth";
+import { jwtAuth } from "../middlewares";
 
 export const sessionRouter = Router();
 

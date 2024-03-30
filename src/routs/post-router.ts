@@ -2,8 +2,7 @@ import { Router } from "express";
 import { PostRouts, Routs } from "../enums/Routs";
 import { postValidators } from "../validators/post";
 import PostController from "../controllers/postController";
-import { basicAuth } from "../middlewares/basicAuth";
-import { jwtAuth } from "../middlewares/jwtAuth";
+import { basicAuth, jwtAuth } from "../middlewares";
 
 export const postRouter = Router({});
 
