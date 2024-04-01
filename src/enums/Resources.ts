@@ -5,5 +5,5 @@ export enum Resources {
   Auth = "/auth",
   Comments = "/comments",
   Testing = "/testing",
-  Sessions = "/sessions",
+  Sessions = "/security",
 }
