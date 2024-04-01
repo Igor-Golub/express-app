@@ -47,6 +47,14 @@ class JwtService {
       return null;
     }
   }
+
+  public decode(token: string) {
+    const result = jwt.decode(token);
+
+    if (!result || isString(result)) return null;
+
+    return result;
+  }
 }
 
 export default new JwtService();

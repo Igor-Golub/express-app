@@ -2,16 +2,10 @@ import { Router } from "express";
 import SessionController from "../controllers/sessionController";
 import { SessionRoutes } from "../enums/Routs";
 import { sessionsValidators } from "../validators/sessions";
-import { jwtAuth } from "../middlewares";
 
 export const sessionRouter = Router();
 
 sessionRouter
-  .get(SessionRoutes.Devices, jwtAuth, SessionController.getAllUserSessions)
-  .delete(SessionRoutes.Devices, jwtAuth, SessionController.removeAllUserSessions)
-  .delete(
-    SessionRoutes.DevicesWithId,
-    jwtAuth,
-    ...sessionsValidators.removeById,
-    SessionController.removeUserSessionById,
-  );
+  .get(SessionRoutes.Devices, SessionController.getAllUserSessions)
+  .delete(SessionRoutes.Devices, SessionController.removeAllUserSessions)
+  .delete(SessionRoutes.DevicesWithId, ...sessionsValidators.removeById, SessionController.removeUserSessionById);

@@ -19,7 +19,6 @@ class SMTPEmailAdapter implements Base.Notify {
   }
 
   public async send({ address, subject, from, template }: Base.NotifyOptions) {
-    console.log(address, subject, from, template);
     return this.transport.sendMail({
       from,
       to: address,
