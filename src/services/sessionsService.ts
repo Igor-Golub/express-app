@@ -20,13 +20,14 @@ class SessionsService extends BaseDomainService {
   }
 
   public async removeById(userId: string, deviceId: string) {
-    const isUserSession = await this.authSessionCommandRepository.findSession(userId, deviceId);
+    const allDeviceSessions = await this.authSessionCommandRepository.getAllSessionByDeviceId(deviceId);
 
-    if (!isUserSession) return this.innerForbiddenResult();
+    if (!allDeviceSessions.length) return this.innerNotFoundResult();
 
-    const { deletedCount } = await this.authSessionCommandRepository.delete(userId, deviceId);
+    if (!allDeviceSessions.map(({ userId }) => userId).includes(userId)) return this.innerForbiddenResult();
 
-    if (!deletedCount) return this.innerNotFoundResult();
+    await this.authSessionCommandRepository.delete(userId, deviceId);
+
     return this.innerSuccessResult(true);
   }
 }
