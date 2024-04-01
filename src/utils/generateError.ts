@@ -7,6 +7,7 @@ const resultStatusCodes: Record<ResultStatuses, StatusCodes> = {
   [ResultStatuses.NotFound]: StatusCodes.NotFound_404,
   [ResultStatuses.Forbidden]: StatusCodes.Forbidden_403,
   [ResultStatuses.Unauthorized]: StatusCodes.Unauthorized_401,
+  [ResultStatuses.BadRequest]: StatusCodes.BadRequest_400,
 } as const;
 
 export default function generateErrorResponse<T>(res: Response, data: Inner.Result<T>) {

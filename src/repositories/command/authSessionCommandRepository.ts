@@ -68,6 +68,13 @@ class AuthSessionCommandRepository {
   public async getAllSessionByUserId(userId: string) {
     return this.dbService.authSessionsCollection.find({ userId }).toArray();
   }
+
+  public async findSession(userId: string, deviceId: string) {
+    return this.dbService.authSessionsCollection.findOne({
+      userId,
+      deviceId,
+    });
+  }
 }
 
 export default new AuthSessionCommandRepository(DbService);

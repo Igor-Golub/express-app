@@ -166,7 +166,7 @@ class UserService extends BaseDomainService {
 
     if (!session) return this.innerUnauthorizedResult();
 
-    await this.authSessionCommandRepository.delete(session.userId, session._id.toString());
+    await this.authSessionCommandRepository.delete(session.userId, session.deviceId);
 
     return this.innerSuccessResult(true);
   }

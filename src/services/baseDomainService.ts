@@ -14,6 +14,12 @@ class BaseDomainService {
     });
   }
 
+  public innerForbiddenResult() {
+    return generateInnerResult(ResultStatuses.Forbidden, {
+      data: null,
+    });
+  }
+
   public innerSuccessResult<T>(data: T) {
     return generateInnerResult<T>(ResultStatuses.Success, {
       data,
