@@ -1,5 +1,6 @@
 export enum ResultStatuses {
   Success,
+  BadRequest,
   NotFound,
   Forbidden,
   Unauthorized,

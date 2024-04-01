@@ -4,6 +4,7 @@ import { ResultStatuses } from "../enums/Inner";
 
 const resultStatusCodes: Record<ResultStatuses, StatusCodes> = {
   [ResultStatuses.Success]: StatusCodes.Ok_200,
+  [ResultStatuses.BadRequest]: StatusCodes.BadRequest_400,
   [ResultStatuses.NotFound]: StatusCodes.NotFound_404,
   [ResultStatuses.Forbidden]: StatusCodes.Forbidden_403,
   [ResultStatuses.Unauthorized]: StatusCodes.Unauthorized_401,

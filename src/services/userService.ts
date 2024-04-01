@@ -59,7 +59,7 @@ class UserService extends BaseDomainService {
   public async confirmUser(confirmationCode: string) {
     const user = await this.userCommandRepository.findUserByConfirmationCode(confirmationCode);
 
-    if (!user) return this.innerUnauthorizedResult();
+    if (!user) return this.innerBadRequestResult();
 
     const result = await this.checkConfirmationCode(user, "code");
 
