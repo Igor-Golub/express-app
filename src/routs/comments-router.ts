@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { CommentsRouts } from "../enums/Routs";
-import { jwtAuth } from "../middlewares/jwtAuth";
+import { jwtAuth } from "../middlewares";
 import { commentsValidators } from "../validators/comments";
 import CommentController from "../controllers/commentController";
 

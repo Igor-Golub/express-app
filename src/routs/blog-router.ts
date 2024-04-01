@@ -1,8 +1,7 @@
 import { Router } from "express";
 import { BlogRouts } from "../enums/Routs";
-import { validation } from "../middlewares/validation";
+import { validation, basicAuth } from "../middlewares";
 import { blogValidators } from "../validators/blog";
-import { basicAuth } from "../middlewares/basicAuth";
 import BlogController from "../controllers/blogController";
 import { sortingValidators } from "../validators/sotting";
 import { paginationValidators } from "../validators/pagination";

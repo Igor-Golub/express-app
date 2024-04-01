@@ -1,11 +1,8 @@
 import { Response } from "express";
-import PostService from "../services/postService";
-import CommentsService from "../services/commentsService";
+import { PostService, CommentsService } from "../services";
 import { PostQueryRepository, CommentsQueryRepository } from "../repositories/query";
 import { StatusCodes } from "../enums/StatusCodes";
-import SortingService from "../application/sortingService";
-import PaginationService from "../application/paginationService";
-import FilterService from "../application/filterService";
+import { SortingService, PaginationService, FilterService } from "../application";
 import { FiltersType } from "../enums/Filters";
 
 class PostController implements Base.Controller {
@@ -107,7 +104,7 @@ class PostController implements Base.Controller {
     if (!postEntity) {
       res.status(StatusCodes.NotFound_404).end();
     } else {
-      const result = await this.commentsService.create(body, user.id, user.login, String(id));
+      const result = await this.commentsService.create(body, user.id, String(id));
 
       if (!result) res.status(StatusCodes.BadRequest_400).end();
       else res.status(StatusCodes.Created_201).send(result);

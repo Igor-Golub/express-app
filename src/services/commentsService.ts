@@ -1,17 +1,22 @@
-import { CommentsCommandRepository } from "../repositories/command";
+import { CommentsCommandRepository, UserCommandRepository } from "../repositories/command";
 
 class CommentsService {
   constructor(
     private readonly commentsCommandRepository: Base.CommandRepository<DBModels.Comment, ViewModels.Comment>,
+    private readonly userCommandRepository: typeof UserCommandRepository,
   ) {}
 
-  public async create(comment: DTO.Comment, userId: string, userLogin: string, postId: string) {
+  public async create(comment: DTO.Comment, userId: string, postId: string) {
+    const user = await this.userCommandRepository.findUserById(userId);
+
+    if (!user) return null;
+
     const newComment: DBModels.Comment = {
       postId,
       ...comment,
       commentatorInfo: {
         userId,
-        userLogin,
+        userLogin: user.login,
       },
     };
 
@@ -27,4 +32,4 @@ class CommentsService {
   }
 }
 
-export default new CommentsService(CommentsCommandRepository);
+export default new CommentsService(CommentsCommandRepository, UserCommandRepository);

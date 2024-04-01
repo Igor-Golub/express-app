@@ -14,9 +14,6 @@ export const jwtAuth = async (req: Request, res: Response, next: NextFunction) =
   req.context = {
     user: {
       id: payload._id.toString(),
-      email: payload.email,
-      login: payload.login,
-      createdAt: payload._id.getTimestamp().toISOString(),
     },
   };
 

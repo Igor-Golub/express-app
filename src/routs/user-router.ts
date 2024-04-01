@@ -2,7 +2,7 @@ import { Router } from "express";
 import { Routs } from "../enums/Routs";
 import { userValidators } from "../validators/user";
 import UserController from "../controllers/userController";
-import { basicAuth } from "../middlewares/basicAuth";
+import { basicAuth } from "../middlewares";
 
 export const userRouter = Router({});
 
