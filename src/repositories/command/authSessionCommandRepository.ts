@@ -49,17 +49,29 @@ class AuthSessionCommandRepository {
 
   public async delete(userId: string, deviceId: string) {
     return this.dbService.authSessionsCollection.deleteOne({
-      deviceId,
-      userId,
+      $and: [
+        {
+          deviceId,
+        },
+        {
+          userId,
+        },
+      ],
     });
   }
 
   public async deleteMany(userId: string, sessionsIds: ObjectId[]) {
     const { deletedCount } = await this.dbService.authSessionsCollection.deleteMany({
-      userId,
-      _id: {
-        $in: sessionsIds,
-      },
+      $and: [
+        {
+          userId,
+        },
+        {
+          _id: {
+            $in: sessionsIds,
+          },
+        },
+      ],
     });
 
     return Boolean(deletedCount);
