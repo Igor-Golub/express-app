@@ -90,9 +90,9 @@ class UserService extends BaseDomainService {
 
     const deviceId = uuidv4();
 
-    const tokenPare = this.jwtService.generateTokenPare({ userId: user._id.toString(), login: user.login, deviceId });
+    const pairTokens = this.jwtService.generatePairTokens({ userId: user._id.toString(), login: user.login, deviceId });
 
-    const verifyResult = this.jwtService.verify(tokenPare.refresh, TokensType.Refresh);
+    const verifyResult = this.jwtService.verify(pairTokens.refresh, TokensType.Refresh);
 
     if (!verifyResult || isString(verifyResult)) return this.innerNotFoundResult();
 
@@ -108,7 +108,7 @@ class UserService extends BaseDomainService {
     });
 
     return this.innerSuccessResult({
-      tokenPare,
+      pairTokens,
       session: {
         version,
         deviceId,
@@ -143,7 +143,7 @@ class UserService extends BaseDomainService {
 
     if (!user) return this.innerUnauthorizedResult();
 
-    const tokensPare = this.jwtService.generateTokenPare({
+    const tokensPare = this.jwtService.generatePairTokens({
       userId: user._id.toString(),
       login: user.login,
       deviceId: session.deviceId,

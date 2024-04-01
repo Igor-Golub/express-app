@@ -31,7 +31,7 @@ class AuthController {
     else {
       const {
         session: { version, deviceId },
-        tokenPare: { refresh },
+        pairTokens: { refresh },
       } = result.meta.data;
 
       successResponse(
@@ -40,7 +40,7 @@ class AuthController {
           { key: CookiesKeys.SessionId, payload: version },
           { key: CookiesKeys.DeviceId, payload: deviceId },
         ]),
-        { accessToken: result.meta.data.tokenPare.access },
+        { accessToken: result.meta.data.pairTokens.access },
       );
     }
   };

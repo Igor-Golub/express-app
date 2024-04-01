@@ -15,7 +15,7 @@ export const jwtRefreshAuth = async (req: Request, res: Response, next: NextFunc
 
   req.context = {
     user: {
-      id: payload._id.toString(),
+      id: payload.userId,
     },
   };
 

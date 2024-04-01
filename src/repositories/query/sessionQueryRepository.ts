@@ -5,6 +5,7 @@ class SessionQueryRepository {
   constructor(private readonly dbService: typeof DbService) {}
 
   public async getAll(userId: string) {
+    console.log(userId);
     const data = await this.dbService.authSessionsCollection.find({ userId }).toArray();
 
     return this.mapSessionToView(data);

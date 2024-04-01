@@ -9,7 +9,7 @@ class JwtService {
     [TokensType.Refresh]: mainConfig.jwt.refreshSecret,
   };
 
-  public generateTokenPare({ userId, login, deviceId }: { userId: string; login: string; deviceId: string }) {
+  public generatePairTokens({ userId, login, deviceId }: { userId: string; login: string; deviceId: string }) {
     return {
       access: jwt.sign(
         {
