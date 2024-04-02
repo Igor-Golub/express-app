@@ -23,7 +23,7 @@ class AuthController {
     const { body, headers } = req;
 
     const result = await this.userService.login(body, {
-      deviceIp: req.socket.remoteAddress ?? "Not found",
+      deviceIp: req.ip ?? "Not found",
       deviceName: headers["user-agent"] ?? "Not found",
     });
 
