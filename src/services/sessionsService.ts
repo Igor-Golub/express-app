@@ -1,16 +1,24 @@
 import BaseDomainService from "./baseDomainService";
 import { AuthSessionCommandRepository } from "../repositories/command";
+import { JWTService } from "../application";
 
 class SessionsService extends BaseDomainService {
-  constructor(private readonly authSessionCommandRepository: typeof AuthSessionCommandRepository) {
+  constructor(
+    private readonly authSessionCommandRepository: typeof AuthSessionCommandRepository,
+    private readonly jwtService: typeof JWTService,
+  ) {
     super();
   }
 
-  public async removeAll(userId: string, currentSessionId: string) {
+  public async removeAll(userId: string, refreshToken: string) {
+    const decodeResult = this.jwtService.decode(refreshToken);
+
+    if (!decodeResult || !decodeResult?.iat) return this.innerUnauthorizedResult();
+
     const userSessions = await this.authSessionCommandRepository.getAllSessionByUserId(userId);
 
     const removeSessionsIds = userSessions
-      .filter(({ version }) => String(version) !== currentSessionId)
+      .filter(({ version }) => String(version) !== new Date(decodeResult.iat * 1000).toISOString())
       .map(({ _id }) => _id);
 
     const result = await this.authSessionCommandRepository.deleteMany(userId, removeSessionsIds);
@@ -32,4 +40,4 @@ class SessionsService extends BaseDomainService {
   }
 }
 
-export default new SessionsService(AuthSessionCommandRepository);
+export default new SessionsService(AuthSessionCommandRepository, JWTService);

@@ -4,7 +4,7 @@ import { ObjectId } from "mongodb";
 class AuthSessionCommandRepository {
   constructor(private dbService: typeof DbService) {}
 
-  public async checkIsTokenValid(version: number) {
+  public async checkIsTokenValid(version: string) {
     return this.dbService.authSessionsCollection.findOne({
       version,
     });
@@ -25,10 +25,10 @@ class AuthSessionCommandRepository {
     return newEntity;
   }
 
-  public async update(id: string, entity: DBModels.Sessions) {
+  public async update(id: ObjectId, entity: DBModels.Sessions) {
     const res = await this.dbService.authSessionsCollection.findOneAndUpdate(
       {
-        _id: new ObjectId(id),
+        _id: id,
       },
       {
         $set: {

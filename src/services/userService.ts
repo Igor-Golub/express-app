@@ -92,15 +92,13 @@ class UserService extends BaseDomainService {
 
     const pairTokens = this.jwtService.generatePairTokens({ userId: user._id.toString(), login: user.login, deviceId });
 
-    const verifyResult = this.jwtService.verify(pairTokens.refresh, TokensType.Refresh);
+    const verifyResult = this.jwtService.decode(pairTokens.refresh);
 
-    if (!verifyResult || isString(verifyResult)) return this.innerNotFoundResult();
-
-    const version = Number(verifyResult.iat);
+    if (!verifyResult || !verifyResult?.iat) return this.innerNotFoundResult();
 
     await this.authSessionCommandRepository.create({
       userId: user._id.toString(),
-      version,
+      version: new Date(verifyResult.iat * 1000).toISOString(),
       deviceId,
       deviceIp,
       deviceName,
@@ -110,7 +108,6 @@ class UserService extends BaseDomainService {
     return this.innerSuccessResult({
       pairTokens,
       session: {
-        version,
         deviceId,
       },
     });
@@ -149,13 +146,13 @@ class UserService extends BaseDomainService {
       deviceId: session.deviceId,
     });
 
-    const result = this.jwtService.verify(tokensPare.refresh, TokensType.Refresh);
+    const result = this.jwtService.decode(tokensPare.refresh);
 
-    if (!result) return this.innerUnauthorizedResult();
+    if (!result || !result?.iat) return this.innerUnauthorizedResult();
 
-    await this.authSessionCommandRepository.update(session._id.toString(), {
+    await this.authSessionCommandRepository.update(session._id, {
       ...session,
-      version: Number(result.iat),
+      version: new Date(result.iat * 1000).toISOString(),
     });
 
     return this.innerSuccessResult(tokensPare);

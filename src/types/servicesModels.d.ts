@@ -13,7 +13,7 @@ export declare global {
 
     interface Session {
       id: string;
-      version: number;
+      version: string;
       userId: string;
       deviceId: string;
       deviceName: string;

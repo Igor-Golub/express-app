@@ -15,7 +15,7 @@ class SessionQueryRepository {
       ip: deviceIp,
       deviceId,
       title: deviceName,
-      lastActiveDate: new Date(version * 1000).toISOString(),
+      lastActiveDate: version,
     }));
   }
 }

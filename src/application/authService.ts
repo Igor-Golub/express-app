@@ -39,9 +39,9 @@ class AuthService {
   public async jwtRefreshVerification(token: string) {
     const result = this.jwtService.verify(token, TokensType.Refresh);
 
-    if (!result) return null;
+    if (!result || !result?.iat) return null;
 
-    const entity = await this.authSessionCommandRepository.checkIsTokenValid(Number(result.iat));
+    const entity = await this.authSessionCommandRepository.checkIsTokenValid(new Date(result.iat * 1000).toISOString());
 
     return entity ?? null;
   }

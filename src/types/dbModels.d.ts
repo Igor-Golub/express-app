@@ -44,7 +44,7 @@ export declare global {
     }
 
     interface Sessions {
-      version: number;
+      version: string;
       userId: string;
       deviceId: string;
       deviceName: string;

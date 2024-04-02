@@ -23,13 +23,13 @@ class SessionController {
   };
 
   public removeAllUserSessions = async (req: Request, res: Response) => {
-    const currentSessionId = this.cookiesService.read(req, CookiesKeys.SessionId);
+    const refreshToken = this.cookiesService.read(req, CookiesKeys.RefreshToken);
 
     const {
       context: { user },
     } = req;
 
-    const result = await this.sessionsService.removeAll(user.id, currentSessionId);
+    const result = await this.sessionsService.removeAll(user.id, refreshToken);
 
     if (result.status) generateErrorResponse(res, result);
     else noContentResponse(res);

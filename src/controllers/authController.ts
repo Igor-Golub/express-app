@@ -30,14 +30,13 @@ class AuthController {
     if (!result?.meta.data) unauthorizedResponse(res);
     else {
       const {
-        session: { version, deviceId },
+        session: { deviceId },
         pairTokens: { refresh },
       } = result.meta.data;
 
       successResponse(
         this.cookiesService.writeManuSecure(res, [
           { key: CookiesKeys.RefreshToken, payload: refresh },
-          { key: CookiesKeys.SessionId, payload: version },
           { key: CookiesKeys.DeviceId, payload: deviceId },
         ]),
         { accessToken: result.meta.data.pairTokens.access },
