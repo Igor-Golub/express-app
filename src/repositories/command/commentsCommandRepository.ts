@@ -1,17 +1,12 @@
-import DbService from "../../application/db/dbService";
-import { ObjectId } from "mongodb";
+import { CommentsModel } from "../../application/db/models";
 
 class CommentsCommandRepository implements Base.CommandRepository<DBModels.Comment, ViewModels.Comment> {
-  constructor(private dbService: typeof DbService) {}
-
   public async create(entity: DBModels.Comment) {
-    const { insertedId, acknowledged } = await this.dbService.commentsCollection.insertOne({ ...entity });
-
-    if (!acknowledged) return null;
+    const { _id } = await CommentsModel.create(entity);
 
     const newEntity: ViewModels.Comment = {
-      id: insertedId.toString(),
-      createdAt: insertedId.getTimestamp().toISOString(),
+      id: _id.toString(),
+      createdAt: _id.getTimestamp().toISOString(),
       content: entity.content,
       commentatorInfo: entity.commentatorInfo,
     };
@@ -20,14 +15,7 @@ class CommentsCommandRepository implements Base.CommandRepository<DBModels.Comme
   }
 
   public async update(id: string, entity: DBModels.Comment) {
-    const res = await this.dbService.commentsCollection.findOneAndUpdate(
-      {
-        _id: new ObjectId(id),
-      },
-      {
-        $set: { ...entity },
-      },
-    );
+    const res = await CommentsModel.findOneAndUpdate({ _id: id }, entity);
 
     if (!res) return null;
 
@@ -39,12 +27,10 @@ class CommentsCommandRepository implements Base.CommandRepository<DBModels.Comme
   }
 
   public async delete(id: string) {
-    const { deletedCount } = await this.dbService.commentsCollection.deleteOne({
-      _id: new ObjectId(id),
-    });
+    const { deletedCount } = await CommentsModel.deleteOne({ _id: id });
 
     return Boolean(deletedCount);
   }
 }
 
-export default new CommentsCommandRepository(DbService);
+export default new CommentsCommandRepository();

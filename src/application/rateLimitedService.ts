@@ -1,9 +1,9 @@
 import { sub } from "date-fns";
-import DbService from "./db/dbService";
+import { EndpointsLogsModel } from "./db/models";
 
 class RateLimitedService {
   public async logApiCallFromIp({ lastCall, ip, endpoint }: DBModels.EndpointsLogs) {
-    await DbService.endpointsLogCollection.insertOne({
+    await EndpointsLogsModel.create({
       ip,
       lastCall,
       endpoint,
@@ -11,7 +11,7 @@ class RateLimitedService {
   }
 
   public async getAllAttemptsEndpointForTime(endpoint: string, ip: string, time: number) {
-    return DbService.endpointsLogCollection.countDocuments({
+    return EndpointsLogsModel.countDocuments({
       endpoint,
       ip,
       lastCall: {

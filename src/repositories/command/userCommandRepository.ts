@@ -1,19 +1,15 @@
-import DbService from "../../application/db/dbService";
-import { ObjectId } from "mongodb";
 import { add } from "date-fns";
 import mainConfig from "../../configs/mainConfig";
+import { UsersModel } from "../../application/db/models";
+import { ObjectId } from "mongodb";
 
 class UserCommandRepository {
-  constructor(private dbService: typeof DbService) {}
-
   public async create(entity: DBModels.User) {
-    const { insertedId, acknowledged } = await this.dbService.usersCollection.insertOne({ ...entity });
-
-    if (!acknowledged) return null;
+    const { _id } = await UsersModel.create(entity);
 
     const newEntity: ViewModels.User = {
-      id: insertedId.toString(),
-      createdAt: insertedId.getTimestamp().toISOString(),
+      id: _id.toString(),
+      createdAt: _id.getTimestamp().toISOString(),
       email: entity.email,
       login: entity.login,
     };
@@ -26,15 +22,13 @@ class UserCommandRepository {
   }
 
   public async delete(id: string) {
-    const { deletedCount } = await this.dbService.usersCollection.deleteOne({
-      _id: new ObjectId(id),
-    });
+    const { deletedCount } = await UsersModel.deleteOne({ _id: id });
 
     return Boolean(deletedCount);
   }
 
   public async confirmUser(id: ObjectId) {
-    return this.dbService.usersCollection.findOneAndUpdate(
+    return UsersModel.findOneAndUpdate(
       { _id: id },
       {
         $set: {
@@ -45,7 +39,7 @@ class UserCommandRepository {
   }
 
   public async updateConfirmationCode(id: ObjectId, confirmationCode: string) {
-    return this.dbService.usersCollection.findOneAndUpdate(
+    return UsersModel.findOneAndUpdate(
       { _id: id },
       {
         $set: {
@@ -57,34 +51,34 @@ class UserCommandRepository {
   }
 
   public async findUserByConfirmationCode(confirmationCode: string) {
-    return this.dbService.usersCollection.findOne({
+    return UsersModel.findOne({
       "confirmation.code": confirmationCode,
     });
   }
 
   public async findUserById(id: string) {
-    return await this.dbService.usersCollection.findOne({
+    return UsersModel.findOne({
       _id: new ObjectId(id),
     });
   }
 
   public async findUserByLoginOrEmail(loginOrEmail: string) {
-    return await this.dbService.usersCollection.findOne({
+    return UsersModel.findOne({
       $or: [{ email: loginOrEmail }, { login: loginOrEmail }],
     });
   }
 
   public async findUserByLogin(login: string) {
-    return this.dbService.usersCollection.findOne({
+    return UsersModel.findOne({
       login,
     });
   }
 
   public async findUserByEmail(email: string) {
-    return this.dbService.usersCollection.findOne({
+    return UsersModel.findOne({
       email,
     });
   }
 }
 
-export default new UserCommandRepository(DbService);
+export default new UserCommandRepository();

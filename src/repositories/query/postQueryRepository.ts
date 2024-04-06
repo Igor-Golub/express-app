@@ -1,29 +1,21 @@
-import DbService from "../../application/db/dbService";
 import PaginationService from "../../application/paginationService";
-import { Filter, ObjectId, Sort } from "mongodb";
 import SortingService from "../../application/sortingService";
 import FilterService from "../../application/filterService";
+import { PostsModel } from "../../application/db/models";
 
 class PostQueryRepository implements Base.QueryRepository<ViewModels.Post> {
   constructor(
-    private dbService: typeof DbService,
     private paginationService: typeof PaginationService,
     private sortingService: Base.SortingService,
     private filterService: Base.FilterService<ViewModels.Post>,
   ) {}
 
   public async getById(id: string) {
-    const result = await this.dbService.postsCollection.findOne({ _id: new ObjectId(id) });
+    const result = await PostsModel.findOne({ _id: id }).lean();
 
     if (!result) return null;
 
-    const { _id, ...entity } = result;
-
-    return {
-      id: _id.toString(),
-      createdAt: _id.getTimestamp().toISOString(),
-      ...entity,
-    };
+    return this.mapToViewModels([result])[0];
   }
 
   public async getWithPagination() {
@@ -31,14 +23,13 @@ class PostQueryRepository implements Base.QueryRepository<ViewModels.Post> {
     const sort = this.sortingService.createSortCondition();
     const filters = this.filterService.getFilters();
 
-    const result = await this.dbService.findWithPaginationAndSorting(
-      this.dbService.postsCollection,
-      { pageNumber, pageSize },
-      sort,
-      filters,
-    );
+    const result = await PostsModel.find(filters)
+      .sort(sort)
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize)
+      .lean();
 
-    const collectionLength = await this.dbService.postsCollection.countDocuments(filters);
+    const collectionLength = await PostsModel.countDocuments(filters);
 
     return {
       page: pageNumber,
@@ -50,12 +41,16 @@ class PostQueryRepository implements Base.QueryRepository<ViewModels.Post> {
   }
 
   private mapToViewModels(data: DBModels.MongoResponseEntity<DBModels.Post>[]): ViewModels.Post[] {
-    return data.map(({ _id, ...entity }) => ({
+    return data.map(({ _id, content, blogName, blogId, title, shortDescription }) => ({
       id: _id.toString(),
       createdAt: _id.getTimestamp().toISOString(),
-      ...entity,
+      content,
+      blogName,
+      blogId,
+      title,
+      shortDescription,
     }));
   }
 }
 
-export default new PostQueryRepository(DbService, PaginationService, SortingService, FilterService);
+export default new PostQueryRepository(PaginationService, SortingService, FilterService);

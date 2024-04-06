@@ -1,36 +1,35 @@
-import DbService from "../../application/db/dbService";
 import PaginationService from "../../application/paginationService";
-import { Filter, ObjectId, Sort } from "mongodb";
+import { CommentsModel } from "../../application/db/models";
+import SortingService from "../../application/sortingService";
+import FilterService from "../../application/filterService";
 
 class CommentsQueryRepository implements Base.QueryRepository<ViewModels.Comment> {
   constructor(
-    private dbService: typeof DbService,
     private paginationService: typeof PaginationService,
+    private sortingService: Base.SortingService,
+    private filterService: Base.FilterService<ViewModels.Comment>,
   ) {}
 
   public async getById(id: string) {
-    const result = await this.dbService.commentsCollection.findOne({
-      _id: new ObjectId(id),
-    });
+    const result = await CommentsModel.findOne({ _id: id });
 
     if (!result) return null;
-
-    const { _id, ...entity } = result;
 
     return this.mapToViewModels([result])[0];
   }
 
-  public async getWithPagination(sort: Sort, filters: Filter<any> = {}) {
-    const { pageNumber, pageSize } = this.paginationService.getPagination();
+  public async getWithPagination() {
+    const { pageNumber, pageSize } = this.paginationService.value;
+    const sort = this.sortingService.createSortCondition();
+    const filters = this.filterService.getFilters();
 
-    const result = await this.dbService.findWithPaginationAndSorting(
-      this.dbService.commentsCollection,
-      { pageNumber, pageSize },
-      sort,
-      filters,
-    );
+    const result = await CommentsModel.find(filters)
+      .sort(sort)
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize)
+      .lean();
 
-    const collectionLength = await this.dbService.commentsCollection.countDocuments(filters);
+    const collectionLength = await CommentsModel.countDocuments(filters);
 
     return {
       page: pageNumber,
@@ -51,4 +50,4 @@ class CommentsQueryRepository implements Base.QueryRepository<ViewModels.Comment
   }
 }
 
-export default new CommentsQueryRepository(DbService, PaginationService);
+export default new CommentsQueryRepository(PaginationService, SortingService, FilterService);

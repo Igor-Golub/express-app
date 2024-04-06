@@ -15,21 +15,26 @@ export const UserConfirmationSchema = new mongoose.Schema<Pick<DBModels.User, "c
   },
 });
 
-export const UserSchema = new mongoose.Schema<DBModels.User>({
-  login: {
-    type: String,
-    required: true,
+export const UserSchema = new mongoose.Schema<DBModels.User>(
+  {
+    login: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+    hash: {
+      type: String,
+      required: true,
+    },
+    confirmation: {
+      type: UserConfirmationSchema,
+      required: true,
+    },
   },
-  email: {
-    type: String,
-    required: true,
+  {
+    timestamps: true,
   },
-  hash: {
-    type: String,
-    required: true,
-  },
-  confirmation: {
-    type: UserConfirmationSchema,
-    required: true,
-  },
-});
+);

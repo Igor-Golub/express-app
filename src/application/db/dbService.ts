@@ -1,8 +1,7 @@
 import dotenv from "dotenv";
-import { Collection, Filter, Sort } from "mongodb";
-import { DataBaseCollections } from "../../enums/DataBaseCollections";
 import { Document } from "bson";
-import mongoose from "mongoose";
+import mongoose, { FilterQuery, Model } from "mongoose";
+import { AuthSessionsModel, BlogModel, CommentsModel, PostsModel, UsersModel } from "./models";
 
 dotenv.config();
 
@@ -14,49 +13,27 @@ class DBService {
       .catch(console.dir);
   }
 
-  public blogsCollection = this.client.db(process.env.DB_NAME).collection<DBModels.Blog>(DataBaseCollections.Blogs);
-
-  public postsCollection = this.client.db(process.env.DB_NAME).collection<DBModels.Post>(DataBaseCollections.Posts);
-
-  public usersCollection = this.client.db(process.env.DB_NAME).collection<DBModels.User>(DataBaseCollections.Users);
-
-  public authSessionsCollection = this.client
-    .db(process.env.DB_NAME)
-    .collection<DBModels.Sessions>(DataBaseCollections.AuthSessions);
-
-  public unauthorizedSessionsCollection = this.client
-    .db(process.env.DB_NAME)
-    .collection<DBModels.UnauthorizedSessions>(DataBaseCollections.UnauthorizedSessions);
-
-  public endpointsLogCollection = this.client
-    .db(process.env.DB_NAME)
-    .collection<DBModels.EndpointsLogs>(DataBaseCollections.EndpointsLogs);
-
-  public commentsCollection = this.client
-    .db(process.env.DB_NAME)
-    .collection<DBModels.Comment>(DataBaseCollections.Comments);
-
   public async findWithPaginationAndSorting<TSchema extends Document = Document>(
-    collection: Collection<TSchema>,
+    collection: Model<TSchema>,
     { pageNumber, pageSize }: Omit<Base.Pagination, "totalCount" | "pagesCount">,
-    sortingCondition: Sort,
-    filter: Filter<TSchema> = {},
+    sortingCondition: any,
+    filter: FilterQuery<TSchema> = {},
   ) {
     return collection
       .find(filter)
       .sort(sortingCondition)
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
-      .toArray();
+      .lean();
   }
 
   public async clear() {
     await Promise.all([
-      this.client.db(process.env.DB_NAME).collection(DataBaseCollections.Blogs).deleteMany({}),
-      this.client.db(process.env.DB_NAME).collection(DataBaseCollections.Posts).deleteMany({}),
-      this.client.db(process.env.DB_NAME).collection(DataBaseCollections.Users).deleteMany({}),
-      this.client.db(process.env.DB_NAME).collection(DataBaseCollections.Comments).deleteMany({}),
-      this.client.db(process.env.DB_NAME).collection(DataBaseCollections.AuthSessions).deleteMany({}),
+      BlogModel.collection.deleteMany({}),
+      PostsModel.collection.deleteMany({}),
+      CommentsModel.collection.deleteMany({}),
+      UsersModel.collection.deleteMany({}),
+      AuthSessionsModel.collection.deleteMany({}),
     ]);
   }
 }

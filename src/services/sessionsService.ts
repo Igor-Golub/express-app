@@ -18,7 +18,7 @@ class SessionsService extends BaseDomainService {
     const userSessions = await this.authSessionCommandRepository.getAllSessionByUserId(userId);
 
     const removeSessionsIds = userSessions
-      .filter(({ version }) => String(version) !== new Date(decodeResult.iat * 1000).toISOString())
+      .filter(({ version }) => String(version) !== new Date(Number(decodeResult.iat) * 1000).toISOString())
       .map(({ _id }) => _id);
 
     const result = await this.authSessionCommandRepository.deleteMany(userId, removeSessionsIds);

@@ -1,6 +1,7 @@
 import { Filter, Sort, SortDirection } from "mongodb";
 import { SortingDirectionStrings } from "../enums/Sorting";
 import { FiltersType } from "../enums/Filters";
+import { FilterQuery } from "mongoose";
 
 export declare global {
   namespace Base {
@@ -45,13 +46,13 @@ export declare global {
 
     interface SortingService {
       setValue(key: string | undefined, value: SortingDirectionStrings | undefined);
-      createSortCondition(): Sort;
+      createSortCondition(): any;
     }
 
     interface FilterService<ViewEntity> {
       setValue(filed: string, value: string | undefined, type: FiltersType);
       setValues(data: Record<string, string | undefined>, type: FiltersType);
-      getFilters(): Filter<any>;
+      getFilters(): FilterQuery<any>;
     }
 
     interface NotifyOptions {

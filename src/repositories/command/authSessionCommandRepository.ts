@@ -1,24 +1,18 @@
-import DbService from "../../application/db/dbService";
+import { AuthSessionsModel } from "../../application/db/models";
 import { ObjectId } from "mongodb";
 
 class AuthSessionCommandRepository {
-  constructor(private dbService: typeof DbService) {}
-
   public async checkIsTokenValid(version: string) {
-    return this.dbService.authSessionsCollection.findOne({
+    return AuthSessionsModel.findOne({
       version,
     });
   }
 
   public async create(entity: DBModels.Sessions) {
-    const { insertedId, acknowledged } = await this.dbService.authSessionsCollection.insertOne({
-      ...entity,
-    });
-
-    if (!acknowledged) return null;
+    const { _id } = await AuthSessionsModel.create(entity);
 
     const newEntity: ServicesModels.Session = {
-      id: insertedId.toString(),
+      id: _id.toString(),
       ...entity,
     };
 
@@ -26,29 +20,15 @@ class AuthSessionCommandRepository {
   }
 
   public async update(id: ObjectId, entity: DBModels.Sessions) {
-    const res = await this.dbService.authSessionsCollection.findOneAndUpdate(
-      {
-        _id: id,
-      },
-      {
-        $set: {
-          ...entity,
-        },
-      },
-    );
+    const { matchedCount } = await AuthSessionsModel.updateOne({ id }, entity);
 
-    if (!res) return null;
+    if (!matchedCount) return null;
 
-    const updatedEntity: ServicesModels.Session = {
-      id: res._id.toString(),
-      ...entity,
-    };
-
-    return updatedEntity;
+    return entity;
   }
 
   public async delete(userId: string, deviceId: string) {
-    return this.dbService.authSessionsCollection.deleteOne({
+    return AuthSessionsModel.deleteOne({
       $and: [
         {
           deviceId,
@@ -61,7 +41,7 @@ class AuthSessionCommandRepository {
   }
 
   public async deleteMany(userId: string, sessionsIds: ObjectId[]) {
-    const { deletedCount } = await this.dbService.authSessionsCollection.deleteMany({
+    const { deletedCount } = await AuthSessionsModel.deleteMany({
       $and: [
         {
           userId,
@@ -78,12 +58,12 @@ class AuthSessionCommandRepository {
   }
 
   public async getAllSessionByUserId(userId: string) {
-    return this.dbService.authSessionsCollection.find({ userId }).toArray();
+    return AuthSessionsModel.find({ userId }).lean();
   }
 
   public async getAllSessionByDeviceId(deviceId: string) {
-    return this.dbService.authSessionsCollection.find({ deviceId }).toArray();
+    return AuthSessionsModel.find({ deviceId }).lean();
   }
 }
 
-export default new AuthSessionCommandRepository(DbService);
+export default new AuthSessionCommandRepository();

@@ -1,17 +1,12 @@
-import DbService from "../../application/db/dbService";
-import { ObjectId } from "mongodb";
+import { PostsModel } from "../../application/db/models";
 
 class PostCommandRepository implements Base.CommandRepository<DBModels.Post, ViewModels.Post> {
-  constructor(private dbService: typeof DbService) {}
-
   public async create(entity: DBModels.Post) {
-    const { insertedId, acknowledged } = await this.dbService.postsCollection.insertOne({ ...entity });
-
-    if (!acknowledged) return null;
+    const { _id } = await PostsModel.create(entity);
 
     const newEntity: ViewModels.Post = {
-      id: insertedId.toString(),
-      createdAt: insertedId.getTimestamp().toISOString(),
+      id: _id.toString(),
+      createdAt: _id.getTimestamp().toISOString(),
       ...entity,
     };
 
@@ -19,14 +14,7 @@ class PostCommandRepository implements Base.CommandRepository<DBModels.Post, Vie
   }
 
   public async update(id: string, entity: DBModels.Post) {
-    const result = await this.dbService.postsCollection.findOneAndUpdate(
-      {
-        _id: new ObjectId(id),
-      },
-      {
-        $set: { ...entity },
-      },
-    );
+    const result = await PostsModel.findOneAndUpdate({ _id: id }, entity);
 
     if (!result) return null;
 
@@ -38,12 +26,10 @@ class PostCommandRepository implements Base.CommandRepository<DBModels.Post, Vie
   }
 
   public async delete(id: string) {
-    const { deletedCount } = await this.dbService.postsCollection.deleteOne({
-      _id: new ObjectId(id),
-    });
+    const { deletedCount } = await PostsModel.deleteOne({ _id: id });
 
     return Boolean(deletedCount);
   }
 }
 
-export default new PostCommandRepository(DbService);
+export default new PostCommandRepository();

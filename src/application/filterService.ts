@@ -1,8 +1,8 @@
-import { Filter } from "mongodb";
 import { FiltersType } from "../enums/Filters";
+import { FilterQuery } from "mongoose";
 
 class ClientFilterService<ViewEntity> implements Base.FilterService<ViewEntity> {
-  private mangoMapper: Record<FiltersType, (...args: any) => Partial<Filter<any>>> = {
+  private mangoMapper: Record<FiltersType, (...args: any) => Partial<FilterQuery<any>>> = {
     [FiltersType.ById]: (field, value) => ({
       [field]: value,
     }),
@@ -23,7 +23,7 @@ class ClientFilterService<ViewEntity> implements Base.FilterService<ViewEntity> 
     },
   };
 
-  public value: Filter<any> = {};
+  public value: FilterQuery<any> = {};
 
   public setValue(filed: string, value: string, type: FiltersType) {
     this.value = this.mangoMapper[type](filed, value);
@@ -33,7 +33,7 @@ class ClientFilterService<ViewEntity> implements Base.FilterService<ViewEntity> 
     this.value = this.mangoMapper[type](data);
   }
 
-  public getFilters(): Filter<any> {
+  public getFilters(): FilterQuery<any> {
     return this.value;
   }
 }

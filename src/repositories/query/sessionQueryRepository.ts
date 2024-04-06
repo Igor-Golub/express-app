@@ -1,16 +1,13 @@
-import { DbService } from "../../application";
-import { WithId } from "mongodb";
+import { AuthSessionsModel } from "../../application/db/models";
 
 class SessionQueryRepository {
-  constructor(private readonly dbService: typeof DbService) {}
-
   public async getAll(userId: string) {
-    const data = await this.dbService.authSessionsCollection.find({ userId }).toArray();
+    const data = await AuthSessionsModel.find({ userId }).lean();
 
     return this.mapSessionToView(data);
   }
 
-  private mapSessionToView(data: WithId<DBModels.Sessions>[]): ViewModels.Session[] {
+  private mapSessionToView(data: DBModels.MongoResponseEntity<DBModels.Sessions>[]): ViewModels.Session[] {
     return data.map(({ deviceIp, deviceId, deviceName, version }) => ({
       ip: deviceIp,
       deviceId,
@@ -20,4 +17,4 @@ class SessionQueryRepository {
   }
 }
 
-export default new SessionQueryRepository(DbService);
+export default new SessionQueryRepository();

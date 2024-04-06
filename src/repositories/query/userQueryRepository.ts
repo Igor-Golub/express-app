@@ -1,19 +1,15 @@
-import DbService from "../../application/db/dbService";
-import { ObjectId } from "mongodb";
-import PaginationService from "../../application/paginationService";
-import SortingService from "../../application/sortingService";
-import FilterService from "../../application/filterService";
+import { FilterService, PaginationService, SortingService } from "../../application";
+import { UsersModel } from "../../application/db/models";
 
 class UserQueryRepository {
   constructor(
-    private dbService: typeof DbService,
     private paginationService: typeof PaginationService,
     private sortingService: Base.SortingService,
     private filterService: Base.FilterService<ViewModels.User>,
   ) {}
 
   public async getMe(id: string): Promise<ViewModels.UserMe | null> {
-    const user = await this.dbService.usersCollection.findOne({ _id: new ObjectId(id) });
+    const user = await UsersModel.findOne({ _id: id });
 
     if (!user) return null;
 
@@ -25,7 +21,7 @@ class UserQueryRepository {
   }
 
   public async getById(id: string): Promise<ViewModels.User | null> {
-    const user = await this.dbService.usersCollection.findOne({ _id: new ObjectId(id) });
+    const user = await UsersModel.findOne({ _id: id });
 
     if (!user) return null;
 
@@ -37,14 +33,13 @@ class UserQueryRepository {
     const sort = this.sortingService.createSortCondition();
     const filters = this.filterService.getFilters();
 
-    const result = await this.dbService.findWithPaginationAndSorting(
-      this.dbService.usersCollection,
-      { pageNumber, pageSize },
-      sort,
-      filters,
-    );
+    const result = await UsersModel.find(filters)
+      .sort(sort)
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize)
+      .lean();
 
-    const collectionLength = await this.dbService.usersCollection.countDocuments(filters);
+    const collectionLength = await UsersModel.countDocuments(filters);
 
     return {
       page: pageNumber,
@@ -56,7 +51,7 @@ class UserQueryRepository {
   }
 
   public async findUserByLoginOrEmail(loginOrEmail: string): Promise<ViewModels.User | null> {
-    const user = await this.dbService.usersCollection.findOne({
+    const user = await UsersModel.findOne({
       $or: [{ email: loginOrEmail }, { login: loginOrEmail }],
     });
 
@@ -75,4 +70,4 @@ class UserQueryRepository {
   }
 }
 
-export default new UserQueryRepository(DbService, PaginationService, SortingService, FilterService);
+export default new UserQueryRepository(PaginationService, SortingService, FilterService);

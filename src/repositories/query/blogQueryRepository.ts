@@ -1,21 +1,17 @@
-import DbService from "../../application/db/dbService";
-import { Filter, ObjectId, Sort } from "mongodb";
 import PaginationService from "../../application/paginationService";
 import SortingService from "../../application/sortingService";
 import FilterService from "../../application/filterService";
+import { BlogModel } from "../../application/db/models";
 
 class BlogQueryRepository {
   constructor(
-    private dbService: typeof DbService,
     private paginationService: typeof PaginationService,
     private sortingService: Base.SortingService,
     private filterService: Base.FilterService<ViewModels.Blog>,
   ) {}
 
   public async getById(id: string) {
-    const result = await this.dbService.blogsCollection.findOne({
-      _id: new ObjectId(id),
-    });
+    const result = await BlogModel.findById(id);
 
     if (!result) return null;
 
@@ -27,14 +23,13 @@ class BlogQueryRepository {
     const sort = this.sortingService.createSortCondition();
     const filters = this.filterService.getFilters();
 
-    const result = await this.dbService.findWithPaginationAndSorting(
-      this.dbService.blogsCollection,
-      { pageNumber, pageSize },
-      sort,
-      filters,
-    );
+    const result = await BlogModel.find(filters)
+      .sort(sort)
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize)
+      .lean();
 
-    const collectionLength = await this.dbService.blogsCollection.countDocuments(filters);
+    const collectionLength = await BlogModel.countDocuments(filters);
 
     return {
       page: pageNumber,
@@ -46,12 +41,15 @@ class BlogQueryRepository {
   }
 
   private mapToViewModels(data: DBModels.MongoResponseEntity<DBModels.Blog>[]): ViewModels.Blog[] {
-    return data.map(({ _id, ...entity }) => ({
+    return data.map(({ _id, name, isMembership, websiteUrl, description }) => ({
       id: _id.toString(),
       createdAt: _id.getTimestamp().toISOString(),
-      ...entity,
+      name,
+      isMembership,
+      websiteUrl,
+      description,
     }));
   }
 }
 
-export default new BlogQueryRepository(DbService, PaginationService, SortingService, FilterService);
+export default new BlogQueryRepository(PaginationService, SortingService, FilterService);

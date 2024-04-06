@@ -1,17 +1,12 @@
-import DbService from "../../application/db/dbService";
-import { ObjectId } from "mongodb";
+import { BlogModel } from "../../application/db/models";
 
 class BlogCommandRepository implements Base.CommandRepository<DBModels.Blog, ViewModels.Blog> {
-  constructor(private dbService: typeof DbService) {}
-
   public async create(entity: DBModels.Blog) {
-    const { insertedId, acknowledged } = await this.dbService.blogsCollection.insertOne({ ...entity });
-
-    if (!acknowledged) return null;
+    const { _id } = await BlogModel.create(entity);
 
     const newEntity: ViewModels.Blog = {
-      id: insertedId.toString(),
-      createdAt: insertedId.getTimestamp().toISOString(),
+      id: _id.toString(),
+      createdAt: _id.getTimestamp().toISOString(),
       ...entity,
     };
 
@@ -19,31 +14,22 @@ class BlogCommandRepository implements Base.CommandRepository<DBModels.Blog, Vie
   }
 
   public async update(id: string, entity: DBModels.Blog) {
-    const res = await this.dbService.blogsCollection.findOneAndUpdate(
-      {
-        _id: new ObjectId(id),
-      },
-      {
-        $set: { ...entity },
-      },
-    );
+    const result = await BlogModel.findOneAndUpdate({ _id: id }, entity);
 
-    if (!res) return null;
+    if (!result) return null;
 
     return {
-      id: res._id.toString(),
-      createdAt: res._id.getTimestamp().toISOString(),
+      id: result._id.toString(),
+      createdAt: result._id.getTimestamp().toISOString(),
       ...entity,
     };
   }
 
   public async delete(id: string) {
-    const { deletedCount } = await this.dbService.blogsCollection.deleteOne({
-      _id: new ObjectId(id),
-    });
+    const { deletedCount } = await BlogModel.deleteOne({ _id: id });
 
     return Boolean(deletedCount);
   }
 }
 
-export default new BlogCommandRepository(DbService);
+export default new BlogCommandRepository();
