@@ -87,9 +87,13 @@ class AuthController {
       });
   };
 
-  public recoveryPassword = async () => {};
+  public recoveryPassword = async (req: Utils.ReqWithReqBody<DTO.PasswordRecovery>, res: Response) => {
+    const { body } = req;
+  };
 
-  public createNewPassword = async () => {};
+  public createNewPassword = async (req: Utils.ReqWithReqBody<DTO.NewPassword>, res: Response) => {
+    const { body } = req;
+  };
 
   public logout = async (req: Request, res: Response) => {
     const refreshToken = this.cookiesService.read(req, CookiesKeys.RefreshToken);
