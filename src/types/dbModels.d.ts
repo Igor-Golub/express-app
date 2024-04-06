@@ -2,10 +2,6 @@ import { WithId } from "mongodb";
 
 export declare global {
   namespace DBModels {
-    interface ResponseWithPagination<Entity> extends Pick<Base.Pagination, "totalCount" | "pagesCount"> {
-      items: Entity[];
-    }
-
     type MongoResponseEntity<Entity> = WithId<Entity>;
 
     interface Blog {

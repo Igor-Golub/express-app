@@ -43,10 +43,13 @@ export declare global {
       content: string;
     }
 
-    interface DeviceMetaInfo {
-      ip: string | undefined;
-      name: string | undefined;
-      userAgent: string | undefined;
+    interface PasswordRecovery {
+      email: string;
+    }
+
+    interface NewPassword {
+      newPassword: string;
+      recoveryCode: string;
     }
   }
 }

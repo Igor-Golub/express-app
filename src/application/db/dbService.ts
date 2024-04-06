@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
-import { Document } from "bson";
-import mongoose, { FilterQuery, Model } from "mongoose";
+import mongoose from "mongoose";
 import { AuthSessionsModel, BlogModel, CommentsModel, PostsModel, UsersModel } from "./models";
 
 dotenv.config();
@@ -11,20 +10,6 @@ class DBService {
       .connect(String(process.env.MONGO_URL))
       .then(() => console.log("DB connected"))
       .catch(console.dir);
-  }
-
-  public async findWithPaginationAndSorting<TSchema extends Document = Document>(
-    collection: Model<TSchema>,
-    { pageNumber, pageSize }: Omit<Base.Pagination, "totalCount" | "pagesCount">,
-    sortingCondition: any,
-    filter: FilterQuery<TSchema> = {},
-  ) {
-    return collection
-      .find(filter)
-      .sort(sortingCondition)
-      .skip((pageNumber - 1) * pageSize)
-      .limit(pageSize)
-      .lean();
   }
 
   public async clear() {

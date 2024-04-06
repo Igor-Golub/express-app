@@ -20,6 +20,8 @@ export enum AuthRouts {
   Resending = "/registration-email-resending",
   Logout = "/logout",
   Me = "/me",
+  Recovery = "/recovery",
+  NewPassword = "/new-password",
 }
 
 export enum CommentsRouts {

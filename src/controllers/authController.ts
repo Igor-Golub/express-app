@@ -87,6 +87,10 @@ class AuthController {
       });
   };
 
+  public recoveryPassword = async () => {};
+
+  public createNewPassword = async () => {};
+
   public logout = async (req: Request, res: Response) => {
     const refreshToken = this.cookiesService.read(req, CookiesKeys.RefreshToken);
 
