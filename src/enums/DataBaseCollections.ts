@@ -3,7 +3,7 @@ export enum DataBaseCollections {
   Posts = "posts",
   Users = "users",
   Comments = "comments",
-  AuthSessions = "authSessions",
-  UnauthorizedSessions = "unauthorizedSessions",
-  EndpointsLogs = "endpointsLogs",
+  AuthSessions = "auth_sessions",
+  UnauthorizedSessions = "unauthorized_sessions",
+  EndpointsLogs = "endpoints_logs",
 }

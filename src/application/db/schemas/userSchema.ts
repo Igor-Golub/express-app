@@ -7,7 +7,6 @@ export const UserConfirmationSchema = new mongoose.Schema<Pick<DBModels.User, "c
   },
   code: {
     type: String,
-    required: true,
   },
   expirationDate: {
     type: Date,

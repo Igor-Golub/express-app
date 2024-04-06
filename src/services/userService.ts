@@ -1,15 +1,13 @@
 import { v4 as uuidv4 } from "uuid";
 import { add, isAfter } from "date-fns";
-import { UserCommandRepository, AuthSessionCommandRepository } from "../repositories/command";
-import { JWTService, AuthService, CryptographyService } from "../application";
+import { AuthSessionCommandRepository, UserCommandRepository } from "../repositories/command";
+import { AuthService, CryptographyService, JWTService } from "../application";
 import NotifyManager from "../managers/NotifyManager";
 import mainConfig from "../configs/mainConfig";
 import generateInnerResult from "../utils/generateInnerResult";
 import { ErrorMessages, ResultStatuses } from "../enums/Inner";
 import { WithId } from "mongodb";
 import BaseDomainService from "./baseDomainService";
-import { TokensType } from "../enums/Authorization";
-import { isString } from "../utils/typesCheck";
 
 class UserService extends BaseDomainService {
   constructor(
