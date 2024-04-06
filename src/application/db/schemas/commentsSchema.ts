@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { FilterQuery } from "mongoose";
 
 export const CommentatorInfoSchema = new mongoose.Schema<Pick<DBModels.Comment, "commentatorInfo">["commentatorInfo"]>({
   userId: {
@@ -11,7 +11,7 @@ export const CommentatorInfoSchema = new mongoose.Schema<Pick<DBModels.Comment, 
   },
 });
 
-export const CommentSchema = new mongoose.Schema<DBModels.Comment>(
+export const CommentSchema = new mongoose.Schema<DBModels.Comment, Models.Comment>(
   {
     postId: {
       type: String,
@@ -27,6 +27,21 @@ export const CommentSchema = new mongoose.Schema<DBModels.Comment>(
     },
   },
   {
+    statics: {
+      getListWithPaginationAndSorting(
+        filters: FilterQuery<DBModels.Comment>,
+        sortingCondition: any,
+        pagination: Omit<Base.Pagination, "totalCount" | "pagesCount">,
+      ) {
+        const { pageNumber, pageSize } = pagination;
+
+        return this.find(filters)
+          .sort(sortingCondition)
+          .skip((pageNumber - 1) * pageSize)
+          .limit(pageSize)
+          .lean();
+      },
+    },
     timestamps: true,
   },
 );

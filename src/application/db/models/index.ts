@@ -10,13 +10,13 @@ import {
   UnauthorizedSessions,
 } from "../schemas";
 
-const BlogModel = mongoose.model<DBModels.Blog>(DataBaseCollections.Blogs, BlogSchema);
+const BlogModel = mongoose.model<DBModels.Blog, Models.Blog>(DataBaseCollections.Blogs, BlogSchema);
 
-const UsersModel = mongoose.model<DBModels.User>(DataBaseCollections.Users, UserSchema);
+const UsersModel = mongoose.model<DBModels.User, Models.User>(DataBaseCollections.Users, UserSchema);
 
-const CommentsModel = mongoose.model<DBModels.Comment>(DataBaseCollections.Comments, CommentSchema);
+const CommentsModel = mongoose.model<DBModels.Comment, Models.Comment>(DataBaseCollections.Comments, CommentSchema);
 
-const PostsModel = mongoose.model<DBModels.Post>(DataBaseCollections.Posts, PostSchema);
+const PostsModel = mongoose.model<DBModels.Post, Models.Post>(DataBaseCollections.Posts, PostSchema);
 
 const AuthSessionsModel = mongoose.model<DBModels.Sessions>(DataBaseCollections.AuthSessions, SessionSchema);
 

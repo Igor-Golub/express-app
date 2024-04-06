@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import mongoose, { FilterQuery } from "mongoose";
 
-export const BlogSchema = new mongoose.Schema<DBModels.Blog>(
+export const BlogSchema = new mongoose.Schema<DBModels.Blog, Models.Blog>(
   {
     name: {
       type: String,
@@ -20,6 +20,21 @@ export const BlogSchema = new mongoose.Schema<DBModels.Blog>(
     },
   },
   {
+    statics: {
+      getListWithPaginationAndSorting(
+        filters: FilterQuery<DBModels.Blog>,
+        sortingCondition: any,
+        pagination: Omit<Base.Pagination, "totalCount" | "pagesCount">,
+      ) {
+        const { pageNumber, pageSize } = pagination;
+
+        return this.find(filters)
+          .sort(sortingCondition)
+          .skip((pageNumber - 1) * pageSize)
+          .limit(pageSize)
+          .lean();
+      },
+    },
     timestamps: true,
   },
 );

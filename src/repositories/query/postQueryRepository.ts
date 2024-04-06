@@ -23,11 +23,7 @@ class PostQueryRepository implements Base.QueryRepository<ViewModels.Post> {
     const sort = this.sortingService.createSortCondition();
     const filters = this.filterService.getFilters();
 
-    const result = await PostsModel.find(filters)
-      .sort(sort)
-      .skip((pageNumber - 1) * pageSize)
-      .limit(pageSize)
-      .lean();
+    const result = await PostsModel.getListWithPaginationAndSorting(filters, sort, { pageNumber, pageSize });
 
     const collectionLength = await PostsModel.countDocuments(filters);
 

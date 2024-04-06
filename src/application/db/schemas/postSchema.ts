@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import mongoose, { FilterQuery } from "mongoose";
 
-export const PostSchema = new mongoose.Schema<DBModels.Post>(
+export const PostSchema = new mongoose.Schema<DBModels.Post, Models.Post>(
   {
     title: {
       type: String,
@@ -24,6 +24,21 @@ export const PostSchema = new mongoose.Schema<DBModels.Post>(
     },
   },
   {
+    statics: {
+      getListWithPaginationAndSorting(
+        filters: FilterQuery<DBModels.Post>,
+        sortingCondition: any,
+        pagination: Omit<Base.Pagination, "totalCount" | "pagesCount">,
+      ) {
+        const { pageNumber, pageSize } = pagination;
+
+        return this.find(filters)
+          .sort(sortingCondition)
+          .skip((pageNumber - 1) * pageSize)
+          .limit(pageSize)
+          .lean();
+      },
+    },
     timestamps: true,
   },
 );

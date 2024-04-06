@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { FilterQuery } from "mongoose";
 
 export const UserConfirmationSchema = new mongoose.Schema<Pick<DBModels.User, "confirmation">["confirmation"]>({
   isConfirmed: {
@@ -14,7 +14,7 @@ export const UserConfirmationSchema = new mongoose.Schema<Pick<DBModels.User, "c
   },
 });
 
-export const UserSchema = new mongoose.Schema<DBModels.User>(
+export const UserSchema = new mongoose.Schema<DBModels.User, Models.User>(
   {
     login: {
       type: String,
@@ -34,6 +34,21 @@ export const UserSchema = new mongoose.Schema<DBModels.User>(
     },
   },
   {
+    statics: {
+      getListWithPaginationAndSorting(
+        filters: FilterQuery<DBModels.User>,
+        sortingCondition: any,
+        pagination: Omit<Base.Pagination, "totalCount" | "pagesCount">,
+      ) {
+        const { pageNumber, pageSize } = pagination;
+
+        return this.find(filters)
+          .sort(sortingCondition)
+          .skip((pageNumber - 1) * pageSize)
+          .limit(pageSize)
+          .lean();
+      },
+    },
     timestamps: true,
   },
 );

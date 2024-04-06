@@ -23,11 +23,7 @@ class BlogQueryRepository {
     const sort = this.sortingService.createSortCondition();
     const filters = this.filterService.getFilters();
 
-    const result = await BlogModel.find(filters)
-      .sort(sort)
-      .skip((pageNumber - 1) * pageSize)
-      .limit(pageSize)
-      .lean();
+    const result = await BlogModel.getListWithPaginationAndSorting(filters, sort, { pageNumber, pageSize });
 
     const collectionLength = await BlogModel.countDocuments(filters);
 
