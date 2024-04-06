@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import DBService from "../application/dbService";
+import DBService from "../application/db/dbService";
 import { StatusCodes } from "../enums/StatusCodes";
 
 class TestingController {

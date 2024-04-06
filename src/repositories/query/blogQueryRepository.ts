@@ -1,4 +1,4 @@
-import DbService from "../../application/dbService";
+import DbService from "../../application/db/dbService";
 import { Filter, ObjectId, Sort } from "mongodb";
 import PaginationService from "../../application/paginationService";
 import SortingService from "../../application/sortingService";

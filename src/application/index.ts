@@ -1,4 +1,4 @@
-import DbService from "./dbService";
+import DbService from "./db/dbService";
 import CookiesService from "./cookiesService";
 import JWTService from "./jwtService";
 import AuthService from "./authService";

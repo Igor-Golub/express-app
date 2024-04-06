@@ -1,5 +1,5 @@
 import { sub } from "date-fns";
-import DbService from "./dbService";
+import DbService from "./db/dbService";
 
 class RateLimitedService {
   public async logApiCallFromIp({ lastCall, ip, endpoint }: DBModels.EndpointsLogs) {

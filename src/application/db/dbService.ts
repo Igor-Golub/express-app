@@ -1,16 +1,15 @@
 import dotenv from "dotenv";
-import { Collection, Filter, MongoClient, Sort } from "mongodb";
-import { DataBaseCollections } from "../enums/DataBaseCollections";
+import { Collection, Filter, Sort } from "mongodb";
+import { DataBaseCollections } from "../../enums/DataBaseCollections";
 import { Document } from "bson";
+import mongoose from "mongoose";
 
 dotenv.config();
 
 class DBService {
-  private client = new MongoClient(String(process.env.MONGO_URL));
-
   public connect() {
-    this.client
-      .connect()
+    mongoose
+      .connect(String(process.env.MONGO_URL))
       .then(() => console.log("DB connected"))
       .catch(console.dir);
   }
