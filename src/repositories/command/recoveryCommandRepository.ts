@@ -5,15 +5,13 @@ import { RecoveryStatus } from "../../enums/Recovery";
 
 class RecoveryCommandRepository {
   public async create(userId: string, code: string) {
-    const expirationDate = add(new Date(), {
-      hours: mainConfig.recovery.expirationDate,
-    });
-
-    return new RecoveryModel({
-      code,
+    return RecoveryModel.create({
       userId,
-      expirationDate,
+      code,
       status: RecoveryStatus.InProgress,
+      expirationDate: add(new Date(), {
+        hours: mainConfig.recovery.expirationDate,
+      }),
     });
   }
 

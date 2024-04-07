@@ -184,7 +184,7 @@ class UserService extends BaseDomainService {
     try {
       const result = await this.recoveryCommandRepository.getRecoveryByCode(recoveryCode);
 
-      if (!result || isAfter(result.expirationDate, new Date())) return this.innerBadRequestResult();
+      if (!result || isAfter(new Date(), result.expirationDate)) return this.innerBadRequestResult();
 
       const { hash } = await this.cryptographyService.createSaltAndHash(newPassword);
 
@@ -195,7 +195,8 @@ class UserService extends BaseDomainService {
       await this.userCommandRepository.updateHash(result.userId, hash);
 
       return this.innerSuccessResult(true);
-    } catch {
+    } catch (e) {
+      console.log(e);
       return this.innerBadRequestResult();
     }
   }
