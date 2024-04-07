@@ -57,6 +57,10 @@ class AuthSessionCommandRepository {
     return Boolean(deletedCount);
   }
 
+  public async deleteAll() {
+    return AuthSessionsModel.deleteMany({});
+  }
+
   public async getAllSessionByUserId(userId: string) {
     return AuthSessionsModel.find({ userId }).lean();
   }

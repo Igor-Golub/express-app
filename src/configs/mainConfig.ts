@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import * as process from "node:process";
 
 dotenv.config();
 
@@ -29,6 +30,9 @@ const mainConfig = {
   rateLimit: {
     callsAmount: Number(process.env.RATE_LIMIT_CALLS_AMOUNT),
     time: Number(process.env.RATE_LIMIT_TIME),
+  },
+  recovery: {
+    expirationDate: Number(process.env.PASSWORD_RECOVERY_EXPIRATION_DATE),
   },
 };
 

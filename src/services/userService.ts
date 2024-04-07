@@ -12,6 +12,7 @@ import generateInnerResult from "../utils/generateInnerResult";
 import { ErrorMessages, ResultStatuses } from "../enums/Inner";
 import { WithId } from "mongodb";
 import BaseDomainService from "./baseDomainService";
+import { RecoveryStatus } from "../enums/Recovery";
 
 class UserService extends BaseDomainService {
   constructor(
@@ -162,29 +163,41 @@ class UserService extends BaseDomainService {
   }
 
   public async recoveryPassword({ email }: DTO.PasswordRecovery) {
-    const user = await this.userCommandRepository.findUserByEmail(email);
+    try {
+      const user = await this.userCommandRepository.findUserByEmail(email);
 
-    if (!user) return this.innerBadRequestResult();
+      if (!user) return this.innerBadRequestResult();
 
-    const recoveryCode = uuidv4();
+      const recoveryCode = uuidv4();
 
-    await this.recoveryCommandRepository.create(user._id.toString(), recoveryCode);
+      await this.recoveryCommandRepository.create(user._id.toString(), recoveryCode);
 
-    await this.notifyManager.sendRecoveryEmail(user.login, email, recoveryCode);
+      await this.notifyManager.sendRecoveryEmail(user.login, email, recoveryCode);
 
-    return this.innerSuccessResult(true);
+      return this.innerSuccessResult(true);
+    } catch {
+      return this.innerBadRequestResult();
+    }
   }
 
   public async createNewPassword({ recoveryCode, newPassword }: DTO.NewPassword) {
-    const result = await this.recoveryCommandRepository.confirm(recoveryCode);
+    try {
+      const result = await this.recoveryCommandRepository.getRecoveryByCode(recoveryCode);
 
-    if (!result) return this.innerBadRequestResult();
+      if (!result || isAfter(result.expirationDate, new Date())) return this.innerBadRequestResult();
 
-    const { hash } = await this.cryptographyService.createSaltAndHash(newPassword);
+      const { hash } = await this.cryptographyService.createSaltAndHash(newPassword);
 
-    await this.userCommandRepository.updateHash(result.userId, hash);
+      await this.recoveryCommandRepository.updateStatus(recoveryCode, RecoveryStatus.Recovered);
 
-    return this.innerSuccessResult(true);
+      await this.authSessionCommandRepository.deleteAll();
+
+      await this.userCommandRepository.updateHash(result.userId, hash);
+
+      return this.innerSuccessResult(true);
+    } catch {
+      return this.innerBadRequestResult();
+    }
   }
 
   public async logout(refreshToken: string) {

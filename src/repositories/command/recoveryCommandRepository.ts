@@ -1,16 +1,40 @@
+import { add } from "date-fns";
 import { RecoveryModel } from "../../application/db/models";
+import mainConfig from "../../configs/mainConfig";
+import { RecoveryStatus } from "../../enums/Recovery";
 
 class RecoveryCommandRepository {
   public async create(userId: string, code: string) {
-    return RecoveryModel.create({
-      userId,
+    const expirationDate = add(new Date(), {
+      hours: mainConfig.recovery.expirationDate,
+    });
+
+    return new RecoveryModel({
       code,
-      isRecovered: false,
+      userId,
+      expirationDate,
+      status: RecoveryStatus.InProgress,
     });
   }
 
-  public async confirm(code: string) {
-    return RecoveryModel.findOneAndUpdate({ code }, { isRecovered: true }).lean();
+  public async getRecoveryByCode(code: string) {
+    return RecoveryModel.findOne({
+      code,
+    }).lean();
+  }
+
+  public async updateStatus(code: string, status: RecoveryStatus) {
+    const recovery = await RecoveryModel.findOne({
+      code,
+    });
+
+    if (!recovery) return null;
+
+    recovery.status = status;
+
+    await recovery.save();
+
+    return true;
   }
 }
 

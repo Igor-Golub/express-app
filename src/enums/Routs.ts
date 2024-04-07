@@ -20,7 +20,7 @@ export enum AuthRouts {
   Resending = "/registration-email-resending",
   Logout = "/logout",
   Me = "/me",
-  Recovery = "/recovery",
+  Recovery = "/password-recovery",
   NewPassword = "/new-password",
 }
 

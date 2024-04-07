@@ -1,4 +1,5 @@
 import { WithId } from "mongodb";
+import { RecoveryStatus } from "../enums/Recovery";
 
 export declare global {
   namespace DBModels {
@@ -62,7 +63,8 @@ export declare global {
     interface Recovery {
       userId: string;
       code: string;
-      isRecovered: boolean;
+      status: RecoveryStatus;
+      expirationDate: Date;
     }
   }
 }

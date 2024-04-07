@@ -11,8 +11,12 @@ export const RecoverySchema = new mongoose.Schema<DBModels.Recovery>(
       type: String,
       required: true,
     },
-    isRecovered: {
-      type: Boolean,
+    status: {
+      type: String,
+      required: true,
+    },
+    expirationDate: {
+      type: Date,
       required: true,
     },
   },
