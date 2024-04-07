@@ -166,7 +166,7 @@ class UserService extends BaseDomainService {
     try {
       const user = await this.userCommandRepository.findUserByEmail(email);
 
-``      if (!user) return this.innerSuccessResult(true);
+      if (!user) return this.innerSuccessResult(true);
 
       const recoveryCode = uuidv4();
 
@@ -183,6 +183,8 @@ class UserService extends BaseDomainService {
   public async createNewPassword({ recoveryCode, newPassword }: DTO.NewPassword) {
     try {
       const result = await this.recoveryCommandRepository.getRecoveryByCode(recoveryCode);
+
+      console.log(result);
 
       if (!result || isAfter(new Date(), result.expirationDate))
         return this.innerBadRequestResult({

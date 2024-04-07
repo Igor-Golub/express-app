@@ -90,18 +90,18 @@ class AuthController {
   public recoveryPassword = async (req: Utils.ReqWithReqBody<DTO.PasswordRecovery>, res: Response) => {
     const { body } = req;
 
-    const result = await this.userService.recoveryPassword(body);
+    await this.userService.recoveryPassword(body);
 
-    if (result.status) generateErrorResponse(res, result);
-    else noContentResponse(res);
+    return noContentResponse(res);
   };
 
   public createNewPassword = async (req: Utils.ReqWithReqBody<DTO.NewPassword>, res: Response) => {
     const { body } = req;
 
-    await this.userService.createNewPassword(body);
+    const result = await this.userService.createNewPassword(body);
 
-    return noContentResponse(res);
+    if (result.status) generateErrorResponse(res, result);
+    else noContentResponse(res);
   };
 
   public logout = async (req: Request, res: Response) => {
