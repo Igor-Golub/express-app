@@ -58,5 +58,11 @@ export declare global {
       lastCall: string;
       endpoint: string;
     }
+
+    interface Recovery {
+      userId: string;
+      code: string;
+      isRecovered: boolean;
+    }
   }
 }

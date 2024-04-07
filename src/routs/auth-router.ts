@@ -13,6 +13,6 @@ authRouter
   .post(AuthRouts.Registration, rateLimit, ...authValidators.registration, AuthController.registration)
   .post(AuthRouts.Resending, rateLimit, ...authValidators.resending, AuthController.resending)
   .post(AuthRouts.Refresh, jwtRefreshAuth, AuthController.refreshTokenPair)
-  .post(AuthRouts.Recovery, ...authValidators.recovery, AuthController.recoveryPassword)
-  .post(AuthRouts.NewPassword, ...authValidators.newPassword, AuthController.createNewPassword)
+  .post(AuthRouts.Recovery, rateLimit, ...authValidators.recovery, AuthController.recoveryPassword)
+  .post(AuthRouts.NewPassword, rateLimit, ...authValidators.newPassword, AuthController.createNewPassword)
   .post(AuthRouts.Logout, AuthController.logout);

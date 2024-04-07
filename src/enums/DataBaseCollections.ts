@@ -6,4 +6,5 @@ export enum DataBaseCollections {
   AuthSessions = "auth_sessions",
   UnauthorizedSessions = "unauthorized_sessions",
   EndpointsLogs = "endpoints_logs",
+  Recovery = "recovery",
 }

@@ -1,6 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
 import { add, isAfter } from "date-fns";
-import { AuthSessionCommandRepository, UserCommandRepository } from "../repositories/command";
+import {
+  AuthSessionCommandRepository,
+  RecoveryCommandRepository,
+  UserCommandRepository,
+} from "../repositories/command";
 import { AuthService, CryptographyService, JWTService } from "../application";
 import NotifyManager from "../managers/NotifyManager";
 import mainConfig from "../configs/mainConfig";
@@ -17,6 +21,7 @@ class UserService extends BaseDomainService {
     private readonly notifyManager: typeof NotifyManager,
     private readonly authSessionCommandRepository: typeof AuthSessionCommandRepository,
     private readonly authService: typeof AuthService,
+    private readonly recoveryCommandRepository: typeof RecoveryCommandRepository,
   ) {
     super();
   }
@@ -156,6 +161,32 @@ class UserService extends BaseDomainService {
     return this.innerSuccessResult(tokensPare);
   }
 
+  public async recoveryPassword({ email }: DTO.PasswordRecovery) {
+    const user = await this.userCommandRepository.findUserByEmail(email);
+
+    if (!user) return this.innerBadRequestResult();
+
+    const recoveryCode = uuidv4();
+
+    await this.recoveryCommandRepository.create(user._id.toString(), recoveryCode);
+
+    await this.notifyManager.sendRecoveryEmail(user.login, email, recoveryCode);
+
+    return this.innerSuccessResult(true);
+  }
+
+  public async createNewPassword({ recoveryCode, newPassword }: DTO.NewPassword) {
+    const result = await this.recoveryCommandRepository.confirm(recoveryCode);
+
+    if (!result) return this.innerBadRequestResult();
+
+    const { hash } = await this.cryptographyService.createSaltAndHash(newPassword);
+
+    await this.userCommandRepository.updateHash(result.userId, hash);
+
+    return this.innerSuccessResult(true);
+  }
+
   public async logout(refreshToken: string) {
     const session = await this.authService.jwtRefreshVerification(refreshToken);
 
@@ -244,4 +275,5 @@ export default new UserService(
   NotifyManager,
   AuthSessionCommandRepository,
   AuthService,
+  RecoveryCommandRepository,
 );

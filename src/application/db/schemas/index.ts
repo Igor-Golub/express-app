@@ -5,5 +5,15 @@ import { PostSchema } from "./postSchema";
 import { SessionSchema } from "./sessionSchema";
 import { UnauthorizedSessions } from "./unauthorizedSessions";
 import { UserSchema } from "./userSchema";
+import { RecoverySchema } from "./recovery";
 
-export { BlogSchema, EndpointsLogsSchema, CommentSchema, PostSchema, SessionSchema, UnauthorizedSessions, UserSchema };
+export {
+  BlogSchema,
+  EndpointsLogsSchema,
+  CommentSchema,
+  PostSchema,
+  SessionSchema,
+  UnauthorizedSessions,
+  UserSchema,
+  RecoverySchema,
+};

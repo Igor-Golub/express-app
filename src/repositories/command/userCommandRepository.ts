@@ -17,8 +17,8 @@ class UserCommandRepository {
     return newEntity;
   }
 
-  public async update() {
-    return null;
+  public async updateHash(userId: string, hash: string) {
+    return UsersModel.findOneAndUpdate({ _id: userId }, { hash });
   }
 
   public async delete(id: string) {
@@ -77,7 +77,7 @@ class UserCommandRepository {
   public async findUserByEmail(email: string) {
     return UsersModel.findOne({
       email,
-    });
+    }).lean();
   }
 }
 

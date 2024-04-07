@@ -8,6 +8,7 @@ import {
   PostSchema,
   SessionSchema,
   UnauthorizedSessions,
+  RecoverySchema,
 } from "../schemas";
 
 const BlogModel = mongoose.model<DBModels.Blog, Models.Blog>(DataBaseCollections.Blogs, BlogSchema);
@@ -19,6 +20,8 @@ const CommentsModel = mongoose.model<DBModels.Comment, Models.Comment>(DataBaseC
 const PostsModel = mongoose.model<DBModels.Post, Models.Post>(DataBaseCollections.Posts, PostSchema);
 
 const AuthSessionsModel = mongoose.model<DBModels.Sessions>(DataBaseCollections.AuthSessions, SessionSchema);
+
+const RecoveryModel = mongoose.model<DBModels.Recovery>(DataBaseCollections.Recovery, RecoverySchema);
 
 const EndpointsLogsModel = mongoose.model<DBModels.EndpointsLogs>(
   DataBaseCollections.EndpointsLogs,
@@ -38,4 +41,5 @@ export {
   PostsModel,
   AuthSessionsModel,
   UnauthorizedSessionsModel,
+  RecoveryModel,
 };
