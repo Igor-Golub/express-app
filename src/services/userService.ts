@@ -166,7 +166,7 @@ class UserService extends BaseDomainService {
     try {
       const user = await this.userCommandRepository.findUserByEmail(email);
 
-      if (!user) return this.innerBadRequestResult();
+``      if (!user) return this.innerSuccessResult(true);
 
       const recoveryCode = uuidv4();
 
@@ -176,7 +176,7 @@ class UserService extends BaseDomainService {
 
       return this.innerSuccessResult(true);
     } catch {
-      return this.innerBadRequestResult();
+      return this.innerSuccessResult(true);
     }
   }
 
@@ -184,7 +184,11 @@ class UserService extends BaseDomainService {
     try {
       const result = await this.recoveryCommandRepository.getRecoveryByCode(recoveryCode);
 
-      if (!result || isAfter(new Date(), result.expirationDate)) return this.innerBadRequestResult();
+      if (!result || isAfter(new Date(), result.expirationDate))
+        return this.innerBadRequestResult({
+          field: "recoveryCode",
+          errorMessage: ErrorMessages.RecoveryCodeInvalid,
+        });
 
       const { hash } = await this.cryptographyService.createSaltAndHash(newPassword);
 

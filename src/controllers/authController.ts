@@ -99,10 +99,9 @@ class AuthController {
   public createNewPassword = async (req: Utils.ReqWithReqBody<DTO.NewPassword>, res: Response) => {
     const { body } = req;
 
-    const result = await this.userService.createNewPassword(body);
+    await this.userService.createNewPassword(body);
 
-    if (result.status) generateErrorResponse(res, result);
-    else noContentResponse(res);
+    return noContentResponse(res);
   };
 
   public logout = async (req: Request, res: Response) => {

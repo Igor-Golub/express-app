@@ -12,4 +12,5 @@ export enum ErrorMessages {
   UserAlreadyConfirmed = "User already confirmed",
   UserNotFound = "User not found",
   ConfirmationCodeExpired = "Confirmation code expired",
+  RecoveryCodeInvalid = "Recovery code is invalid",
 }

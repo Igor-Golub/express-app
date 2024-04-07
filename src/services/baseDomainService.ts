@@ -2,9 +2,10 @@ import generateInnerResult from "../utils/generateInnerResult";
 import { ResultStatuses } from "../enums/Inner";
 
 class BaseDomainService {
-  public innerBadRequestResult() {
+  public innerBadRequestResult<Data>(meta?: Partial<Inner.Meta<Data>>) {
     return generateInnerResult(ResultStatuses.BadRequest, {
       data: null,
+      ...meta,
     });
   }
 
