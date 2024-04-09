@@ -43,6 +43,13 @@ class CommentController implements Base.Controller {
     }
   };
 
+  public changeLikeStatus = async (req: Utils.RequestWithParamsAndReqBody<Params.URIId, DTO.Like>, res: Response) => {
+    const {
+      params: { id },
+      body,
+    } = req;
+  };
+
   public delete = async (req: Utils.ReqWithParams<Params.URIId>, res: Response) => {
     const {
       params: { id },

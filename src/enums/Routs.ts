@@ -26,6 +26,7 @@ export enum AuthRouts {
 
 export enum CommentsRouts {
   RootWithId = "/:id",
+  LikeStatus = "/:id/like-status",
 }
 
 export enum PostRouts {

@@ -1,3 +1,5 @@
+import { LikeStatus } from "../enums/Common";
+
 export declare global {
   namespace DTO {
     interface BlogCreateAndUpdate {
@@ -50,6 +52,10 @@ export declare global {
     interface NewPassword {
       newPassword: string;
       recoveryCode: string;
+    }
+
+    interface Like {
+      likeStatus: LikeStatus;
     }
   }
 }

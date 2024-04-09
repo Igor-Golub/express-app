@@ -9,4 +9,5 @@ export const commentsRouter = Router({});
 commentsRouter
   .get(CommentsRouts.RootWithId, ...commentsValidators.readById, CommentController.getById)
   .put(CommentsRouts.RootWithId, jwtAuth, ...commentsValidators.updateById, CommentController.update)
+  .put(CommentsRouts.LikeStatus, jwtAuth, ...commentsValidators.likeStatus, CommentController.changeLikeStatus)
   .delete(CommentsRouts.RootWithId, jwtAuth, commentsValidators.removeById, CommentController.delete);
