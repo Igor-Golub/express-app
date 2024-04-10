@@ -1,6 +1,11 @@
 import { CommentsModel } from "../../application/db/models";
+import { LikeStatus } from "../../enums/Common";
 
-class CommentsCommandRepository implements Base.CommandRepository<DBModels.Comment, ViewModels.Comment> {
+class CommentsCommandRepository {
+  public async findById(id: string) {
+    return CommentsModel.findById(id).lean();
+  }
+
   public async create(entity: DBModels.Comment) {
     const { _id } = await CommentsModel.create(entity);
 
@@ -9,6 +14,11 @@ class CommentsCommandRepository implements Base.CommandRepository<DBModels.Comme
       createdAt: _id.getTimestamp().toISOString(),
       content: entity.content,
       commentatorInfo: entity.commentatorInfo,
+      likesInfo: {
+        myStatus: LikeStatus.None,
+        likesCount: 0,
+        dislikesCount: 0,
+      },
     };
 
     return newEntity;

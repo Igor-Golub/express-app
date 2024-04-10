@@ -1,14 +1,21 @@
 import { LikeStatus } from "../enums/Common";
-import { CommentsLikesCommandRepository } from "../repositories/command";
+import { CommentsCommandRepository, CommentsLikesCommandRepository } from "../repositories/command";
 import BaseDomainService from "./baseDomainService";
 
 class CommentsLikesService extends BaseDomainService {
-  constructor(private readonly commentsLikesCommandRepository: typeof CommentsLikesCommandRepository) {
+  constructor(
+    private readonly commentsCommandRepository: typeof CommentsCommandRepository,
+    private readonly commentsLikesCommandRepository: typeof CommentsLikesCommandRepository,
+  ) {
     super();
   }
 
   public async updateLikeStatus(userId: string, commentId: string, status: LikeStatus) {
     try {
+      const comment = await this.commentsCommandRepository.findById(commentId);
+
+      if (!comment) return this.innerNotFoundResult();
+
       const like = await this.commentsLikesCommandRepository.findLikeByUserId(userId);
 
       if (!like) await this.commentsLikesCommandRepository.createLike({ userId, commentId, status });
@@ -21,4 +28,4 @@ class CommentsLikesService extends BaseDomainService {
   }
 }
 
-export default new CommentsLikesService(CommentsLikesCommandRepository);
+export default new CommentsLikesService(CommentsCommandRepository, CommentsLikesCommandRepository);
