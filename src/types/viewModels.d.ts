@@ -1,3 +1,5 @@
+import { LikeStatus } from "../enums/Common";
+
 export declare global {
   namespace ViewModels {
     interface BaseModel {
@@ -33,10 +35,19 @@ export declare global {
 
     interface Comment extends BaseModel {
       content: string;
-      commentatorInfo: {
-        userId: string;
-        userLogin: string;
-      };
+      commentatorInfo: CommentatorInfo;
+      likesInfo: CommentsLike;
+    }
+
+    interface CommentatorInfo {
+      userId: string;
+      userLogin: string;
+    }
+
+    interface CommentsLike {
+      likesCount: number;
+      dislikesCount: number;
+      myStatus: LikeStatus;
     }
 
     interface Session {

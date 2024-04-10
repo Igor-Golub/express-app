@@ -1,49 +1,48 @@
-import PaginationService from "../../application/paginationService";
-import { CommentsModel } from "../../application/db/models";
-import SortingService from "../../application/sortingService";
-import FilterService from "../../application/filterService";
+import { CommentsLikesModel, CommentsModel } from "../../application/db/models";
+import { LikeStatus } from "../../enums/Common";
 
-class CommentsQueryRepository implements Base.QueryRepository<ViewModels.Comment> {
-  constructor(
-    private paginationService: typeof PaginationService,
-    private sortingService: Base.SortingService,
-    private filterService: Base.FilterService<ViewModels.Comment>,
-  ) {}
-
+class CommentsQueryRepository {
   public async getById(id: string) {
     const result = await CommentsModel.findOne({ _id: id });
 
     if (!result) return null;
 
-    return this.mapToViewModels([result])[0];
+    const commentsLikes = await CommentsLikesModel.find({ commentId: id });
+
+    return this.mapToViewModels(result, commentsLikes);
   }
 
-  public async getWithPagination() {
-    const { pageNumber, pageSize } = this.paginationService.value;
-    const sort = this.sortingService.createSortCondition();
-    const filters = this.filterService.getFilters();
-
-    const result = await CommentsModel.getListWithPaginationAndSorting(filters, sort, { pageNumber, pageSize });
-
-    const collectionLength = await CommentsModel.countDocuments(filters);
+  private mapToViewModels(
+    comment: DBModels.MongoResponseEntity<DBModels.Comment>,
+    commentsLikes: DBModels.MongoResponseEntity<DBModels.CommentsLikes>[],
+  ): ViewModels.Comment {
+    const {
+      _id,
+      content,
+      commentatorInfo: { userId: commentatorInfoUserId, userLogin },
+    } = comment;
 
     return {
-      page: pageNumber,
-      pageSize,
-      totalCount: collectionLength,
-      items: this.mapToViewModels(result),
-      pagesCount: Math.ceil(collectionLength / pageSize),
-    };
-  }
-
-  private mapToViewModels(data: DBModels.MongoResponseEntity<DBModels.Comment>[]): ViewModels.Comment[] {
-    return data.map(({ _id, ...entity }) => ({
       id: _id.toString(),
       createdAt: _id.getTimestamp().toISOString(),
-      content: entity.content,
-      commentatorInfo: entity.commentatorInfo,
-    }));
+      content,
+      commentatorInfo: { userId: commentatorInfoUserId, userLogin },
+      likesInfo: commentsLikes.reduce<ViewModels.CommentsLike>(
+        (acc, { status, userId }) => {
+          if (status === LikeStatus.Like) acc.likesCount += 1;
+          if (status === LikeStatus.Dislike) acc.dislikesCount += 1;
+          if (userId === commentatorInfoUserId) acc.myStatus = status;
+
+          return acc;
+        },
+        {
+          likesCount: 0,
+          dislikesCount: 0,
+          myStatus: LikeStatus.None,
+        },
+      ),
+    };
   }
 }
 
-export default new CommentsQueryRepository(PaginationService, SortingService, FilterService);
+export default new CommentsQueryRepository();
