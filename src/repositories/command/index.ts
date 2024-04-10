@@ -4,6 +4,7 @@ import UserCommandRepository from "./userCommandRepository";
 import CommentsCommandRepository from "./commentsCommandRepository";
 import AuthSessionCommandRepository from "./authSessionCommandRepository";
 import RecoveryCommandRepository from "./recoveryCommandRepository";
+import CommentsLikesCommandRepository from "./commentsLikesCommandRepository";
 
 export {
   BlogCommandRepository,
@@ -12,4 +13,5 @@ export {
   CommentsCommandRepository,
   AuthSessionCommandRepository,
   RecoveryCommandRepository,
+  CommentsLikesCommandRepository,
 };

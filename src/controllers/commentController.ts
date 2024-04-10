@@ -1,12 +1,13 @@
 import { CommentsQueryRepository } from "../repositories/query";
 import { Response } from "express";
 import { StatusCodes } from "../enums/StatusCodes";
-import CommentsService from "../services/commentsService";
+import { CommentsService, CommentsLikesService } from "../services";
 
 class CommentController implements Base.Controller {
   constructor(
     private readonly commentsQueryRepository: typeof CommentsQueryRepository,
     private readonly commentsService: typeof CommentsService,
+    private readonly commentsLikesService: typeof CommentsLikesService,
   ) {}
 
   public getAll = async () => {};
@@ -45,9 +46,15 @@ class CommentController implements Base.Controller {
 
   public changeLikeStatus = async (req: Utils.RequestWithParamsAndReqBody<Params.URIId, DTO.Like>, res: Response) => {
     const {
-      params: { id },
+      context: { user },
+      params: { id: commentId },
       body,
     } = req;
+
+    const result = await this.commentsLikesService.updateLikeStatus(user.id, String(commentId), body.likeStatus);
+
+    if (!result) res.status(StatusCodes.NotFound_404).end();
+    else res.status(StatusCodes.NoContent_204).end();
   };
 
   public delete = async (req: Utils.ReqWithParams<Params.URIId>, res: Response) => {
@@ -69,4 +76,4 @@ class CommentController implements Base.Controller {
   };
 }
 
-export default new CommentController(CommentsQueryRepository, CommentsService);
+export default new CommentController(CommentsQueryRepository, CommentsService, CommentsLikesService);

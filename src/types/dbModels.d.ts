@@ -1,5 +1,6 @@
 import { WithId } from "mongodb";
 import { RecoveryStatus } from "../enums/Recovery";
+import { LikeStatus } from "../enums/Common";
 
 export declare global {
   namespace DBModels {
@@ -65,6 +66,12 @@ export declare global {
       code: string;
       status: RecoveryStatus;
       expirationDate: Date;
+    }
+
+    interface CommentsLikes {
+      userId: string;
+      commentId: string;
+      status: LikeStatus;
     }
   }
 }

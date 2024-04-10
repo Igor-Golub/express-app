@@ -98,9 +98,8 @@ class PostController implements Base.Controller {
 
     const postEntity = await this.postQueryRepository.getById(String(id));
 
-    if (!postEntity) {
-      res.status(StatusCodes.NotFound_404).end();
-    } else {
+    if (!postEntity) res.status(StatusCodes.NotFound_404).end();
+    else {
       const result = await this.commentsService.create(body, user.id, String(id));
 
       if (!result) res.status(StatusCodes.BadRequest_400).end();

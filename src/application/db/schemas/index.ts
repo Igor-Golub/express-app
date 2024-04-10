@@ -6,6 +6,7 @@ import { SessionSchema } from "./sessionSchema";
 import { UnauthorizedSessions } from "./unauthorizedSessions";
 import { UserSchema } from "./userSchema";
 import { RecoverySchema } from "./recovery";
+import { CommentsLikesSchema } from "./commentsLikesSchema";
 
 export {
   BlogSchema,
@@ -16,4 +17,5 @@ export {
   UnauthorizedSessions,
   UserSchema,
   RecoverySchema,
+  CommentsLikesSchema,
 };

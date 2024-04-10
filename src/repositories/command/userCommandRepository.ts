@@ -57,9 +57,7 @@ class UserCommandRepository {
   }
 
   public async findUserById(id: string) {
-    return UsersModel.findOne({
-      _id: new ObjectId(id),
-    });
+    return UsersModel.findOne({ _id: id });
   }
 
   public async findUserByLoginOrEmail(loginOrEmail: string) {

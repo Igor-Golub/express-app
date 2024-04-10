@@ -1,7 +1,7 @@
 import { body, param } from "express-validator";
 import { BlogQueryRepository } from "../repositories/query";
 import { ObjectId } from "mongodb";
-import { validation } from "../middlewares/validation";
+import { validation } from "../middlewares";
 import { sortingValidators } from "./sotting";
 import { paginationValidators } from "./pagination";
 
@@ -28,5 +28,5 @@ export const postValidators = {
   delete: [idValidation, validation],
 
   readComments: [idValidation, sortingValidators, paginationValidators, validation],
-  createComments: [validation, body("content").isString().trim().isLength({ min: 20, max: 300 }), validation],
+  createComments: [body("content").isString().trim().isLength({ min: 20, max: 300 }), validation],
 };
