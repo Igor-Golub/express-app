@@ -2,7 +2,7 @@ import { CommentsCommandRepository, UserCommandRepository } from "../repositorie
 
 class CommentsService {
   constructor(
-    private readonly commentsCommandRepository: Base.CommandRepository<DBModels.Comment, ViewModels.Comment>,
+    private readonly commentsCommandRepository: typeof CommentsCommandRepository,
     private readonly userCommandRepository: typeof UserCommandRepository,
   ) {}
 

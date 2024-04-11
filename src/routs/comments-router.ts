@@ -1,13 +1,13 @@
 import { Router } from "express";
 import { CommentsRouts } from "../enums/Routs";
-import { jwtAuth } from "../middlewares";
+import { jwtAccessAuth, jwtExisting } from "../middlewares";
 import { commentsValidators } from "../validators/comments";
 import CommentController from "../controllers/commentController";
 
 export const commentsRouter = Router({});
 
 commentsRouter
-  .get(CommentsRouts.RootWithId, ...commentsValidators.readById, CommentController.getById)
-  .put(CommentsRouts.RootWithId, jwtAuth, ...commentsValidators.updateById, CommentController.update)
-  .put(CommentsRouts.LikeStatus, jwtAuth, ...commentsValidators.likeStatus, CommentController.changeLikeStatus)
-  .delete(CommentsRouts.RootWithId, jwtAuth, commentsValidators.removeById, CommentController.delete);
+  .get(CommentsRouts.RootWithId, jwtExisting, ...commentsValidators.readById, CommentController.getById)
+  .put(CommentsRouts.RootWithId, jwtAccessAuth, ...commentsValidators.updateById, CommentController.update)
+  .put(CommentsRouts.LikeStatus, jwtAccessAuth, ...commentsValidators.likeStatus, CommentController.changeLikeStatus)
+  .delete(CommentsRouts.RootWithId, jwtAccessAuth, commentsValidators.removeById, CommentController.delete);

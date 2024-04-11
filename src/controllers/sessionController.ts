@@ -17,7 +17,7 @@ class SessionController {
       context: { user },
     } = req;
 
-    const result = await this.sessionQueryRepository.getAll(user.id);
+    const result = await this.sessionQueryRepository.getAll(user!.id);
 
     return successResponse(res, result);
   };
@@ -29,7 +29,7 @@ class SessionController {
       context: { user },
     } = req;
 
-    const result = await this.sessionsService.removeAll(user.id, refreshToken);
+    const result = await this.sessionsService.removeAll(user!.id, refreshToken);
 
     if (result.status) generateErrorResponse(res, result);
     else noContentResponse(res);
@@ -41,7 +41,7 @@ class SessionController {
       params: { id },
     } = req;
 
-    const result = await this.sessionsService.removeById(user.id, String(id));
+    const result = await this.sessionsService.removeById(user!.id, String(id));
 
     if (result.status) generateErrorResponse(res, result);
     else noContentResponse(res);

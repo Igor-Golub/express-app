@@ -24,7 +24,7 @@ class CommentsCommandRepository {
     return newEntity;
   }
 
-  public async update(id: string, entity: DBModels.Comment) {
+  public async update(id: string, entity: Partial<DBModels.Comment>) {
     const res = await CommentsModel.findOneAndUpdate({ _id: id }, entity);
 
     if (!res) return null;

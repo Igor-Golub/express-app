@@ -13,7 +13,11 @@ class AuthController {
   ) {}
 
   public me = async (req: Request, res: Response) => {
-    const result = await this.userQueryRepository.getMe(req.context.user.id);
+    const {
+      context: { user },
+    } = req;
+
+    const result = await this.userQueryRepository.getMe(user!.id);
 
     if (!result) unauthorizedResponse(res);
     else successResponse(res, result);

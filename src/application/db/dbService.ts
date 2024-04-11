@@ -1,6 +1,16 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import { AuthSessionsModel, BlogModel, CommentsModel, PostsModel, UsersModel } from "./models";
+import {
+  AuthSessionsModel,
+  BlogModel,
+  CommentsModel,
+  PostsModel,
+  UsersModel,
+  CommentsLikesModel,
+  UnauthorizedSessionsModel,
+  EndpointsLogsModel,
+  RecoveryModel,
+} from "./models";
 
 dotenv.config();
 
@@ -19,6 +29,11 @@ class DBService {
       CommentsModel.collection.deleteMany({}),
       UsersModel.collection.deleteMany({}),
       AuthSessionsModel.collection.deleteMany({}),
+      AuthSessionsModel.collection.deleteMany({}),
+      CommentsLikesModel.collection.deleteMany({}),
+      UnauthorizedSessionsModel.collection.deleteMany({}),
+      EndpointsLogsModel.collection.deleteMany({}),
+      RecoveryModel.collection.deleteMany({}),
     ]);
   }
 }

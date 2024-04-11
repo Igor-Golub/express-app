@@ -16,7 +16,7 @@ class CommentsLikesService extends BaseDomainService {
 
       if (!comment) return this.innerNotFoundResult();
 
-      const like = await this.commentsLikesCommandRepository.findLikeByUserId(userId);
+      const like = await this.commentsLikesCommandRepository.findLikeByUserIdAndCommentId(userId, commentId);
 
       if (!like) await this.commentsLikesCommandRepository.createLike({ userId, commentId, status });
       else await this.commentsLikesCommandRepository.updateLike({ likeId: like._id, status });

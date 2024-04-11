@@ -3,11 +3,12 @@ import { LikeStatus } from "../../enums/Common";
 import { ObjectId } from "mongodb";
 
 class CommentsCommandRepository {
-  public async findLikeByUserId(userId: string) {
-    return CommentsLikesModel.findOne({ userId }).lean();
+  public async findLikeByUserIdAndCommentId(userId: string, commentId: string) {
+    return CommentsLikesModel.findOne({ userId, commentId }).lean();
   }
 
   public async createLike(entity: DBModels.CommentsLikes) {
+    console.log(entity);
     return CommentsLikesModel.create(entity);
   }
 

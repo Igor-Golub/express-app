@@ -75,6 +75,7 @@ class PostController implements Base.Controller {
     res: Response<Base.ResponseWithPagination<ViewModels.Comment>>,
   ) => {
     const {
+      context: { user },
       params: { id },
       query: { sortBy, sortDirection, pageNumber, pageSize },
     } = req;
@@ -83,7 +84,7 @@ class PostController implements Base.Controller {
     this.sortingService.setValue(sortBy as keyof ViewModels.Comment, sortDirection);
     this.filterService.setValue("postId", id, FiltersType.ById);
 
-    const data = await this.commentsQueryRepository.getWithPagination();
+    const data = await this.commentsQueryRepository.getWithPagination(!!user?.id);
 
     if (!data.items.length) res.status(StatusCodes.NotFound_404).end();
     else res.status(StatusCodes.Ok_200).send(data);
@@ -100,7 +101,7 @@ class PostController implements Base.Controller {
 
     if (!postEntity) res.status(StatusCodes.NotFound_404).end();
     else {
-      const result = await this.commentsService.create(body, user.id, String(id));
+      const result = await this.commentsService.create(body, user!.id, String(id));
 
       if (!result) res.status(StatusCodes.BadRequest_400).end();
       else res.status(StatusCodes.Created_201).send(result);

@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import AuthService from "../application/authService";
 import { StatusCodes } from "../enums/StatusCodes";
 
-export const jwtAuth = async (req: Request, res: Response, next: NextFunction) => {
+export const jwtAccessAuth = async (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) return res.status(StatusCodes.Unauthorized_401).end();
