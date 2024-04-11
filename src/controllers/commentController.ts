@@ -1,13 +1,16 @@
 import { CommentsQueryRepository } from "../repositories/query";
 import { Response } from "express";
 import { StatusCodes } from "../enums/StatusCodes";
-import { CommentsService, CommentsLikesService } from "../services";
+import { CommentsLikesService, CommentsService } from "../services";
+import { CookiesService } from "../application";
+import { CookiesKeys } from "../enums/CookiesKeys";
 
 class CommentController implements Base.Controller {
   constructor(
     private readonly commentsQueryRepository: typeof CommentsQueryRepository,
     private readonly commentsService: typeof CommentsService,
     private readonly commentsLikesService: typeof CommentsLikesService,
+    private readonly cookiesService: typeof CookiesService,
   ) {}
 
   public getAll = async () => {};
@@ -17,7 +20,9 @@ class CommentController implements Base.Controller {
       params: { id },
     } = req;
 
-    const entity = await this.commentsQueryRepository.getById(String(id));
+    const isUserWithAuthSession = this.cookiesService.read(req, CookiesKeys.RefreshToken);
+
+    const entity = await this.commentsQueryRepository.getById(String(id), isUserWithAuthSession);
 
     if (!entity) res.status(StatusCodes.NotFound_404).end();
     else res.status(StatusCodes.Ok_200).send(entity);
@@ -53,7 +58,7 @@ class CommentController implements Base.Controller {
 
     const result = await this.commentsLikesService.updateLikeStatus(user.id, String(commentId), body.likeStatus);
 
-    if (!result) res.status(StatusCodes.NotFound_404).end();
+    if (result.status) res.status(StatusCodes.NotFound_404).end();
     else res.status(StatusCodes.NoContent_204).end();
   };
 
@@ -76,4 +81,4 @@ class CommentController implements Base.Controller {
   };
 }
 
-export default new CommentController(CommentsQueryRepository, CommentsService, CommentsLikesService);
+export default new CommentController(CommentsQueryRepository, CommentsService, CommentsLikesService, CookiesService);
