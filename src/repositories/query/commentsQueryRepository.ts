@@ -9,12 +9,12 @@ class CommentsQueryRepository {
     private filterService: Base.FilterService<ViewModels.Comment>,
   ) {}
 
-  public async getById(id: string, userId?: string) {
-    const result = await CommentsModel.findOne({ _id: id });
+  public async getById(commentId: string, userId?: string) {
+    const result = await CommentsModel.findOne({ _id: commentId });
 
     if (!result) return null;
 
-    const commentsLikes = await CommentsLikesModel.find({ commentId: id });
+    const commentsLikes = await CommentsLikesModel.find({ commentId });
 
     return this.mapToViewModel(result, commentsLikes, userId);
   }
@@ -58,10 +58,10 @@ class CommentsQueryRepository {
       content,
       commentatorInfo: { userId: commentatorInfoUserId, userLogin },
       likesInfo: commentsLikes.reduce<ViewModels.CommentsLike>(
-        (acc, { status }) => {
+        (acc, { status, userId }) => {
           if (status === LikeStatus.Like) acc.likesCount += 1;
           if (status === LikeStatus.Dislike) acc.dislikesCount += 1;
-          if (reqUserId && reqUserId === commentatorInfoUserId) acc.myStatus = status;
+          if (reqUserId && reqUserId === userId) acc.myStatus = status;
 
           return acc;
         },
