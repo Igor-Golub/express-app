@@ -84,7 +84,7 @@ class PostController implements Base.Controller {
     this.sortingService.setValue(sortBy as keyof ViewModels.Comment, sortDirection);
     this.filterService.setValue("postId", id, FiltersType.ById);
 
-    const data = await this.commentsQueryRepository.getWithPagination(!!user?.id);
+    const data = await this.commentsQueryRepository.getWithPagination(user?.id);
 
     if (!data.items.length) res.status(StatusCodes.NotFound_404).end();
     else res.status(StatusCodes.Ok_200).send(data);

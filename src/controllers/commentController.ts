@@ -18,7 +18,7 @@ class CommentController implements Base.Controller {
       params: { id },
     } = req;
 
-    const entity = await this.commentsQueryRepository.getById(String(id), !!user?.id);
+    const entity = await this.commentsQueryRepository.getById(String(id), user?.id);
 
     if (!entity) res.status(StatusCodes.NotFound_404).end();
     else res.status(StatusCodes.Ok_200).send(entity);
