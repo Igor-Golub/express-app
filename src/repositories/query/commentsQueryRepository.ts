@@ -57,20 +57,22 @@ class CommentsQueryRepository {
       createdAt: _id.getTimestamp().toISOString(),
       content,
       commentatorInfo: { userId: commentatorInfoUserId, userLogin },
-      likesInfo: commentsLikes.reduce<ViewModels.CommentsLike>(
-        (acc, { status, userId }) => {
-          if (status === LikeStatus.Like) acc.likesCount += 1;
-          if (status === LikeStatus.Dislike) acc.dislikesCount += 1;
-          if (reqUserId && reqUserId === userId) acc.myStatus = status;
+      likesInfo: commentsLikes
+        .filter(({ commentId }) => commentId !== _id.toString())
+        .reduce<ViewModels.CommentsLike>(
+          (acc, { status, userId }) => {
+            if (status === LikeStatus.Like) acc.likesCount += 1;
+            if (status === LikeStatus.Dislike) acc.dislikesCount += 1;
+            if (reqUserId && reqUserId === userId) acc.myStatus = status;
 
-          return acc;
-        },
-        {
-          likesCount: 0,
-          dislikesCount: 0,
-          myStatus: LikeStatus.None,
-        },
-      ),
+            return acc;
+          },
+          {
+            likesCount: 0,
+            dislikesCount: 0,
+            myStatus: LikeStatus.None,
+          },
+        ),
     };
   }
 }

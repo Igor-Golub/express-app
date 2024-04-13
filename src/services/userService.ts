@@ -184,8 +184,6 @@ class UserService extends BaseDomainService {
     try {
       const result = await this.recoveryCommandRepository.getRecoveryByCode(recoveryCode);
 
-      console.log(result);
-
       if (!result || isAfter(new Date(), result.expirationDate))
         return this.innerBadRequestResult({
           field: "recoveryCode",
@@ -202,7 +200,6 @@ class UserService extends BaseDomainService {
 
       return this.innerSuccessResult(true);
     } catch (e) {
-      console.log(e);
       return this.innerBadRequestResult();
     }
   }

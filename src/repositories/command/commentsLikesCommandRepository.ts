@@ -8,7 +8,6 @@ class CommentsCommandRepository {
   }
 
   public async createLike(entity: DBModels.CommentsLikes) {
-    console.log(entity);
     return CommentsLikesModel.create(entity);
   }
 
