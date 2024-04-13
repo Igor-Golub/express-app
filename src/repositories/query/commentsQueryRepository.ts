@@ -58,7 +58,7 @@ class CommentsQueryRepository {
       content,
       commentatorInfo: { userId: commentatorInfoUserId, userLogin },
       likesInfo: commentsLikes
-        .filter(({ commentId }) => commentId !== _id.toString())
+        .filter(({ commentId }) => commentId === _id.toString())
         .reduce<ViewModels.CommentsLike>(
           (acc, { status, userId }) => {
             if (status === LikeStatus.Like) acc.likesCount += 1;
