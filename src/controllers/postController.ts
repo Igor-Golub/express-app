@@ -1,10 +1,9 @@
 import { Response } from "express";
 import { inject, injectable } from "inversify";
+import { StatusCodes, FiltersType } from "../enums";
 import { PostService, CommentsService } from "../services";
 import { PostQueryRepo, CommentsQueryRepo } from "../repositories/query";
-import { StatusCodes } from "../enums/StatusCodes";
 import { SortingService, PaginationService, FilterService } from "../application";
-import { FiltersType } from "../enums/Filters";
 
 @injectable()
 class PostController implements Base.Controller {
@@ -27,44 +26,52 @@ class PostController implements Base.Controller {
     } = req;
 
     this.paginationService.setValues({ pageSize, pageNumber });
-    this.sortingService.setValue(sortBy as keyof ViewModels.Post, sortDirection);
+    this.sortingService.setValue(sortBy, sortDirection);
 
     const data = await this.postQueryRepository.getWithPagination();
 
     res.status(StatusCodes.Ok_200).send(data);
   };
 
-  public getById = async (req: Utils.ReqWithParams<Params.URIId>, res: Response) => {
-    const id = req.params.id;
-    const entity = await this.postQueryRepository.getById(String(id));
+  public getById = async (req: Utils.ReqWithParams<Params.URIId>, res: Response<ViewModels.Post>) => {
+    const {
+      params: { id },
+    } = req;
 
-    if (!entity) res.status(StatusCodes.NotFound_404).end();
-    else res.status(StatusCodes.Ok_200).send(entity);
+    const result = await this.postQueryRepository.getById(String(id));
+
+    if (!result) res.status(StatusCodes.NotFound_404).end();
+    else res.status(StatusCodes.Ok_200).send(result);
   };
 
-  public create = async (req: Utils.ReqWithReqBody<DTO.PostCreateAndUpdate>, res: Response) => {
-    const entity = req.body;
+  public create = async (req: Utils.ReqWithReqBody<DTO.PostCreateAndUpdate>, res: Response<ViewModels.Post>) => {
+    const { body: entity } = req;
 
     const result = await this.postService.create(entity);
 
-    res.status(StatusCodes.Created_201).send(result);
+    if (!result) res.status(StatusCodes.NotFound_404).end();
+    else res.status(StatusCodes.Created_201).send(result);
   };
 
   public update = async (
     req: Utils.RequestWithParamsAndReqBody<Params.URIId, DTO.PostCreateAndUpdate>,
-    res: Response,
+    res: Response<ViewModels.Post>,
   ) => {
-    const id = req.params.id;
-    const videoEntity = req.body;
+    const {
+      params: { id },
+      body: entity,
+    } = req;
 
-    const result = await this.postService.update(String(id), videoEntity);
+    const result = await this.postService.update(String(id), entity);
 
     if (!result) res.status(StatusCodes.NotFound_404).end();
     else res.status(StatusCodes.NoContent_204).send(result);
   };
 
   public delete = async (req: Utils.ReqWithParams<Params.URIId>, res: Response) => {
-    const id = req.params.id;
+    const {
+      params: { id },
+    } = req;
 
     const result = await this.postService.delete(String(id));
 
@@ -83,7 +90,7 @@ class PostController implements Base.Controller {
     } = req;
 
     this.paginationService.setValues({ pageSize, pageNumber });
-    this.sortingService.setValue(sortBy as keyof ViewModels.Comment, sortDirection);
+    this.sortingService.setValue(sortBy, sortDirection);
     this.filterService.setValue("postId", id, FiltersType.ById);
 
     const data = await this.commentsQueryRepository.getWithPagination(user?.id);
@@ -92,7 +99,10 @@ class PostController implements Base.Controller {
     else res.status(StatusCodes.Ok_200).send(data);
   };
 
-  public createComment = async (req: Utils.RequestWithParamsAndReqBody<Params.URIId, DTO.Comment>, res: any) => {
+  public createComment = async (
+    req: Utils.RequestWithParamsAndReqBody<Params.URIId, DTO.Comment>,
+    res: Response<ViewModels.Comment>,
+  ) => {
     const {
       body,
       params: { id },

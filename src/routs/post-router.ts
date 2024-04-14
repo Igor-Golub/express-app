@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { PostRouts, Routs } from "../enums/Routs";
+import { PostRouts, Routs } from "../enums";
 import { postValidators } from "../validators/post";
 import PostController from "../controllers/postController";
 import { basicAuth, jwtAccessAuth, jwtExisting } from "../middlewares";

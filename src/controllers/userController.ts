@@ -1,11 +1,8 @@
 import { Response } from "express";
-import UserService from "../services/userService";
-import { StatusCodes } from "../enums/StatusCodes";
-import { FiltersType } from "../enums/Filters";
-import PaginationService from "../application/paginationService";
-import SortingService from "../application/sortingService";
-import FilterService from "../application/filterService";
 import { inject, injectable } from "inversify";
+import { UserService } from "../services";
+import { StatusCodes, FiltersType } from "../enums";
+import { PaginationService, FilterService, SortingService } from "../application";
 import { UserQueryRepo } from "../repositories/query";
 
 @injectable()
@@ -27,6 +24,7 @@ class UserController {
     } = req;
 
     this.paginationService.setValues({ pageSize, pageNumber });
+    this.sortingService.setValue(sortBy, sortDirection);
     this.filterService.setValues(
       {
         login: searchLoginTerm,
@@ -34,7 +32,6 @@ class UserController {
       },
       FiltersType.OrAndInnerText,
     );
-    this.sortingService.setValue(sortBy, sortDirection);
 
     const data = await this.userQueryRepo.getWithPagination();
 

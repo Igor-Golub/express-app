@@ -1,6 +1,5 @@
 import { Response } from "express";
-import { StatusCodes } from "../enums/StatusCodes";
-import { ResultStatuses } from "../enums/Inner";
+import { StatusCodes, ResultStatuses } from "../enums";
 
 const resultStatusCodes: Record<ResultStatuses, StatusCodes> = {
   [ResultStatuses.Success]: StatusCodes.Ok_200,

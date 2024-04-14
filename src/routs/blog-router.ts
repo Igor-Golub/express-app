@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { BlogRouts } from "../enums/Routs";
+import { BlogRouts } from "../enums";
 import { validation, basicAuth } from "../middlewares";
 import { blogValidators } from "../validators/blog";
 import { sortingValidators } from "../validators/sotting";

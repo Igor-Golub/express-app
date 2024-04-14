@@ -50,9 +50,9 @@ export declare global {
     }
 
     interface FilterService<ViewEntity> {
-      setValue(filed: string, value: string | undefined, type: FiltersType);
-      setValues(data: Record<string, string | undefined>, type: FiltersType);
-      getFilters(): FilterQuery<any>;
+      setValue(filed: keyof ViewEntity | string, value: string | undefined, type: FiltersType);
+      setValues(data: Record<keyof ViewEntity | string, string | undefined>, type: FiltersType);
+      getFilters(): FilterQuery<ViewEntity>;
     }
 
     interface NotifyOptions {

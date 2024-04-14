@@ -1,20 +1,18 @@
 import { Response } from "express";
 import { inject, injectable } from "inversify";
-import { StatusCodes } from "../enums/StatusCodes";
-import { CommentsLikesService, CommentsService } from "../services";
+import { StatusCodes } from "../enums";
 import { CommentsQueryRepo } from "../repositories/query";
+import { CommentsLikesService, CommentsService } from "../services";
 
 @injectable()
-class CommentController implements Base.Controller {
+class CommentController {
   constructor(
     @inject(CommentsQueryRepo) private readonly commentsQueryRepo: CommentsQueryRepo,
     @inject(CommentsService) private readonly commentsService: CommentsService,
     @inject(CommentsLikesService) private readonly commentsLikesService: CommentsLikesService,
   ) {}
 
-  public getAll = async () => {};
-
-  public getById = async (req: Utils.ReqWithParams<Params.URIId>, res: Response) => {
+  public getById = async (req: Utils.ReqWithParams<Params.URIId>, res: Response<ViewModels.Comment>) => {
     const {
       context: { user },
       params: { id },
@@ -25,8 +23,6 @@ class CommentController implements Base.Controller {
     if (!entity) res.status(StatusCodes.NotFound_404).end();
     else res.status(StatusCodes.Ok_200).send(entity);
   };
-
-  public create = async () => {};
 
   public update = async (req: Utils.RequestWithParamsAndReqBody<Params.URIId, DTO.Comment>, res: Response) => {
     const {

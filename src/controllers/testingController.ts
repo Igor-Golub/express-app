@@ -1,7 +1,7 @@
 import { Response, Request } from "express";
 import { injectable } from "inversify";
+import { StatusCodes } from "../enums";
 import DBService from "../application/db/dbService";
-import { StatusCodes } from "../enums/StatusCodes";
 
 @injectable()
 class TestingController {

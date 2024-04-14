@@ -27,7 +27,7 @@ class UserQueryRepo {
 
     if (!user) return null;
 
-    return this.mapToViewModels([user])[0];
+    return this.mapToViewModel(user);
   }
 
   public async getWithPagination() {
@@ -43,28 +43,28 @@ class UserQueryRepo {
       page: pageNumber,
       pageSize,
       totalCount: collectionLength,
-      items: this.mapToViewModels(result),
+      items: result.map(this.mapToViewModel),
       pagesCount: Math.ceil(collectionLength / pageSize),
     };
   }
 
   public async findUserByLoginOrEmail(loginOrEmail: string): Promise<ViewModels.User | null> {
-    const user = await UsersModel.findOne({
-      $or: [{ email: loginOrEmail }, { login: loginOrEmail }],
-    });
+    const userQuery = UsersModel.findOne();
+
+    const user = await userQuery.or([{ email: loginOrEmail }, { login: loginOrEmail }]);
 
     if (!user) return null;
 
-    return this.mapToViewModels([user])[0];
+    return this.mapToViewModel(user);
   }
 
-  private mapToViewModels(data: DBModels.MongoResponseEntity<DBModels.User>[]): ViewModels.User[] {
-    return data.map(({ _id, email, login }) => ({
-      email,
-      login,
-      id: _id.toString(),
-      createdAt: _id.getTimestamp().toISOString(),
-    }));
+  private mapToViewModel(data: DBModels.MongoResponseEntity<DBModels.User>): ViewModels.User {
+    return {
+      email: data.email,
+      login: data.login,
+      id: data._id.toString(),
+      createdAt: data._id.getTimestamp().toISOString(),
+    };
   }
 }
 

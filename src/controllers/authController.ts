@@ -1,10 +1,10 @@
+import { Request, Response } from "express";
+import { inject, injectable } from "inversify";
+import { CookiesKeys } from "../enums";
+import { CookiesService } from "../application";
 import UserService from "../services/userService";
 import UserQueryRepository from "../repositories/query/userQueryRepository";
-import { CookiesService } from "../application";
-import { Request, Response } from "express";
-import { CookiesKeys } from "../enums/CookiesKeys";
 import { generateErrorResponse, noContentResponse, successResponse, unauthorizedResponse } from "../utils/response";
-import { inject, injectable } from "inversify";
 
 @injectable()
 class AuthController {
@@ -14,7 +14,7 @@ class AuthController {
     @inject(CookiesService) private readonly cookiesService: CookiesService,
   ) {}
 
-  public me = async (req: Request, res: Response) => {
+  public me = async (req: Request, res: Response<ViewModels.UserMe>) => {
     const {
       context: { user },
     } = req;
@@ -25,7 +25,7 @@ class AuthController {
     else successResponse(res, result);
   };
 
-  public login = async (req: Utils.ReqWithReqBody<DTO.Login>, res: Response) => {
+  public login = async (req: Utils.ReqWithReqBody<DTO.Login>, res: Response<{ accessToken: string }>) => {
     const { body, headers } = req;
 
     const result = await this.userService.login(body, {
@@ -81,7 +81,7 @@ class AuthController {
     else noContentResponse(res);
   };
 
-  public refreshTokenPair = async (req: Request, res: Response) => {
+  public refreshTokenPair = async (req: Request, res: Response<{ accessToken: string }>) => {
     const refreshToken = this.cookiesService.read(req, CookiesKeys.RefreshToken);
 
     const result = await this.userService.refreshTokenPairs(refreshToken);

@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
+import { CookiesKeys } from "../enums";
 import { SessionsService } from "../services";
-import { CookiesService } from "../application";
-import { generateErrorResponse, noContentResponse, successResponse } from "../utils/response";
-import { CookiesKeys } from "../enums/CookiesKeys";
 import { inject, injectable } from "inversify";
+import { CookiesService } from "../application";
 import { SessionQueryRepo } from "../repositories/query";
+import { generateErrorResponse, noContentResponse, successResponse } from "../utils/response";
 
 @injectable()
 class SessionController {

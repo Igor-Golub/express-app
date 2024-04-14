@@ -1,12 +1,9 @@
 import { Response } from "express";
-import BlogService from "../services/blogService";
 import { inject, injectable } from "inversify";
+import { BlogService } from "../services";
+import { StatusCodes, FiltersType } from "../enums";
 import { BlogQueryRepo, PostQueryRepo } from "../repositories/query";
-import { StatusCodes } from "../enums/StatusCodes";
-import SortingService from "../application/sortingService";
-import FilterService from "../application/filterService";
-import { FiltersType } from "../enums/Filters";
-import PaginationService from "../application/paginationService";
+import { SortingService, FilterService, PaginationService } from "../application";
 
 @injectable()
 class BlogController implements Base.Controller {
@@ -36,7 +33,7 @@ class BlogController implements Base.Controller {
     res.status(StatusCodes.Ok_200).send(data);
   };
 
-  public getById = async (req: Utils.ReqWithParams<Params.URIId>, res: Response) => {
+  public getById = async (req: Utils.ReqWithParams<Params.URIId>, res: Response<ViewModels.Blog>) => {
     const {
       params: { id },
     } = req;
@@ -68,7 +65,7 @@ class BlogController implements Base.Controller {
 
   public createPostForBlog = async (
     req: Utils.RequestWithParamsAndReqBody<Params.URIId, Omit<DTO.PostCreateAndUpdate, "blogId">>,
-    res: Response,
+    res: Response<ViewModels.Post>,
   ) => {
     const {
       params: { id },
@@ -77,9 +74,8 @@ class BlogController implements Base.Controller {
 
     const blog = await this.blogQueryRepo.getById(String(id));
 
-    if (!blog) {
-      res.status(StatusCodes.NotFound_404).end();
-    } else {
+    if (!blog) res.status(StatusCodes.NotFound_404).end();
+    else {
       const result = await this.blogService.createPostForBlog({
         ...entity,
         blogId: String(id),
@@ -90,13 +86,13 @@ class BlogController implements Base.Controller {
     }
   };
 
-  public create = async (req: Utils.ReqWithReqBody<DTO.BlogCreateAndUpdate>, res: Response) => {
+  public create = async (req: Utils.ReqWithReqBody<DTO.BlogCreateAndUpdate>, res: Response<ViewModels.Blog>) => {
     const { body: entity } = req;
 
     const result = await this.blogService.create(entity);
 
     if (!result) res.status(StatusCodes.NotFound_404).end();
-    res.status(StatusCodes.Created_201).send(result);
+    else res.status(StatusCodes.Created_201).send(result);
   };
 
   public update = async (

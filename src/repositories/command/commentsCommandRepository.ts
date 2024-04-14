@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
+import { LikeStatus } from "../../enums";
 import { CommentsModel } from "../../application/db/models";
-import { LikeStatus } from "../../enums/Common";
 
 @injectable()
 class CommentsCommandRepository {
@@ -27,13 +27,13 @@ class CommentsCommandRepository {
   }
 
   public async update(id: string, entity: Partial<DBModels.Comment>) {
-    const res = await CommentsModel.findOneAndUpdate({ _id: id }, entity);
+    const result = await CommentsModel.findOneAndUpdate({ _id: id }, entity);
 
-    if (!res) return null;
+    if (!result) return null;
 
     return {
-      id: res._id.toString(),
-      createdAt: res._id.getTimestamp().toISOString(),
+      id: result._id.toString(),
+      createdAt: result._id.getTimestamp().toISOString(),
       ...entity,
     };
   }
