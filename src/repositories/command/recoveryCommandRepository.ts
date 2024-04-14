@@ -1,8 +1,10 @@
 import { add } from "date-fns";
+import { injectable } from "inversify";
 import { RecoveryModel } from "../../application/db/models";
 import mainConfig from "../../configs/mainConfig";
 import { RecoveryStatus } from "../../enums/Recovery";
 
+@injectable()
 class RecoveryCommandRepository {
   public async create(userId: string, code: string) {
     return RecoveryModel.create({
@@ -36,4 +38,4 @@ class RecoveryCommandRepository {
   }
 }
 
-export default new RecoveryCommandRepository();
+export default RecoveryCommandRepository;

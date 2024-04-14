@@ -1,3 +1,6 @@
+import { injectable } from "inversify";
+
+@injectable()
 class EmailTemplatesCreator {
   public getRegistrationTemplate(login: string, code: string) {
     return `
@@ -19,4 +22,4 @@ class EmailTemplatesCreator {
   }
 }
 
-export default new EmailTemplatesCreator();
+export default EmailTemplatesCreator;

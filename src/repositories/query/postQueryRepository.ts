@@ -1,13 +1,15 @@
+import { inject, injectable } from "inversify";
 import PaginationService from "../../application/paginationService";
 import SortingService from "../../application/sortingService";
 import FilterService from "../../application/filterService";
 import { PostsModel } from "../../application/db/models";
 
+@injectable()
 class PostQueryRepository implements Base.QueryRepository<ViewModels.Post> {
   constructor(
-    private paginationService: typeof PaginationService,
-    private sortingService: Base.SortingService,
-    private filterService: Base.FilterService<ViewModels.Post>,
+    @inject(PaginationService) private readonly paginationService: PaginationService,
+    @inject(SortingService) private readonly sortingService: SortingService,
+    @inject(FilterService) private readonly filterService: Base.FilterService<ViewModels.Post>,
   ) {}
 
   public async getById(id: string) {
@@ -49,4 +51,4 @@ class PostQueryRepository implements Base.QueryRepository<ViewModels.Post> {
   }
 }
 
-export default new PostQueryRepository(PaginationService, SortingService, FilterService);
+export default PostQueryRepository;

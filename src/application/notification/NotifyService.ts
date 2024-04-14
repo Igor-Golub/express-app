@@ -1,11 +1,13 @@
 import EmailNotify from "./email/EmailNotify";
+import { inject, injectable } from "inversify";
 
+@injectable()
 class NotifyService {
-  constructor(private readonly emailNotify: typeof EmailNotify) {}
+  constructor(@inject(EmailNotify) private readonly emailNotify: EmailNotify) {}
 
   public sendEmail(options: Pick<Base.NotifyOptions, "from" | "address" | "subject" | "template">) {
     return this.emailNotify.send(options);
   }
 }
 
-export default new NotifyService(EmailNotify);
+export default NotifyService;

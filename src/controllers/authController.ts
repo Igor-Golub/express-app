@@ -4,12 +4,14 @@ import { CookiesService } from "../application";
 import { Request, Response } from "express";
 import { CookiesKeys } from "../enums/CookiesKeys";
 import { generateErrorResponse, noContentResponse, successResponse, unauthorizedResponse } from "../utils/response";
+import { inject, injectable } from "inversify";
 
+@injectable()
 class AuthController {
   constructor(
-    private readonly userQueryRepository: typeof UserQueryRepository,
-    private readonly userService: typeof UserService,
-    private readonly cookiesService: typeof CookiesService,
+    @inject(UserQueryRepository) private readonly userQueryRepository: UserQueryRepository,
+    @inject(UserService) private readonly userService: UserService,
+    @inject(CookiesService) private readonly cookiesService: CookiesService,
   ) {}
 
   public me = async (req: Request, res: Response) => {
@@ -118,4 +120,4 @@ class AuthController {
   };
 }
 
-export default new AuthController(UserQueryRepository, UserService, CookiesService);
+export default AuthController;

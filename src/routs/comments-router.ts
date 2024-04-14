@@ -3,11 +3,14 @@ import { CommentsRouts } from "../enums/Routs";
 import { jwtAccessAuth, jwtExisting } from "../middlewares";
 import { commentsValidators } from "../validators/comments";
 import CommentController from "../controllers/commentController";
+import { container } from "../inversify.config";
+
+const commentController = container.resolve(CommentController);
 
 export const commentsRouter = Router({});
 
 commentsRouter
-  .get(CommentsRouts.RootWithId, jwtExisting, ...commentsValidators.readById, CommentController.getById)
-  .put(CommentsRouts.RootWithId, jwtAccessAuth, ...commentsValidators.updateById, CommentController.update)
-  .put(CommentsRouts.LikeStatus, jwtAccessAuth, ...commentsValidators.likeStatus, CommentController.changeLikeStatus)
-  .delete(CommentsRouts.RootWithId, jwtAccessAuth, commentsValidators.removeById, CommentController.delete);
+  .get(CommentsRouts.RootWithId, jwtExisting, ...commentsValidators.readById, commentController.getById)
+  .put(CommentsRouts.RootWithId, jwtAccessAuth, ...commentsValidators.updateById, commentController.update)
+  .put(CommentsRouts.LikeStatus, jwtAccessAuth, ...commentsValidators.likeStatus, commentController.changeLikeStatus)
+  .delete(CommentsRouts.RootWithId, jwtAccessAuth, commentsValidators.removeById, commentController.delete);

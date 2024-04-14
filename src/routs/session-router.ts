@@ -3,15 +3,18 @@ import SessionController from "../controllers/sessionController";
 import { SessionRoutes } from "../enums/Routs";
 import { sessionsValidators } from "../validators/sessions";
 import { jwtRefreshAuth } from "../middlewares";
+import { container } from "../inversify.config";
+
+const sessionController = container.resolve(SessionController);
 
 export const sessionRouter = Router();
 
 sessionRouter
-  .get(SessionRoutes.Devices, jwtRefreshAuth, SessionController.getAllUserSessions)
-  .delete(SessionRoutes.Devices, jwtRefreshAuth, SessionController.removeAllUserSessions)
+  .get(SessionRoutes.Devices, jwtRefreshAuth, sessionController.getAllUserSessions)
+  .delete(SessionRoutes.Devices, jwtRefreshAuth, sessionController.removeAllUserSessions)
   .delete(
     SessionRoutes.DevicesWithId,
     jwtRefreshAuth,
     ...sessionsValidators.removeById,
-    SessionController.removeUserSessionById,
+    sessionController.removeUserSessionById,
   );

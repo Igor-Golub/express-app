@@ -1,7 +1,9 @@
+import { ObjectId } from "mongodb";
+import { injectable } from "inversify";
 import { CommentsLikesModel } from "../../application/db/models";
 import { LikeStatus } from "../../enums/Common";
-import { ObjectId } from "mongodb";
 
+@injectable()
 class CommentsCommandRepository {
   public async findLikeByUserIdAndCommentId(userId: string, commentId: string) {
     return CommentsLikesModel.findOne({ userId, commentId }).lean();
@@ -16,4 +18,4 @@ class CommentsCommandRepository {
   }
 }
 
-export default new CommentsCommandRepository();
+export default CommentsCommandRepository;

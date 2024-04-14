@@ -1,6 +1,8 @@
-import { SortingDirectionStrings } from "../enums/Sorting";
+import { injectable } from "inversify";
 import { Sort } from "mongodb";
+import { SortingDirectionStrings } from "../enums/Sorting";
 
+@injectable()
 class ClientSortingService implements Base.SortingService {
   public value: Base.Sorting = {
     sortBy: "_id",
@@ -19,4 +21,4 @@ class ClientSortingService implements Base.SortingService {
   }
 }
 
-export default new ClientSortingService();
+export default ClientSortingService;

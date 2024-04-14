@@ -30,7 +30,7 @@ export declare global {
       getWithPagination(sort: Sort, filters: Filter<any> = {}): Promise<ViewModels.ResponseWithPagination<Entity>>;
     }
 
-    interface CommandRepository<DBEntity, ViewEntity> {
+    interface CommandRepo<DBEntity, ViewEntity> {
       create(entity: DBEntity): Promise<ViewEntity | null>;
       update(id: string, entity: Partial<DBEntity>): Promise<ViewEntity | null>;
       delete(id: string): Promise<boolean>;

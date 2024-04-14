@@ -1,5 +1,7 @@
 import bcrypt from "bcrypt";
+import { injectable } from "inversify";
 
+@injectable()
 class CryptographyService {
   public async createSaltAndHash(password: string) {
     const salt = await this.createSalt();
@@ -21,4 +23,4 @@ class CryptographyService {
   }
 }
 
-export default new CryptographyService();
+export default CryptographyService;

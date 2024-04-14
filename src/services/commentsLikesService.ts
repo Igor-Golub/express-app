@@ -1,25 +1,27 @@
+import { inject, injectable } from "inversify";
 import { LikeStatus } from "../enums/Common";
-import { CommentsCommandRepository, CommentsLikesCommandRepository } from "../repositories/command";
+import { CommentsCommandRepo, CommentsLikesCommandRepo } from "../repositories/command";
 import BaseDomainService from "./baseDomainService";
 
+@injectable()
 class CommentsLikesService extends BaseDomainService {
   constructor(
-    private readonly commentsCommandRepository: typeof CommentsCommandRepository,
-    private readonly commentsLikesCommandRepository: typeof CommentsLikesCommandRepository,
+    @inject(CommentsCommandRepo) private readonly commentsCommandRepo: CommentsCommandRepo,
+    @inject(CommentsLikesCommandRepo) private readonly commentsLikesCommandRepo: CommentsLikesCommandRepo,
   ) {
     super();
   }
 
   public async updateLikeStatus(userId: string, commentId: string, status: LikeStatus) {
     try {
-      const comment = await this.commentsCommandRepository.findById(commentId);
+      const comment = await this.commentsCommandRepo.findById(commentId);
 
       if (!comment) return this.innerNotFoundResult();
 
-      const like = await this.commentsLikesCommandRepository.findLikeByUserIdAndCommentId(userId, commentId);
+      const like = await this.commentsLikesCommandRepo.findLikeByUserIdAndCommentId(userId, commentId);
 
-      if (!like) await this.commentsLikesCommandRepository.createLike({ userId, commentId, status });
-      else await this.commentsLikesCommandRepository.updateLike({ likeId: like._id, status });
+      if (!like) await this.commentsLikesCommandRepo.createLike({ userId, commentId, status });
+      else await this.commentsLikesCommandRepo.updateLike({ likeId: like._id, status });
 
       return this.innerSuccessResult(true);
     } catch {
@@ -28,4 +30,4 @@ class CommentsLikesService extends BaseDomainService {
   }
 }
 
-export default new CommentsLikesService(CommentsCommandRepository, CommentsLikesCommandRepository);
+export default CommentsLikesService;

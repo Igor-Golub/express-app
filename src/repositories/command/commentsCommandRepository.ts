@@ -1,6 +1,8 @@
+import { injectable } from "inversify";
 import { CommentsModel } from "../../application/db/models";
 import { LikeStatus } from "../../enums/Common";
 
+@injectable()
 class CommentsCommandRepository {
   public async findById(id: string) {
     return CommentsModel.findById(id).lean();
@@ -43,4 +45,4 @@ class CommentsCommandRepository {
   }
 }
 
-export default new CommentsCommandRepository();
+export default CommentsCommandRepository;

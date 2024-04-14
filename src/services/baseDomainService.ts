@@ -1,6 +1,8 @@
 import generateInnerResult from "../utils/generateInnerResult";
 import { ResultStatuses } from "../enums/Inner";
+import { injectable } from "inversify";
 
+@injectable()
 class BaseDomainService {
   public innerBadRequestResult<Data>(meta?: Partial<Inner.Meta<Data>>) {
     return generateInnerResult(ResultStatuses.BadRequest, {

@@ -1,11 +1,13 @@
+import { inject, injectable } from "inversify";
 import { FilterService, PaginationService, SortingService } from "../../application";
 import { UsersModel } from "../../application/db/models";
 
-class UserQueryRepository {
+@injectable()
+class UserQueryRepo {
   constructor(
-    private paginationService: typeof PaginationService,
-    private sortingService: Base.SortingService,
-    private filterService: Base.FilterService<ViewModels.User>,
+    @inject(PaginationService) private readonly paginationService: PaginationService,
+    @inject(SortingService) private readonly sortingService: Base.SortingService,
+    @inject(FilterService) private readonly filterService: Base.FilterService<ViewModels.User>,
   ) {}
 
   public async getMe(id: string): Promise<ViewModels.UserMe | null> {
@@ -66,4 +68,4 @@ class UserQueryRepository {
   }
 }
 
-export default new UserQueryRepository(PaginationService, SortingService, FilterService);
+export default UserQueryRepo;

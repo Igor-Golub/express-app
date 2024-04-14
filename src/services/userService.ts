@@ -1,10 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { add, isAfter } from "date-fns";
-import {
-  AuthSessionCommandRepository,
-  RecoveryCommandRepository,
-  UserCommandRepository,
-} from "../repositories/command";
+import { inject, injectable } from "inversify";
+import { AuthSessionCommandRepo, RecoveryCommandRepo, UserCommandRepo } from "../repositories/command";
 import { AuthService, CryptographyService, JWTService } from "../application";
 import NotifyManager from "../managers/NotifyManager";
 import mainConfig from "../configs/mainConfig";
@@ -14,15 +11,16 @@ import { WithId } from "mongodb";
 import BaseDomainService from "./baseDomainService";
 import { RecoveryStatus } from "../enums/Recovery";
 
+@injectable()
 class UserService extends BaseDomainService {
   constructor(
-    private readonly userCommandRepository: typeof UserCommandRepository,
-    private readonly cryptographyService: typeof CryptographyService,
-    private readonly jwtService: typeof JWTService,
-    private readonly notifyManager: typeof NotifyManager,
-    private readonly authSessionCommandRepository: typeof AuthSessionCommandRepository,
-    private readonly authService: typeof AuthService,
-    private readonly recoveryCommandRepository: typeof RecoveryCommandRepository,
+    @inject(UserCommandRepo) private readonly userCommandRepository: UserCommandRepo,
+    @inject(CryptographyService) private readonly cryptographyService: CryptographyService,
+    @inject(JWTService) private readonly jwtService: JWTService,
+    @inject(NotifyManager) private readonly notifyManager: NotifyManager,
+    @inject(AuthSessionCommandRepo) private readonly authSessionCommandRepo: AuthSessionCommandRepo,
+    @inject(AuthService) private readonly authService: AuthService,
+    @inject(RecoveryCommandRepo) private readonly recoveryCommandRepo: RecoveryCommandRepo,
   ) {
     super();
   }
@@ -100,7 +98,7 @@ class UserService extends BaseDomainService {
 
     if (!verifyResult || !verifyResult?.iat) return this.innerNotFoundResult();
 
-    await this.authSessionCommandRepository.create({
+    await this.authSessionCommandRepo.create({
       userId: user._id.toString(),
       version: new Date(verifyResult.iat * 1000).toISOString(),
       deviceId,
@@ -154,7 +152,7 @@ class UserService extends BaseDomainService {
 
     if (!result || !result?.iat) return this.innerUnauthorizedResult();
 
-    await this.authSessionCommandRepository.update(session._id, {
+    await this.authSessionCommandRepo.update(session._id, {
       ...session,
       version: new Date(result.iat * 1000).toISOString(),
     });
@@ -170,7 +168,7 @@ class UserService extends BaseDomainService {
 
       const recoveryCode = uuidv4();
 
-      await this.recoveryCommandRepository.create(user._id.toString(), recoveryCode);
+      await this.recoveryCommandRepo.create(user._id.toString(), recoveryCode);
 
       await this.notifyManager.sendRecoveryEmail(user.login, email, recoveryCode);
 
@@ -182,7 +180,7 @@ class UserService extends BaseDomainService {
 
   public async createNewPassword({ recoveryCode, newPassword }: DTO.NewPassword) {
     try {
-      const result = await this.recoveryCommandRepository.getRecoveryByCode(recoveryCode);
+      const result = await this.recoveryCommandRepo.getRecoveryByCode(recoveryCode);
 
       if (!result || isAfter(new Date(), result.expirationDate))
         return this.innerBadRequestResult({
@@ -192,9 +190,9 @@ class UserService extends BaseDomainService {
 
       const { hash } = await this.cryptographyService.createSaltAndHash(newPassword);
 
-      await this.recoveryCommandRepository.updateStatus(recoveryCode, RecoveryStatus.Recovered);
+      await this.recoveryCommandRepo.updateStatus(recoveryCode, RecoveryStatus.Recovered);
 
-      await this.authSessionCommandRepository.deleteAll();
+      await this.authSessionCommandRepo.deleteAll();
 
       await this.userCommandRepository.updateHash(result.userId, hash);
 
@@ -209,7 +207,7 @@ class UserService extends BaseDomainService {
 
     if (!session) return this.innerUnauthorizedResult();
 
-    await this.authSessionCommandRepository.delete(session.userId, session.deviceId);
+    await this.authSessionCommandRepo.delete(session.userId, session.deviceId);
 
     return this.innerSuccessResult(true);
   }
@@ -285,12 +283,4 @@ class UserService extends BaseDomainService {
   }
 }
 
-export default new UserService(
-  UserCommandRepository,
-  CryptographyService,
-  JWTService,
-  NotifyManager,
-  AuthSessionCommandRepository,
-  AuthService,
-  RecoveryCommandRepository,
-);
+export default UserService;

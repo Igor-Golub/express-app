@@ -1,6 +1,8 @@
-import { AuthSessionsModel } from "../../application/db/models";
 import { ObjectId } from "mongodb";
+import { injectable } from "inversify";
+import { AuthSessionsModel } from "../../application/db/models";
 
+@injectable()
 class AuthSessionCommandRepository {
   public async checkIsTokenValid(version: string) {
     return AuthSessionsModel.findOne({
@@ -70,4 +72,4 @@ class AuthSessionCommandRepository {
   }
 }
 
-export default new AuthSessionCommandRepository();
+export default AuthSessionCommandRepository;

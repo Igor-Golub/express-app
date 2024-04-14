@@ -1,19 +1,21 @@
 import { Response } from "express";
 import UserService from "../services/userService";
-import { UserQueryRepository } from "../repositories/query";
 import { StatusCodes } from "../enums/StatusCodes";
 import { FiltersType } from "../enums/Filters";
 import PaginationService from "../application/paginationService";
 import SortingService from "../application/sortingService";
 import FilterService from "../application/filterService";
+import { inject, injectable } from "inversify";
+import { UserQueryRepo } from "../repositories/query";
 
+@injectable()
 class UserController {
   constructor(
-    private userQueryRepository: typeof UserQueryRepository,
-    private userService: typeof UserService,
-    private sortingService: Base.SortingService,
-    private filterService: Base.FilterService<DBModels.User>,
-    private paginationService: typeof PaginationService,
+    @inject(UserQueryRepo) private readonly userQueryRepo: UserQueryRepo,
+    @inject(UserService) private readonly userService: UserService,
+    @inject(SortingService) private readonly sortingService: Base.SortingService,
+    @inject(FilterService) private readonly filterService: Base.FilterService<DBModels.User>,
+    @inject(PaginationService) private readonly paginationService: PaginationService,
   ) {}
 
   public getAll = async (
@@ -34,7 +36,7 @@ class UserController {
     );
     this.sortingService.setValue(sortBy, sortDirection);
 
-    const data = await this.userQueryRepository.getWithPagination();
+    const data = await this.userQueryRepo.getWithPagination();
 
     res.status(StatusCodes.Ok_200).send(data);
   };
@@ -60,4 +62,4 @@ class UserController {
   };
 }
 
-export default new UserController(UserQueryRepository, UserService, SortingService, FilterService, PaginationService);
+export default UserController;

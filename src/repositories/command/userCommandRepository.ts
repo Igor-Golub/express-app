@@ -1,8 +1,10 @@
+import { injectable } from "inversify";
 import { add } from "date-fns";
+import { ObjectId } from "mongodb";
 import mainConfig from "../../configs/mainConfig";
 import { UsersModel } from "../../application/db/models";
-import { ObjectId } from "mongodb";
 
+@injectable()
 class UserCommandRepository {
   public async create(entity: DBModels.User) {
     const { _id } = await UsersModel.create(entity);
@@ -79,4 +81,4 @@ class UserCommandRepository {
   }
 }
 
-export default new UserCommandRepository();
+export default UserCommandRepository;

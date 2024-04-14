@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
+import { injectable } from "inversify";
 import { CookiesKeys } from "../enums/CookiesKeys";
 import { CookieOptions } from "express-serve-static-core";
 
+@injectable()
 class CookiesService {
   public write(res: Response, key: CookiesKeys, payload: string, options?: Partial<CookieOptions>) {
     return res.cookie(key, payload, { ...options });
@@ -39,4 +41,4 @@ class CookiesService {
   }
 }
 
-export default new CookiesService();
+export default CookiesService;

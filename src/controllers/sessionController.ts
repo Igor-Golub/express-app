@@ -1,15 +1,17 @@
 import { Request, Response } from "express";
 import { SessionsService } from "../services";
-import { SessionQueryRepository } from "../repositories/query";
 import { CookiesService } from "../application";
 import { generateErrorResponse, noContentResponse, successResponse } from "../utils/response";
 import { CookiesKeys } from "../enums/CookiesKeys";
+import { inject, injectable } from "inversify";
+import { SessionQueryRepo } from "../repositories/query";
 
+@injectable()
 class SessionController {
   constructor(
-    private readonly sessionQueryRepository: typeof SessionQueryRepository,
-    private readonly sessionsService: typeof SessionsService,
-    private readonly cookiesService: typeof CookiesService,
+    @inject(SessionQueryRepo) private readonly sessionQueryRepo: SessionQueryRepo,
+    @inject(SessionsService) private readonly sessionsService: SessionsService,
+    @inject(CookiesService) private readonly cookiesService: CookiesService,
   ) {}
 
   public getAllUserSessions = async (req: Request, res: Response<ViewModels.Session[]>) => {
@@ -17,7 +19,7 @@ class SessionController {
       context: { user },
     } = req;
 
-    const result = await this.sessionQueryRepository.getAll(user!.id);
+    const result = await this.sessionQueryRepo.getAll(user!.id);
 
     return successResponse(res, result);
   };
@@ -48,4 +50,4 @@ class SessionController {
   };
 }
 
-export default new SessionController(SessionQueryRepository, SessionsService, CookiesService);
+export default SessionController;

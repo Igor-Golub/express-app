@@ -1,19 +1,21 @@
 import { Response } from "express";
+import { inject, injectable } from "inversify";
 import { PostService, CommentsService } from "../services";
-import { PostQueryRepository, CommentsQueryRepository } from "../repositories/query";
+import { PostQueryRepo, CommentsQueryRepo } from "../repositories/query";
 import { StatusCodes } from "../enums/StatusCodes";
 import { SortingService, PaginationService, FilterService } from "../application";
 import { FiltersType } from "../enums/Filters";
 
+@injectable()
 class PostController implements Base.Controller {
   constructor(
-    private readonly postQueryRepository: typeof PostQueryRepository,
-    private readonly commentsQueryRepository: typeof CommentsQueryRepository,
-    private readonly postService: typeof PostService,
-    private readonly sortingService: Base.SortingService,
-    private readonly filterService: Base.FilterService<ViewModels.Comment>,
-    private readonly paginationService: typeof PaginationService,
-    private readonly commentsService: typeof CommentsService,
+    @inject(PostQueryRepo) private readonly postQueryRepository: PostQueryRepo,
+    @inject(CommentsQueryRepo) private readonly commentsQueryRepository: CommentsQueryRepo,
+    @inject(PostService) private readonly postService: PostService,
+    @inject(SortingService) private readonly sortingService: Base.SortingService,
+    @inject(FilterService) private readonly filterService: Base.FilterService<ViewModels.Comment>,
+    @inject(PaginationService) private readonly paginationService: PaginationService,
+    @inject(CommentsService) private readonly commentsService: CommentsService,
   ) {}
 
   public getAll = async (
@@ -109,12 +111,4 @@ class PostController implements Base.Controller {
   };
 }
 
-export default new PostController(
-  PostQueryRepository,
-  CommentsQueryRepository,
-  PostService,
-  SortingService,
-  FilterService,
-  PaginationService,
-  CommentsService,
-);
+export default PostController;

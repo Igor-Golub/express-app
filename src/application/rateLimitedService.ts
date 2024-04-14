@@ -1,8 +1,10 @@
 import { sub } from "date-fns";
 import { EndpointsLogsModel } from "./db/models";
+import { injectable } from "inversify";
 
+@injectable()
 class RateLimitedService {
-  public async logApiCallFromIp({ lastCall, ip, endpoint }: DBModels.EndpointsLogs) {
+  public static async logApiCallFromIp({ lastCall, ip, endpoint }: DBModels.EndpointsLogs) {
     await EndpointsLogsModel.create({
       ip,
       lastCall,
@@ -10,7 +12,7 @@ class RateLimitedService {
     });
   }
 
-  public async getAllAttemptsEndpointForTime(endpoint: string, ip: string, time: number) {
+  public static async getAllAttemptsEndpointForTime(endpoint: string, ip: string, time: number) {
     return EndpointsLogsModel.countDocuments({
       endpoint,
       ip,
@@ -23,4 +25,4 @@ class RateLimitedService {
   }
 }
 
-export default new RateLimitedService();
+export default RateLimitedService;

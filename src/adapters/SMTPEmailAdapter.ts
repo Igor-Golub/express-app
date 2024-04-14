@@ -1,6 +1,8 @@
 import nodemailer from "nodemailer";
 import mainConfig from "../configs/mainConfig";
+import { injectable } from "inversify";
 
+@injectable()
 class SMTPEmailAdapter implements Base.Notify {
   private transport;
 
@@ -28,4 +30,4 @@ class SMTPEmailAdapter implements Base.Notify {
   }
 }
 
-export default new SMTPEmailAdapter();
+export default SMTPEmailAdapter;

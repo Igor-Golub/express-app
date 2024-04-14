@@ -2,12 +2,14 @@ import PaginationService from "../../application/paginationService";
 import SortingService from "../../application/sortingService";
 import FilterService from "../../application/filterService";
 import { BlogModel } from "../../application/db/models";
+import { inject, injectable } from "inversify";
 
+@injectable()
 class BlogQueryRepository {
   constructor(
-    private paginationService: typeof PaginationService,
-    private sortingService: Base.SortingService,
-    private filterService: Base.FilterService<ViewModels.Blog>,
+    @inject(PaginationService) private readonly paginationService: PaginationService,
+    @inject(SortingService) private readonly sortingService: Base.SortingService,
+    @inject(FilterService) private readonly filterService: Base.FilterService<ViewModels.Blog>,
   ) {}
 
   public async getById(id: string) {
@@ -48,4 +50,4 @@ class BlogQueryRepository {
   }
 }
 
-export default new BlogQueryRepository(PaginationService, SortingService, FilterService);
+export default BlogQueryRepository;

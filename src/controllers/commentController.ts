@@ -1,13 +1,15 @@
-import { CommentsQueryRepository } from "../repositories/query";
 import { Response } from "express";
+import { inject, injectable } from "inversify";
 import { StatusCodes } from "../enums/StatusCodes";
 import { CommentsLikesService, CommentsService } from "../services";
+import { CommentsQueryRepo } from "../repositories/query";
 
+@injectable()
 class CommentController implements Base.Controller {
   constructor(
-    private readonly commentsQueryRepository: typeof CommentsQueryRepository,
-    private readonly commentsService: typeof CommentsService,
-    private readonly commentsLikesService: typeof CommentsLikesService,
+    @inject(CommentsQueryRepo) private readonly commentsQueryRepo: CommentsQueryRepo,
+    @inject(CommentsService) private readonly commentsService: CommentsService,
+    @inject(CommentsLikesService) private readonly commentsLikesService: CommentsLikesService,
   ) {}
 
   public getAll = async () => {};
@@ -18,7 +20,7 @@ class CommentController implements Base.Controller {
       params: { id },
     } = req;
 
-    const entity = await this.commentsQueryRepository.getById(String(id), user?.id);
+    const entity = await this.commentsQueryRepo.getById(String(id), user?.id);
 
     if (!entity) res.status(StatusCodes.NotFound_404).end();
     else res.status(StatusCodes.Ok_200).send(entity);
@@ -33,7 +35,7 @@ class CommentController implements Base.Controller {
       context: { user },
     } = req;
 
-    const commentEntity = await this.commentsQueryRepository.getById(String(id));
+    const commentEntity = await this.commentsQueryRepo.getById(String(id));
 
     if (commentEntity && commentEntity?.commentatorInfo.userId !== user!.id) {
       res.status(StatusCodes.Forbidden_403).end();
@@ -64,7 +66,7 @@ class CommentController implements Base.Controller {
       context: { user },
     } = req;
 
-    const commentEntity = await this.commentsQueryRepository.getById(String(id));
+    const commentEntity = await this.commentsQueryRepo.getById(String(id));
 
     if (commentEntity && commentEntity?.commentatorInfo.userId !== user!.id) {
       res.status(StatusCodes.Forbidden_403).end();
@@ -77,4 +79,4 @@ class CommentController implements Base.Controller {
   };
 }
 
-export default new CommentController(CommentsQueryRepository, CommentsService, CommentsLikesService);
+export default CommentController;

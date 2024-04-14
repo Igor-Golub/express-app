@@ -1,13 +1,7 @@
-import BlogQueryRepository from "./blogQueryRepository";
-import PostQueryRepository from "./postQueryRepository";
-import UserQueryRepository from "./userQueryRepository";
-import CommentsQueryRepository from "./commentsQueryRepository";
-import SessionQueryRepository from "./sessionQueryRepository";
+import BlogQueryRepo from "./blogQueryRepository";
+import PostQueryRepo from "./postQueryRepository";
+import UserQueryRepo from "./userQueryRepository";
+import CommentsQueryRepo from "./commentsQueryRepository";
+import SessionQueryRepo from "./sessionQueryRepository";
 
-export {
-  BlogQueryRepository,
-  PostQueryRepository,
-  UserQueryRepository,
-  CommentsQueryRepository,
-  SessionQueryRepository,
-};
+export { BlogQueryRepo, PostQueryRepo, UserQueryRepo, CommentsQueryRepo, SessionQueryRepo };

@@ -1,10 +1,12 @@
-import BlogCommandRepository from "../repositories/command/blogCommandRepository";
-import PostService from "../services/postService";
+import { injectable, inject } from "inversify";
+import { BlogCommandRepo } from "../repositories/command";
+import PostService from "./postService";
 
+@injectable()
 class BlogService {
   constructor(
-    private blogCommandRepository: Base.CommandRepository<DBModels.Blog, ViewModels.Blog>,
-    private postService: typeof PostService,
+    @inject(BlogCommandRepo) private readonly blogCommandRepo: Base.CommandRepo<DBModels.Blog, ViewModels.Blog>,
+    @inject(PostService) private readonly postService: PostService,
   ) {}
 
   public async create(blogEntity: DTO.BlogCreateAndUpdate) {
@@ -13,7 +15,7 @@ class BlogService {
       isMembership: false,
     };
 
-    return this.blogCommandRepository.create(newEntity);
+    return this.blogCommandRepo.create(newEntity);
   }
 
   public async createPostForBlog(entity: DTO.PostCreateAndUpdate) {
@@ -21,12 +23,12 @@ class BlogService {
   }
 
   public async update(id: string, blogEntity: DTO.BlogCreateAndUpdate) {
-    return this.blogCommandRepository.update(id, blogEntity);
+    return this.blogCommandRepo.update(id, blogEntity);
   }
 
   public async delete(id: string) {
-    return this.blogCommandRepository.delete(id);
+    return this.blogCommandRepo.delete(id);
   }
 }
 
-export default new BlogService(BlogCommandRepository, PostService);
+export default BlogService;

@@ -1,3 +1,6 @@
+import { injectable } from "inversify";
+
+@injectable()
 class PaginationService {
   private defaultValues = {
     pageNumber: 1,
@@ -26,4 +29,4 @@ class PaginationService {
   }
 }
 
-export default new PaginationService();
+export default PaginationService;

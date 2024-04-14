@@ -1,10 +1,12 @@
 import NotifyService from "../application/notification/NotifyService";
 import EmailTemplatesCreator from "../application/notification/email/EmailTemplatesCreator";
+import { inject, injectable } from "inversify";
 
+@injectable()
 class NotifyManager {
   constructor(
-    private readonly emailService: typeof NotifyService,
-    private readonly emailTemplatesCreator: typeof EmailTemplatesCreator,
+    @inject(NotifyService) private readonly emailService: NotifyService,
+    @inject(EmailTemplatesCreator) private readonly emailTemplatesCreator: EmailTemplatesCreator,
   ) {}
 
   public async sendRegistrationEmail(login: string, email: string, code: string) {
@@ -26,4 +28,4 @@ class NotifyManager {
   }
 }
 
-export default new NotifyManager(NotifyService, EmailTemplatesCreator);
+export default NotifyManager;

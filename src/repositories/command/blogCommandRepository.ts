@@ -1,6 +1,8 @@
+import { injectable } from "inversify";
 import { BlogModel } from "../../application/db/models";
 
-class BlogCommandRepository implements Base.CommandRepository<DBModels.Blog, ViewModels.Blog> {
+@injectable()
+class BlogCommandRepo implements Base.CommandRepo<DBModels.Blog, ViewModels.Blog> {
   public async create(entity: DBModels.Blog) {
     const { _id } = await BlogModel.create(entity);
 
@@ -32,4 +34,4 @@ class BlogCommandRepository implements Base.CommandRepository<DBModels.Blog, Vie
   }
 }
 
-export default new BlogCommandRepository();
+export default BlogCommandRepo;

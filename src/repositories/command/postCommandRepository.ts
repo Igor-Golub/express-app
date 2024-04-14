@@ -1,6 +1,8 @@
 import { PostsModel } from "../../application/db/models";
+import { injectable } from "inversify";
 
-class PostCommandRepository implements Base.CommandRepository<DBModels.Post, ViewModels.Post> {
+@injectable()
+class PostCommandRepo implements Base.CommandRepo<DBModels.Post, ViewModels.Post> {
   public async create(entity: DBModels.Post) {
     const { _id } = await PostsModel.create(entity);
 
@@ -32,4 +34,4 @@ class PostCommandRepository implements Base.CommandRepository<DBModels.Post, Vie
   }
 }
 
-export default new PostCommandRepository();
+export default PostCommandRepo;

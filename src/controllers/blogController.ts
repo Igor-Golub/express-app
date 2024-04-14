@@ -1,20 +1,22 @@
 import { Response } from "express";
 import BlogService from "../services/blogService";
-import { BlogQueryRepository, PostQueryRepository } from "../repositories/query";
+import { inject, injectable } from "inversify";
+import { BlogQueryRepo, PostQueryRepo } from "../repositories/query";
 import { StatusCodes } from "../enums/StatusCodes";
 import SortingService from "../application/sortingService";
 import FilterService from "../application/filterService";
 import { FiltersType } from "../enums/Filters";
 import PaginationService from "../application/paginationService";
 
+@injectable()
 class BlogController implements Base.Controller {
   constructor(
-    private blogQueryRepository: typeof BlogQueryRepository,
-    private postsQueryRepository: typeof PostQueryRepository,
-    private blogService: typeof BlogService,
-    private sortingService: Base.SortingService,
-    private filterService: Base.FilterService<ViewModels.Blog>,
-    private paginationService: typeof PaginationService,
+    @inject(BlogQueryRepo) private readonly blogQueryRepo: BlogQueryRepo,
+    @inject(PostQueryRepo) private readonly postsQueryRepo: PostQueryRepo,
+    @inject(BlogService) private readonly blogService: BlogService,
+    @inject(SortingService) private readonly sortingService: Base.SortingService,
+    @inject(FilterService) private readonly filterService: Base.FilterService<ViewModels.Blog>,
+    @inject(PaginationService) private readonly paginationService: PaginationService,
   ) {}
 
   public getAll = async (
@@ -29,7 +31,7 @@ class BlogController implements Base.Controller {
     this.filterService.setValue("name", searchNameTerm, FiltersType.InnerText);
     this.sortingService.setValue(sortBy, sortDirection);
 
-    const data = await this.blogQueryRepository.getWithPagination();
+    const data = await this.blogQueryRepo.getWithPagination();
 
     res.status(StatusCodes.Ok_200).send(data);
   };
@@ -39,7 +41,7 @@ class BlogController implements Base.Controller {
       params: { id },
     } = req;
 
-    const entity = await this.blogQueryRepository.getById(String(id));
+    const entity = await this.blogQueryRepo.getById(String(id));
 
     if (!entity) res.status(StatusCodes.NotFound_404).end();
     else res.status(StatusCodes.Ok_200).send(entity);
@@ -58,7 +60,7 @@ class BlogController implements Base.Controller {
     this.sortingService.setValue(sortBy as keyof ViewModels.Blog, sortDirection);
     this.filterService.setValue("blogId", String(id), FiltersType.ById);
 
-    const data = await this.postsQueryRepository.getWithPagination();
+    const data = await this.postsQueryRepo.getWithPagination();
 
     if (!data.items.length) res.status(StatusCodes.NotFound_404).end();
     else res.status(StatusCodes.Ok_200).send(data);
@@ -73,7 +75,7 @@ class BlogController implements Base.Controller {
       body: entity,
     } = req;
 
-    const blog = await BlogQueryRepository.getById(String(id));
+    const blog = await this.blogQueryRepo.getById(String(id));
 
     if (!blog) {
       res.status(StatusCodes.NotFound_404).end();
@@ -124,11 +126,4 @@ class BlogController implements Base.Controller {
   };
 }
 
-export default new BlogController(
-  BlogQueryRepository,
-  PostQueryRepository,
-  BlogService,
-  SortingService,
-  FilterService,
-  PaginationService,
-);
+export default BlogController;

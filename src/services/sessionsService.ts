@@ -1,11 +1,13 @@
 import BaseDomainService from "./baseDomainService";
-import { AuthSessionCommandRepository } from "../repositories/command";
 import { JWTService } from "../application";
+import { inject, injectable } from "inversify";
+import { AuthSessionCommandRepo } from "../repositories/command";
 
+@injectable()
 class SessionsService extends BaseDomainService {
   constructor(
-    private readonly authSessionCommandRepository: typeof AuthSessionCommandRepository,
-    private readonly jwtService: typeof JWTService,
+    @inject(AuthSessionCommandRepo) private readonly authSessionCommandRepo: AuthSessionCommandRepo,
+    @inject(JWTService) private readonly jwtService: JWTService,
   ) {
     super();
   }
@@ -15,29 +17,29 @@ class SessionsService extends BaseDomainService {
 
     if (!decodeResult || !decodeResult?.iat) return this.innerUnauthorizedResult();
 
-    const userSessions = await this.authSessionCommandRepository.getAllSessionByUserId(userId);
+    const userSessions = await this.authSessionCommandRepo.getAllSessionByUserId(userId);
 
     const removeSessionsIds = userSessions
       .filter(({ version }) => String(version) !== new Date(Number(decodeResult.iat) * 1000).toISOString())
       .map(({ _id }) => _id);
 
-    const result = await this.authSessionCommandRepository.deleteMany(userId, removeSessionsIds);
+    const result = await this.authSessionCommandRepo.deleteMany(userId, removeSessionsIds);
 
     if (!result) return this.innerNotFoundResult();
     return this.innerSuccessResult(true);
   }
 
   public async removeById(userId: string, deviceId: string) {
-    const allDeviceSessions = await this.authSessionCommandRepository.getAllSessionByDeviceId(deviceId);
+    const allDeviceSessions = await this.authSessionCommandRepo.getAllSessionByDeviceId(deviceId);
 
     if (!allDeviceSessions.length) return this.innerNotFoundResult();
 
     if (!allDeviceSessions.map(({ userId }) => userId).includes(userId)) return this.innerForbiddenResult();
 
-    await this.authSessionCommandRepository.delete(userId, deviceId);
+    await this.authSessionCommandRepo.delete(userId, deviceId);
 
     return this.innerSuccessResult(true);
   }
 }
 
-export default new SessionsService(AuthSessionCommandRepository, JWTService);
+export default SessionsService;

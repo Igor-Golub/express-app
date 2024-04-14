@@ -1,12 +1,16 @@
 import { body, param } from "express-validator";
-import { BlogQueryRepository } from "../repositories/query";
 import { ObjectId } from "mongodb";
 import { validation } from "../middlewares";
 import { sortingValidators } from "./sotting";
 import { paginationValidators } from "./pagination";
+import { BlogQueryRepo } from "../repositories/query";
+import { container } from "../inversify.config";
+
+// TODO replace this method to controller
+const blogQueryRepo = container.resolve(BlogQueryRepo);
 
 const checkBlogId = async (blogId: string) => {
-  const blog = await BlogQueryRepository.getById(blogId);
+  const blog = await blogQueryRepo.getById(blogId);
 
   if (!blog) throw new Error("Blog not exist!");
   else return true;

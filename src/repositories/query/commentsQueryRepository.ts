@@ -1,12 +1,14 @@
+import { inject, injectable } from "inversify";
 import { CommentsLikesModel, CommentsModel } from "../../application/db/models";
 import { LikeStatus } from "../../enums/Common";
 import { FilterService, PaginationService, SortingService } from "../../application";
 
+@injectable()
 class CommentsQueryRepository {
   constructor(
-    private paginationService: typeof PaginationService,
-    private sortingService: Base.SortingService,
-    private filterService: Base.FilterService<ViewModels.Comment>,
+    @inject(PaginationService) private readonly paginationService: PaginationService,
+    @inject(SortingService) private readonly sortingService: Base.SortingService,
+    @inject(FilterService) private readonly filterService: Base.FilterService<ViewModels.Comment>,
   ) {}
 
   public async getById(commentId: string, userId?: string) {
@@ -77,4 +79,4 @@ class CommentsQueryRepository {
   }
 }
 
-export default new CommentsQueryRepository(PaginationService, SortingService, FilterService);
+export default CommentsQueryRepository;

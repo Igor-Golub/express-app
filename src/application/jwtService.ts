@@ -2,7 +2,9 @@ import jwt from "jsonwebtoken";
 import mainConfig from "../configs/mainConfig";
 import { TokensType } from "../enums/Authorization";
 import { isString } from "../utils/typesCheck";
+import { injectable } from "inversify";
 
+@injectable()
 class JwtService {
   private secrets = {
     [TokensType.Access]: mainConfig.jwt.accessSecret,
@@ -57,4 +59,4 @@ class JwtService {
   }
 }
 
-export default new JwtService();
+export default JwtService;

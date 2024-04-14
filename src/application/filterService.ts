@@ -1,6 +1,8 @@
 import { FiltersType } from "../enums/Filters";
 import { FilterQuery } from "mongoose";
+import { injectable } from "inversify";
 
+@injectable()
 class ClientFilterService<ViewEntity> implements Base.FilterService<ViewEntity> {
   private mangoMapper: Record<FiltersType, (...args: any) => Partial<FilterQuery<any>>> = {
     [FiltersType.ById]: (field, value) => ({
@@ -38,4 +40,4 @@ class ClientFilterService<ViewEntity> implements Base.FilterService<ViewEntity> 
   }
 }
 
-export default new ClientFilterService();
+export default ClientFilterService;

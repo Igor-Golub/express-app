@@ -1,15 +1,15 @@
+import { inject, injectable } from "inversify";
 import { Authorization, TokensType } from "../enums/Authorization";
 import mainConfig from "../configs/mainConfig";
 import JWTService from "./jwtService";
-import UserCommandRepository from "../repositories/command/userCommandRepository";
-import AuthSessionCommandRepository from "../repositories/command/authSessionCommandRepository";
-import { isString } from "../utils/typesCheck";
+import { AuthSessionCommandRepo, UserCommandRepo } from "../repositories/command";
 
+@injectable()
 class AuthService {
   constructor(
-    private readonly jwtService: typeof JWTService,
-    private readonly userCommandRepository: typeof UserCommandRepository,
-    private readonly authSessionCommandRepository: typeof AuthSessionCommandRepository,
+    @inject(JWTService) private readonly jwtService: JWTService,
+    @inject(UserCommandRepo) private readonly userCommandRepo: UserCommandRepo,
+    @inject(AuthSessionCommandRepo) private readonly authSessionCommandRepo: AuthSessionCommandRepo,
   ) {}
 
   public async basicVerification(token: string) {
@@ -29,7 +29,7 @@ class AuthService {
 
     if (!result) return null;
 
-    const user = await this.userCommandRepository.findUserByLogin(result?.login);
+    const user = await this.userCommandRepo.findUserByLogin(result?.login);
 
     if (!user) return null;
 
@@ -41,10 +41,10 @@ class AuthService {
 
     if (!result || !result?.iat) return null;
 
-    const entity = await this.authSessionCommandRepository.checkIsTokenValid(new Date(result.iat * 1000).toISOString());
+    const entity = await this.authSessionCommandRepo.checkIsTokenValid(new Date(result.iat * 1000).toISOString());
 
     return entity ?? null;
   }
 }
 
-export default new AuthService(JWTService, UserCommandRepository, AuthSessionCommandRepository);
+export default AuthService;

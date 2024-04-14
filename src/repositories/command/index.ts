@@ -1,17 +1,17 @@
-import BlogCommandRepository from "./blogCommandRepository";
-import PostCommandRepository from "./postCommandRepository";
-import UserCommandRepository from "./userCommandRepository";
-import CommentsCommandRepository from "./commentsCommandRepository";
-import AuthSessionCommandRepository from "./authSessionCommandRepository";
-import RecoveryCommandRepository from "./recoveryCommandRepository";
-import CommentsLikesCommandRepository from "./commentsLikesCommandRepository";
+import BlogCommandRepo from "./blogCommandRepository";
+import PostCommandRepo from "./postCommandRepository";
+import UserCommandRepo from "./userCommandRepository";
+import CommentsCommandRepo from "./commentsCommandRepository";
+import AuthSessionCommandRepo from "./authSessionCommandRepository";
+import RecoveryCommandRepo from "./recoveryCommandRepository";
+import CommentsLikesCommandRepo from "./commentsLikesCommandRepository";
 
 export {
-  BlogCommandRepository,
-  PostCommandRepository,
-  UserCommandRepository,
-  CommentsCommandRepository,
-  AuthSessionCommandRepository,
-  RecoveryCommandRepository,
-  CommentsLikesCommandRepository,
+  BlogCommandRepo,
+  PostCommandRepo,
+  UserCommandRepo,
+  CommentsCommandRepo,
+  AuthSessionCommandRepo,
+  RecoveryCommandRepo,
+  CommentsLikesCommandRepo,
 };

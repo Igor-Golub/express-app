@@ -1,5 +1,6 @@
 import express from "express";
 import cookieParser from "cookie-parser";
+import "reflect-metadata";
 import { postRouter, testingRouter, userRouter, blogRouter, authRouter, sessionRouter, commentsRouter } from "./routs";
 import { Resources } from "./enums/Resources";
 import { DbService } from "./application";

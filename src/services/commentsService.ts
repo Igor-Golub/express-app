@@ -1,13 +1,15 @@
-import { CommentsCommandRepository, UserCommandRepository } from "../repositories/command";
+import { inject, injectable } from "inversify";
+import { CommentsCommandRepo, UserCommandRepo } from "../repositories/command";
 
+@injectable()
 class CommentsService {
   constructor(
-    private readonly commentsCommandRepository: typeof CommentsCommandRepository,
-    private readonly userCommandRepository: typeof UserCommandRepository,
+    @inject(CommentsCommandRepo) private readonly commentsCommandRepo: CommentsCommandRepo,
+    @inject(UserCommandRepo) private readonly userCommandRepo: UserCommandRepo,
   ) {}
 
   public async create(comment: DTO.Comment, userId: string, postId: string) {
-    const user = await this.userCommandRepository.findUserById(userId);
+    const user = await this.userCommandRepo.findUserById(userId);
 
     if (!user) return null;
 
@@ -20,16 +22,16 @@ class CommentsService {
       },
     };
 
-    return this.commentsCommandRepository.create(newComment);
+    return this.commentsCommandRepo.create(newComment);
   }
 
   public async update(id: string, entity: DTO.Comment) {
-    return this.commentsCommandRepository.update(id, entity);
+    return this.commentsCommandRepo.update(id, entity);
   }
 
   public async delete(id: string) {
-    return this.commentsCommandRepository.delete(id);
+    return this.commentsCommandRepo.delete(id);
   }
 }
 
-export default new CommentsService(CommentsCommandRepository, UserCommandRepository);
+export default CommentsService;
