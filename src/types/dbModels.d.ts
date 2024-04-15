@@ -1,6 +1,5 @@
 import { WithId } from "mongodb";
-import { RecoveryStatus } from "../enums/Recovery";
-import { LikeStatus } from "../enums/Common";
+import { RecoveryStatus, LikeStatus } from "../enums";
 
 export declare global {
   namespace DBModels {

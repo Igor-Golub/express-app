@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 import { injectable } from "inversify";
 import { CommentsLikesModel } from "../../application/db/models";
-import { LikeStatus } from "../../enums/Common";
+import { LikeStatus } from "../../enums";
 
 @injectable()
 class CommentsCommandRepository {

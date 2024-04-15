@@ -1,6 +1,6 @@
-import { FiltersType } from "../enums/Filters";
 import { FilterQuery } from "mongoose";
 import { injectable } from "inversify";
+import { FiltersType } from "../enums";
 
 @injectable()
 class ClientFilterService<ViewEntity> implements Base.FilterService<ViewEntity> {

@@ -1,4 +1,4 @@
-import { ResultStatuses } from "../enums/Inner";
+import { ResultStatuses } from "../enums";
 
 export declare global {
   namespace Inner {

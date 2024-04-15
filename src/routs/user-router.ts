@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Routs } from "../enums/Routs";
+import { Routs } from "../enums";
 import { userValidators } from "../validators/user";
 import UserController from "../controllers/userController";
 import { basicAuth } from "../middlewares";

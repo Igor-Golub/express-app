@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { DataBaseCollections } from "../../../enums/DataBaseCollections";
+import { DataBaseCollections } from "../../../enums";
 import {
   BlogSchema,
   UserSchema,

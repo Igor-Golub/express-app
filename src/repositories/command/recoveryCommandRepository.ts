@@ -2,7 +2,7 @@ import { add } from "date-fns";
 import { injectable } from "inversify";
 import { RecoveryModel } from "../../application/db/models";
 import mainConfig from "../../configs/mainConfig";
-import { RecoveryStatus } from "../../enums/Recovery";
+import { RecoveryStatus } from "../../enums";
 
 @injectable()
 class RecoveryCommandRepository {

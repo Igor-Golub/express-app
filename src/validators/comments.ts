@@ -1,7 +1,7 @@
 import { body, param } from "express-validator";
 import { ObjectId } from "mongodb";
 import { validation } from "../middlewares";
-import { LikeStatus } from "../enums/Common";
+import { LikeStatus } from "../enums";
 
 const isIdValid = param("id").exists().isString().custom(ObjectId.isValid);
 

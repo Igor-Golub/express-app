@@ -1,3 +1,4 @@
+import { WithId } from "mongodb";
 import { v4 as uuidv4 } from "uuid";
 import { add, isAfter } from "date-fns";
 import { inject, injectable } from "inversify";
@@ -6,10 +7,8 @@ import { AuthService, CryptographyService, JWTService } from "../application";
 import NotifyManager from "../managers/NotifyManager";
 import mainConfig from "../configs/mainConfig";
 import generateInnerResult from "../utils/generateInnerResult";
-import { ErrorMessages, ResultStatuses } from "../enums/Inner";
-import { WithId } from "mongodb";
 import BaseDomainService from "./baseDomainService";
-import { RecoveryStatus } from "../enums/Recovery";
+import { ErrorMessages, ResultStatuses, RecoveryStatus } from "../enums";
 
 @injectable()
 class UserService extends BaseDomainService {

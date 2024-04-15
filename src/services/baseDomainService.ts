@@ -1,6 +1,6 @@
-import generateInnerResult from "../utils/generateInnerResult";
-import { ResultStatuses } from "../enums/Inner";
 import { injectable } from "inversify";
+import { ResultStatuses } from "../enums";
+import generateInnerResult from "../utils/generateInnerResult";
 
 @injectable()
 class BaseDomainService {

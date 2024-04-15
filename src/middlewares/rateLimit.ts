@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { RateLimitedService } from "../application";
-import { StatusCodes } from "../enums/StatusCodes";
+import { StatusCodes } from "../enums";
 import mainConfig from "../configs/mainConfig";
 
 export const rateLimit = async (req: Request, res: Response, next: NextFunction) => {

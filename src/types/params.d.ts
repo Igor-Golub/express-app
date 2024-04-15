@@ -1,4 +1,4 @@
-import { SortingDirectionStrings } from "../enums/Sorting";
+import { SortingDirectionStrings } from "../enums";
 
 export declare global {
   namespace Params {

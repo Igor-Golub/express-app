@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { AuthRouts } from "../enums/Routs";
+import { AuthRouts } from "../enums";
 import AuthController from "../controllers/authController";
 import { authValidators } from "../validators/auth";
 import { jwtAccessAuth, rateLimit, jwtRefreshAuth } from "../middlewares";

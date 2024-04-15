@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { Sort } from "mongodb";
-import { SortingDirectionStrings } from "../enums/Sorting";
+import { SortingDirectionStrings } from "../enums";
 
 @injectable()
 class ClientSortingService implements Base.SortingService {

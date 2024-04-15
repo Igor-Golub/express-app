@@ -1,7 +1,6 @@
-import { Filter, Sort, SortDirection } from "mongodb";
-import { SortingDirectionStrings } from "../enums/Sorting";
-import { FiltersType } from "../enums/Filters";
 import { FilterQuery } from "mongoose";
+import { Filter, Sort, SortDirection } from "mongodb";
+import { SortingDirectionStrings, FiltersType } from "../enums";
 
 export declare global {
   namespace Base {

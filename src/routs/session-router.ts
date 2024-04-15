@@ -1,6 +1,6 @@
 import { Router } from "express";
 import SessionController from "../controllers/sessionController";
-import { SessionRoutes } from "../enums/Routs";
+import { SessionRoutes } from "../enums";
 import { sessionsValidators } from "../validators/sessions";
 import { jwtRefreshAuth } from "../middlewares";
 import { container } from "../inversify.config";

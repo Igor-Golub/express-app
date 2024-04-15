@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { Authorization, TokensType } from "../enums/Authorization";
+import { Authorization, TokensType } from "../enums";
 import mainConfig from "../configs/mainConfig";
 import JWTService from "./jwtService";
 import { AuthSessionCommandRepo, UserCommandRepo } from "../repositories/command";

@@ -1,4 +1,4 @@
-import { LikeStatus } from "../enums/Common";
+import { LikeStatus } from "../enums";
 
 export declare global {
   namespace DTO {

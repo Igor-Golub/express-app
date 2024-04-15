@@ -90,11 +90,9 @@ container.bind(SMTPEmailAdapter).toSelf();
 container.bind(EmailTemplatesCreator).toSelf();
 container.bind(NotifyManager).toSelf();
 
+container.bind(TestingController).toSelf();
+
 container.bind(RecoveryCommandRepo).toSelf();
 container.bind(AuthSessionCommandRepo).toSelf();
-
-// Other
-
-container.bind(TestingController).toSelf();
 
 export { container };

@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
-import { LikeStatus } from "../enums/Common";
-import { CommentsCommandRepo, CommentsLikesCommandRepo } from "../repositories/command";
+import { LikeStatus } from "../enums";
 import BaseDomainService from "./baseDomainService";
+import { CommentsCommandRepo, CommentsLikesCommandRepo } from "../repositories/command";
 
 @injectable()
 class CommentsLikesService extends BaseDomainService {

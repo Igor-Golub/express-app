@@ -1,5 +1,5 @@
 import { query } from "express-validator";
-import { SortingDirectionStrings } from "../enums/Sorting";
+import { SortingDirectionStrings } from "../enums";
 
 export const sortingValidators = [
   query("sortDirection").optional().isIn(Object.values(SortingDirectionStrings)),

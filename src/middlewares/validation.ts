@@ -1,6 +1,6 @@
 import { NextFunction } from "express";
 import { validationResult } from "express-validator";
-import { StatusCodes } from "../enums/StatusCodes";
+import { StatusCodes } from "../enums";
 
 const convertErrorToContract = (errors: Record<string, { msg: string }>): Base.ErrorViewResponse => {
   return {

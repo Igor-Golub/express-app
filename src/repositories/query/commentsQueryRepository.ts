@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { CommentsLikesModel, CommentsModel } from "../../application/db/models";
-import { LikeStatus } from "../../enums/Common";
+import { LikeStatus } from "../../enums";
 import { FilterService, PaginationService, SortingService } from "../../application";
 
 @injectable()

@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
-import mainConfig from "../configs/mainConfig";
-import { TokensType } from "../enums/Authorization";
-import { isString } from "../utils/typesCheck";
 import { injectable } from "inversify";
+import { TokensType } from "../enums";
+import { isString } from "../utils/typesCheck";
+import mainConfig from "../configs/mainConfig";
 
 @injectable()
 class JwtService {

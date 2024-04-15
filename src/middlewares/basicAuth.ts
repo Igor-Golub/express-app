@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import AuthService from "../application/authService";
-import { StatusCodes } from "../enums/StatusCodes";
+import { StatusCodes } from "../enums";
 import { container } from "../inversify.config";
 
 const authService = container.resolve(AuthService);

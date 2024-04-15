@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { LikeStatus } from "../../../enums/Common";
+import { LikeStatus } from "../../../enums";
 
 export const CommentsLikesSchema = new mongoose.Schema<DBModels.CommentsLikes>(
   {

@@ -2,7 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import "reflect-metadata";
 import { postRouter, testingRouter, userRouter, blogRouter, authRouter, sessionRouter, commentsRouter } from "./routs";
-import { Resources } from "./enums/Resources";
+import { Resources } from "./enums";
 import { DbService } from "./application";
 import mainConfig from "./configs/mainConfig";
 import { apiCallsLogger } from "./middlewares";

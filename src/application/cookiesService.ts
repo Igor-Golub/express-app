@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { injectable } from "inversify";
-import { CookiesKeys } from "../enums/CookiesKeys";
 import { CookieOptions } from "express-serve-static-core";
+import { CookiesKeys } from "../enums";
 
 @injectable()
 class CookiesService {

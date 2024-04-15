@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { CommentsRouts } from "../enums/Routs";
+import { CommentsRouts } from "../enums";
 import { jwtAccessAuth, jwtExisting } from "../middlewares";
 import { commentsValidators } from "../validators/comments";
 import CommentController from "../controllers/commentController";
