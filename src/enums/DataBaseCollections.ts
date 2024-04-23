@@ -1,6 +1,7 @@
 export enum DataBaseCollections {
   Blogs = "blogs",
   Posts = "posts",
+  PostsLikes = "posts-likes",
   Users = "users",
   Comments = "comments",
   AuthSessions = "auth_sessions",

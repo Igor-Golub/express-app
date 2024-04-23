@@ -1,7 +1,7 @@
 import { Response } from "express";
 import { inject, injectable } from "inversify";
 import { StatusCodes, FiltersType } from "../enums";
-import { PostService, CommentsService } from "../services";
+import { PostService, PostLikesService, CommentsService } from "../services";
 import { PostQueryRepo, CommentsQueryRepo } from "../repositories/query";
 import { SortingService, PaginationService, FilterService } from "../application";
 
@@ -11,6 +11,7 @@ class PostController implements Base.Controller {
     @inject(PostQueryRepo) private readonly postQueryRepository: PostQueryRepo,
     @inject(CommentsQueryRepo) private readonly commentsQueryRepository: CommentsQueryRepo,
     @inject(PostService) private readonly postService: PostService,
+    @inject(PostLikesService) private readonly postLikesService: PostLikesService,
     @inject(SortingService) private readonly sortingService: Base.SortingService,
     @inject(FilterService) private readonly filterService: Base.FilterService<ViewModels.Comment>,
     @inject(PaginationService) private readonly paginationService: PaginationService,
@@ -66,6 +67,19 @@ class PostController implements Base.Controller {
 
     if (!result) res.status(StatusCodes.NotFound_404).end();
     else res.status(StatusCodes.NoContent_204).send(result);
+  };
+
+  public changeLikeStatus = async (req: Utils.RequestWithParamsAndReqBody<Params.URIId, DTO.Like>, res: Response) => {
+    const {
+      context: { user },
+      params: { id: blogId },
+      body: { likeStatus },
+    } = req;
+
+    const result = await this.postLikesService.updateLikeStatus(user!.id, String(blogId), likeStatus);
+
+    if (!result) res.status(StatusCodes.NotFound_404).end();
+    else res.status(StatusCodes.NoContent_204).end();
   };
 
   public delete = async (req: Utils.ReqWithParams<Params.URIId>, res: Response) => {

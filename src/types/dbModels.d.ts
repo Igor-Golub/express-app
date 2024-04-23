@@ -72,5 +72,11 @@ export declare global {
       commentId: string;
       status: LikeStatus;
     }
+
+    interface PostsLikes {
+      userId: string;
+      postId: string;
+      status: LikeStatus;
+    }
   }
 }

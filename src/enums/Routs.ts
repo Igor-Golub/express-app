@@ -33,6 +33,7 @@ export enum PostRouts {
   Root = "/",
   RootWithId = "/:id",
   Comments = "/:id/comments",
+  UpdateLikeStatus = "/:id/like-status",
 }
 
 export enum SessionRoutes {

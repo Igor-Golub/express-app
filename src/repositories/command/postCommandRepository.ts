@@ -3,6 +3,10 @@ import { injectable } from "inversify";
 
 @injectable()
 class PostCommandRepo implements Base.CommandRepo<DBModels.Post, ViewModels.Post> {
+  public async findById(id: string) {
+    return PostsModel.findById(id).lean();
+  }
+
   public async create(entity: DBModels.Post) {
     const { _id } = await PostsModel.create(entity);
 

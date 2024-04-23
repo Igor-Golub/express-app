@@ -5,6 +5,7 @@ import { sortingValidators } from "./sotting";
 import { paginationValidators } from "./pagination";
 import { BlogQueryRepo } from "../repositories/query";
 import { container } from "../inversify.config";
+import { LikeStatus } from "../enums";
 
 // TODO replace this method to controller
 const blogQueryRepo = container.resolve(BlogQueryRepo);
@@ -29,6 +30,7 @@ export const postValidators = {
   readById: [idValidation, validation],
   create: [...commonFields, body("blogId").isString().trim().custom(checkBlogId), validation],
   update: [...commonFields, body("blogId").isString().trim().custom(checkBlogId), validation],
+  updateLikeStatus: [body("likeStatus").exists().isIn(Object.values(LikeStatus)), validation],
   delete: [idValidation, validation],
 
   readComments: [idValidation, sortingValidators, paginationValidators, validation],

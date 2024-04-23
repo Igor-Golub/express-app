@@ -47,10 +47,10 @@ class CommentController {
     const {
       context: { user },
       params: { id: commentId },
-      body,
+      body: { likeStatus },
     } = req;
 
-    const result = await this.commentsLikesService.updateLikeStatus(user!.id, String(commentId), body.likeStatus);
+    const result = await this.commentsLikesService.updateLikeStatus(user!.id, String(commentId), likeStatus);
 
     if (result.status) res.status(StatusCodes.NotFound_404).end();
     else res.status(StatusCodes.NoContent_204).end();

@@ -7,6 +7,7 @@ import { UnauthorizedSessions } from "./unauthorizedSessions";
 import { UserSchema } from "./userSchema";
 import { RecoverySchema } from "./recovery";
 import { CommentsLikesSchema } from "./commentsLikesSchema";
+import { PostLikesSchema } from "./postsLikesSchema";
 
 export {
   BlogSchema,
@@ -18,4 +19,5 @@ export {
   UserSchema,
   RecoverySchema,
   CommentsLikesSchema,
+  PostLikesSchema,
 };

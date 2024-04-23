@@ -1,5 +1,6 @@
 import BlogCommandRepo from "./blogCommandRepository";
 import PostCommandRepo from "./postCommandRepository";
+import PostLikesCommandRepo from "./postLikesCommandRepo";
 import UserCommandRepo from "./userCommandRepository";
 import CommentsCommandRepo from "./commentsCommandRepository";
 import AuthSessionCommandRepo from "./authSessionCommandRepository";
@@ -14,4 +15,5 @@ export {
   AuthSessionCommandRepo,
   RecoveryCommandRepo,
   CommentsLikesCommandRepo,
+  PostLikesCommandRepo,
 };

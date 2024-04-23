@@ -10,6 +10,7 @@ import {
   UnauthorizedSessions,
   RecoverySchema,
   CommentsLikesSchema,
+  PostLikesSchema,
 } from "../schemas";
 
 const BlogModel = mongoose.model<DBModels.Blog, Models.Blog>(DataBaseCollections.Blogs, BlogSchema);
@@ -19,6 +20,8 @@ const UsersModel = mongoose.model<DBModels.User, Models.User>(DataBaseCollection
 const CommentsModel = mongoose.model<DBModels.Comment, Models.Comment>(DataBaseCollections.Comments, CommentSchema);
 
 const PostsModel = mongoose.model<DBModels.Post, Models.Post>(DataBaseCollections.Posts, PostSchema);
+
+const PostsLikesModel = mongoose.model<DBModels.PostsLikes>(DataBaseCollections.PostsLikes, PostLikesSchema);
 
 const AuthSessionsModel = mongoose.model<DBModels.Sessions>(DataBaseCollections.AuthSessions, SessionSchema);
 
@@ -49,4 +52,5 @@ export {
   UnauthorizedSessionsModel,
   RecoveryModel,
   CommentsLikesModel,
+  PostsLikesModel,
 };

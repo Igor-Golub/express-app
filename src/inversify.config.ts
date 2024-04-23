@@ -6,6 +6,7 @@ import {
   PostService,
   SessionsService,
   UserService,
+  PostLikesService,
 } from "./services";
 import {
   AuthService,
@@ -50,6 +51,7 @@ container.bind(BlogCommandRepo).toSelf();
 
 container.bind(PostQueryRepo).toSelf();
 container.bind(PostService).toSelf();
+container.bind(PostLikesService).toSelf();
 container.bind(PostCommandRepo).toSelf();
 
 // Comments
