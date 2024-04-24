@@ -47,7 +47,10 @@ class PostController implements Base.Controller {
     else res.status(StatusCodes.Ok_200).send(result);
   };
 
-  public create = async (req: Utils.ReqWithReqBody<DTO.PostCreateAndUpdate>, res: Response<ViewModels.Post>) => {
+  public create = async (
+    req: Utils.ReqWithReqBody<DTO.PostCreateAndUpdate>,
+    res: Response<ViewModels.PostWithLikes>,
+  ) => {
     const { body: entity } = req;
 
     const result = await this.postService.create(entity);

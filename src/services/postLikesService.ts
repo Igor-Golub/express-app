@@ -15,9 +15,9 @@ class PostLikesService extends BaseDomainService {
 
   public async updateLikeStatus(userId: string, postId: string, status: LikeStatus) {
     try {
-      const comment = await this.postCommandRepo.findById(postId);
+      const post = await this.postCommandRepo.findById(postId);
 
-      if (!comment) return this.innerNotFoundResult();
+      if (!post) return this.innerNotFoundResult();
 
       const user = await this.userCommandRepo.findUserById(userId);
 

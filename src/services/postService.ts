@@ -1,6 +1,7 @@
-import { injectable, inject } from "inversify";
+import { inject, injectable } from "inversify";
 import { PostCommandRepo } from "../repositories/command";
 import { BlogQueryRepo } from "../repositories/query";
+import { LikeStatus } from "../enums";
 
 @injectable()
 class PostService {
@@ -19,7 +20,18 @@ class PostService {
       blogName: blogEntity.name,
     };
 
-    return this.postCommandRepo.create(newEntity);
+    const result = await this.postCommandRepo.create(newEntity);
+
+    if (!result) return null;
+
+    return {
+      ...result,
+      likesInfo: {
+        myStatus: LikeStatus.None,
+        likesCount: 0,
+        dislikesCount: 0,
+      },
+    };
   }
 
   public async update(id: string, postEntity: DTO.PostCreateAndUpdate) {
