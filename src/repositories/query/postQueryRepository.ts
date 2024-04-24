@@ -4,7 +4,7 @@ import SortingService from "../../application/sortingService";
 import FilterService from "../../application/filterService";
 import { PostsLikesModel, PostsModel } from "../../application/db/models";
 import { LikeStatus } from "../../enums";
-import { isBefore } from "date-fns";
+import { isAfter, isBefore } from "date-fns";
 
 @injectable()
 class PostQueryRepository {
@@ -21,6 +21,8 @@ class PostQueryRepository {
 
     const postLikes = await PostsLikesModel.find({
       postId: result._id.toString(),
+    }).sort({
+      createdAt: -1,
     });
 
     return this.mapToViewModels([result], postLikes, userId)[0];
@@ -37,6 +39,8 @@ class PostQueryRepository {
 
     const postLikes = await PostsLikesModel.find({
       postId: { $in: result.map(({ _id }) => _id.toString()) },
+    }).sort({
+      createdAt: -1,
     });
 
     return {
@@ -69,10 +73,7 @@ class PostQueryRepository {
           if (status === LikeStatus.Dislike) acc.dislikesCount += 1;
           if (reqUserId && reqUserId === userId) acc.myStatus = status;
 
-          if (
-            acc.newestLikes.length < 3 ||
-            acc.newestLikes.find(({ addedAt }) => createdAt && isBefore(addedAt, createdAt?.toString()))
-          ) {
+          if (status === LikeStatus.Like && acc.newestLikes.length < 3) {
             acc.newestLikes.push({
               addedAt: new Date(createdAt!.toString()).toISOString(),
               userId,
