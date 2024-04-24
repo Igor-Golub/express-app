@@ -25,7 +25,7 @@ class ClientFilterService<ViewEntity> implements Base.FilterService<ViewEntity> 
     },
   };
 
-  public value: FilterQuery<any> = {};
+  private value: FilterQuery<ViewEntity> = {};
 
   public setValue(filed: string, value: string, type: FiltersType) {
     this.value = this.mangoMapper[type](filed, value);
@@ -35,7 +35,7 @@ class ClientFilterService<ViewEntity> implements Base.FilterService<ViewEntity> 
     this.value = this.mangoMapper[type](data);
   }
 
-  public getFilters(): FilterQuery<any> {
+  public getFilters(): FilterQuery<ViewEntity> {
     return this.value;
   }
 }

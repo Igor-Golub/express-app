@@ -81,7 +81,7 @@ container.bind(SessionsService).toSelf();
 
 container.bind(PaginationService).toSelf();
 container.bind(SortingService).toSelf();
-container.bind(FilterService).toSelf();
+container.bind(FilterService).toSelf().inSingletonScope();
 container.bind(CryptographyService).toSelf();
 container.bind(JWTService).toSelf();
 container.bind(CookiesService).toSelf();
