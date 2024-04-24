@@ -22,6 +22,14 @@ export declare global {
       blogName: string;
     }
 
+    interface PostWithLikes extends Post {
+      likesInfo: LikesInfo;
+    }
+
+    interface PostWithFullLikes extends Post {
+      extendedLikesInfo: ExtendedLikesInfo;
+    }
+
     interface User extends BaseModel {
       login: string;
       email: string;
@@ -36,7 +44,7 @@ export declare global {
     interface Comment extends BaseModel {
       content: string;
       commentatorInfo: CommentatorInfo;
-      likesInfo: CommentsLike;
+      likesInfo: LikesInfo;
     }
 
     interface CommentatorInfo {
@@ -44,10 +52,20 @@ export declare global {
       userLogin: string;
     }
 
-    interface CommentsLike {
+    interface LikesInfo {
       likesCount: number;
       dislikesCount: number;
       myStatus: LikeStatus;
+    }
+
+    interface ExtendedLikesInfo extends LikesInfo {
+      newestLikes: NewestLikesInfo[];
+    }
+
+    interface NewestLikesInfo {
+      login: string;
+      userId: string;
+      addedAt: string;
     }
 
     interface Session {

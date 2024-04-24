@@ -1,9 +1,12 @@
 import { WithId } from "mongodb";
+import { SchemaTimestampsConfig } from "mongoose";
 import { RecoveryStatus, LikeStatus } from "../enums";
 
 export declare global {
   namespace DBModels {
     type MongoResponseEntity<Entity> = WithId<Entity>;
+
+    type MongoTimestamps = SchemaTimestampsConfig;
 
     interface Blog {
       name: string;
@@ -67,14 +70,15 @@ export declare global {
       expirationDate: Date;
     }
 
-    interface CommentsLikes {
+    interface CommentsLikes extends MongoTimestamps {
       userId: string;
       commentId: string;
       status: LikeStatus;
     }
 
-    interface PostsLikes {
+    interface PostsLikes extends MongoTimestamps {
       userId: string;
+      login: string;
       postId: string;
       status: LikeStatus;
     }

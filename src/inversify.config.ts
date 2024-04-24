@@ -24,6 +24,7 @@ import {
   CommentsCommandRepo,
   CommentsLikesCommandRepo,
   PostCommandRepo,
+  PostLikesCommandRepo,
   RecoveryCommandRepo,
   UserCommandRepo,
 } from "./repositories/command";
@@ -53,6 +54,7 @@ container.bind(PostQueryRepo).toSelf();
 container.bind(PostService).toSelf();
 container.bind(PostLikesService).toSelf();
 container.bind(PostCommandRepo).toSelf();
+container.bind(PostLikesCommandRepo).toSelf();
 
 // Comments
 

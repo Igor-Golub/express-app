@@ -59,7 +59,7 @@ class UserCommandRepository {
   }
 
   public async findUserById(id: string) {
-    return UsersModel.findOne({ _id: id });
+    return UsersModel.findOne({ _id: id }).lean();
   }
 
   public async findUserByLoginOrEmail(loginOrEmail: string) {

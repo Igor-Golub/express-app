@@ -7,6 +7,10 @@ export const PostLikesSchema = new mongoose.Schema<DBModels.PostsLikes>(
       type: String,
       required: true,
     },
+    login: {
+      type: String,
+      required: true,
+    },
     postId: {
       type: String,
       required: true,

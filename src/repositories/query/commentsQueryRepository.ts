@@ -61,7 +61,7 @@ class CommentsQueryRepository {
       commentatorInfo: { userId: commentatorInfoUserId, userLogin },
       likesInfo: commentsLikes
         .filter(({ commentId }) => commentId === _id.toString())
-        .reduce<ViewModels.CommentsLike>(
+        .reduce<ViewModels.LikesInfo>(
           (acc, { status, userId }) => {
             if (status === LikeStatus.Like) acc.likesCount += 1;
             if (status === LikeStatus.Dislike) acc.dislikesCount += 1;

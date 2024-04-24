@@ -23,23 +23,25 @@ class PostController implements Base.Controller {
     res: Response<Base.ResponseWithPagination<ViewModels.Post>>,
   ) => {
     const {
+      context: { user },
       query: { sortBy, sortDirection, pageSize, pageNumber },
     } = req;
 
     this.paginationService.setValues({ pageSize, pageNumber });
     this.sortingService.setValue(sortBy, sortDirection);
 
-    const data = await this.postQueryRepository.getWithPagination();
+    const data = await this.postQueryRepository.getWithPagination(user?.id);
 
     res.status(StatusCodes.Ok_200).send(data);
   };
 
   public getById = async (req: Utils.ReqWithParams<Params.URIId>, res: Response<ViewModels.Post>) => {
     const {
+      context: { user },
       params: { id },
     } = req;
 
-    const result = await this.postQueryRepository.getById(String(id));
+    const result = await this.postQueryRepository.getById(String(id), user?.id);
 
     if (!result) res.status(StatusCodes.NotFound_404).end();
     else res.status(StatusCodes.Ok_200).send(result);

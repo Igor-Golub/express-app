@@ -10,8 +10,8 @@ const postController = container.resolve(PostController);
 export const postRouter = Router({});
 
 postRouter
-  .get(PostRouts.Root, ...postValidators.readAll, postController.getAll)
-  .get(PostRouts.RootWithId, ...postValidators.readById, postController.getById)
+  .get(PostRouts.Root, jwtExisting, ...postValidators.readAll, postController.getAll)
+  .get(PostRouts.RootWithId, jwtExisting, ...postValidators.readById, postController.getById)
   .get(PostRouts.Comments, jwtExisting, ...postValidators.readComments, postController.getComments)
   .post(PostRouts.Root, basicAuth, ...postValidators.create, postController.create)
   .post(PostRouts.Comments, jwtAccessAuth, ...postValidators.createComments, postController.createComment)
