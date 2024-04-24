@@ -10,6 +10,7 @@ import {
   UnauthorizedSessionsModel,
   EndpointsLogsModel,
   RecoveryModel,
+  PostsLikesModel,
 } from "./models";
 
 dotenv.config();
@@ -34,6 +35,7 @@ class DBService {
       UnauthorizedSessionsModel.collection.deleteMany({}),
       EndpointsLogsModel.collection.deleteMany({}),
       RecoveryModel.collection.deleteMany({}),
+      PostsLikesModel.collection.deleteMany({}),
     ]);
   }
 }

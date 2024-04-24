@@ -4,7 +4,6 @@ import SortingService from "../../application/sortingService";
 import FilterService from "../../application/filterService";
 import { PostsLikesModel, PostsModel } from "../../application/db/models";
 import { LikeStatus } from "../../enums";
-import { isAfter, isBefore } from "date-fns";
 
 @injectable()
 class PostQueryRepository {
