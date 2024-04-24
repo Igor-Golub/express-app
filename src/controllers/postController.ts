@@ -49,7 +49,7 @@ class PostController implements Base.Controller {
 
   public create = async (
     req: Utils.ReqWithReqBody<DTO.PostCreateAndUpdate>,
-    res: Response<ViewModels.PostWithLikes>,
+    res: Response<ViewModels.PostWithFullLikes>,
   ) => {
     const { body: entity } = req;
 
@@ -83,7 +83,7 @@ class PostController implements Base.Controller {
 
     const result = await this.postLikesService.updateLikeStatus(user!.id, String(blogId), likeStatus);
 
-    if (!result) res.status(StatusCodes.NotFound_404).end();
+    if (result.status) res.status(StatusCodes.NotFound_404).end();
     else res.status(StatusCodes.NoContent_204).end();
   };
 

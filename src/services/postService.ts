@@ -26,10 +26,11 @@ class PostService {
 
     return {
       ...result,
-      likesInfo: {
+      extendedLikesInfo: {
         myStatus: LikeStatus.None,
         likesCount: 0,
         dislikesCount: 0,
+        newestLikes: [],
       },
     };
   }
