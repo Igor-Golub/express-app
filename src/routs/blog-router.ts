@@ -12,8 +12,8 @@ const blogController = container.resolve(BlogController);
 export const blogRouter = Router({});
 
 blogRouter
-  .get(BlogRouts.Root, sortingValidators, paginationValidators, blogController.getAll)
-  .get(BlogRouts.RootWithId, ...blogValidators.getById, blogController.getById)
+  .get(BlogRouts.Root, jwtExisting, sortingValidators, paginationValidators, blogController.getAll)
+  .get(BlogRouts.RootWithId, jwtExisting, ...blogValidators.getById, blogController.getById)
   .get(BlogRouts.BlogPosts, jwtExisting, ...blogValidators.getBlogPostsById, blogController.getPostsByBlogId)
   .post(BlogRouts.BlogPosts, basicAuth, blogValidators.createPostForBlog, blogController.createPostForBlog)
   .post(BlogRouts.Root, basicAuth, ...blogValidators.create, blogController.create)
