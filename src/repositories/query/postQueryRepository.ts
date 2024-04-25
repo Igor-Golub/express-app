@@ -3,7 +3,7 @@ import PaginationService from "../../application/paginationService";
 import SortingService from "../../application/sortingService";
 import FilterService from "../../application/filterService";
 import { PostsLikesModel, PostsModel } from "../../application/db/models";
-import { LikeStatus } from "../../enums";
+import { LikeStatus, SortingDirectionNumbers } from "../../enums";
 
 @injectable()
 class PostQueryRepository {
@@ -21,7 +21,7 @@ class PostQueryRepository {
     const postLikes = await PostsLikesModel.find({
       postId: result._id.toString(),
     }).sort({
-      createdAt: -1,
+      createdAt: SortingDirectionNumbers.DESC,
     });
 
     return this.mapToViewModels([result], postLikes, userId)[0];
@@ -37,9 +37,11 @@ class PostQueryRepository {
     const collectionLength = await PostsModel.countDocuments(filters);
 
     const postLikes = await PostsLikesModel.find({
-      postId: { $in: result.map(({ _id }) => _id.toString()) },
+      postId: {
+        $in: result.map(({ _id }) => _id.toString()),
+      },
     }).sort({
-      createdAt: -1,
+      createdAt: SortingDirectionNumbers.DESC,
     });
 
     return {
