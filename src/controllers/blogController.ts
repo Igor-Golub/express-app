@@ -49,6 +49,7 @@ class BlogController implements Base.Controller {
     res: Response<Base.ResponseWithPagination<ViewModels.Post>>,
   ) => {
     const {
+      context: { user },
       params: { id },
       query: { sortBy, sortDirection, pageSize, pageNumber },
     } = req;
@@ -57,7 +58,7 @@ class BlogController implements Base.Controller {
     this.sortingService.setValue(sortBy as keyof ViewModels.Blog, sortDirection);
     this.filterService.setValue("blogId", String(id), FiltersType.ById);
 
-    const data = await this.postsQueryRepo.getWithPagination();
+    const data = await this.postsQueryRepo.getWithPagination(user?.id);
 
     if (!data.items.length) res.status(StatusCodes.NotFound_404).end();
     else res.status(StatusCodes.Ok_200).send(data);
