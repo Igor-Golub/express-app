@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { AuthRouts } from "../enums";
-import AuthController from "../controllers/authController";
+import AuthController from "../modules/auth/api/authController";
 import { authValidators } from "../validators/auth";
 import { jwtAccessAuth, rateLimit, jwtRefreshAuth } from "../middlewares";
 import { container } from "../inversify.config";

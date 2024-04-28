@@ -5,7 +5,7 @@ import { blogValidators } from "../validators/blog";
 import { sortingValidators } from "../validators/sotting";
 import { paginationValidators } from "../validators/pagination";
 import { container } from "../inversify.config";
-import BlogController from "../controllers/blogController";
+import BlogController from "../modules/blog/api/blogController";
 
 const blogController = container.resolve(BlogController);
 

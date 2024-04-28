@@ -2,7 +2,8 @@ import { inject, injectable } from "inversify";
 import { Authorization, TokensType } from "../enums";
 import mainConfig from "../configs/mainConfig";
 import JWTService from "./jwtService";
-import { AuthSessionCommandRepo, UserCommandRepo } from "../repositories/command";
+import UserCommandRepo from "../modules/user/infrastructure/userCommandRepo";
+import AuthSessionCommandRepo from "../modules/auth/infrastructure/authSessionCommandRepo";
 
 @injectable()
 class AuthService {

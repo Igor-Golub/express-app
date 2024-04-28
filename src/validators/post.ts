@@ -3,9 +3,9 @@ import { ObjectId } from "mongodb";
 import { validation } from "../middlewares";
 import { sortingValidators } from "./sotting";
 import { paginationValidators } from "./pagination";
-import { BlogQueryRepo } from "../repositories/query";
 import { container } from "../inversify.config";
 import { LikeStatus } from "../enums";
+import BlogQueryRepo from "../modules/blog/infrastructure/blogQueryRepo";
 
 // TODO replace this method to controller
 const blogQueryRepo = container.resolve(BlogQueryRepo);

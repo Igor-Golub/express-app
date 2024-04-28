@@ -1,14 +1,5 @@
 import { Container } from "inversify";
 import {
-  BlogService,
-  CommentsLikesService,
-  CommentsService,
-  PostService,
-  SessionsService,
-  UserService,
-  PostLikesService,
-} from "./services";
-import {
   AuthService,
   CookiesService,
   CronService,
@@ -18,26 +9,40 @@ import {
   PaginationService,
   SortingService,
 } from "./application";
-import {
-  AuthSessionCommandRepo,
-  BlogCommandRepo,
-  CommentsCommandRepo,
-  CommentsLikesCommandRepo,
-  PostCommandRepo,
-  PostLikesCommandRepo,
-  RecoveryCommandRepo,
-  UserCommandRepo,
-} from "./repositories/command";
-import CommentController from "./controllers/commentController";
-import { BlogQueryRepo, CommentsQueryRepo, PostQueryRepo, SessionQueryRepo, UserQueryRepo } from "./repositories/query";
-import BlogController from "./controllers/blogController";
-import TestingController from "./controllers/testingController";
-import UserController from "./controllers/userController";
 import NotifyManager from "./managers/NotifyManager";
 import NotifyService from "./application/notification/NotifyService";
 import EmailNotify from "./application/notification/email/EmailNotify";
 import SMTPEmailAdapter from "./adapters/SMTPEmailAdapter";
 import EmailTemplatesCreator from "./application/notification/email/EmailTemplatesCreator";
+
+import BlogController from "./modules/blog/api/blogController";
+import BlogService from "./modules/blog/app/blogService";
+import BlogCommandRepo from "./modules/blog/infrastructure/blogCommandRepo";
+import BlogQueryRepo from "./modules/blog/infrastructure/blogQueryRepo";
+
+import PostQueryRepo from "./modules/post/infrastructure/postQueryRepo";
+import PostService from "./modules/post/app/postService";
+import PostLikesService from "./modules/post/app/postLikesService";
+import PostCommandRepo from "./modules/post/infrastructure/postCommandRepo";
+import PostLikesCommandRepo from "./modules/post/infrastructure/postLikesCommandRepo";
+
+import CommentController from "./modules/comment/api/commentController";
+import CommentsService from "./modules/comment/app/commentsService";
+import CommentsLikesService from "./modules/comment/app/commentsLikesService";
+import CommentsQueryRepo from "./modules/comment/infrastructure/commentsQueryRepo";
+import CommentsCommandRepo from "./modules/comment/infrastructure/commentsCommandRepo";
+import CommentsLikesCommandRepo from "./modules/comment/infrastructure/commentsLikesCommandRepo";
+
+import UserController from "./modules/user/api/userController";
+import UserService from "./modules/user/app/userService";
+import UserQueryRepo from "./modules/user/infrastructure/userQueryRepository";
+import UserCommandRepo from "./modules/user/infrastructure/userCommandRepo";
+import SessionQueryRepo from "./modules/auth/infrastructure/sessionQueryRepo";
+import SessionsService from "./modules/auth/app/sessionsService";
+import RecoveryCommandRepo from "./modules/auth/infrastructure/recoveryCommandRepo";
+import AuthSessionCommandRepo from "./modules/auth/infrastructure/authSessionCommandRepo";
+
+import TestingController from "./modules/testing/api/testingController";
 
 const container = new Container();
 
@@ -72,10 +77,17 @@ container.bind(UserService).toSelf();
 container.bind(UserQueryRepo).toSelf();
 container.bind(UserCommandRepo).toSelf();
 
-// Session
+// Auth
 
 container.bind(SessionQueryRepo).toSelf();
 container.bind(SessionsService).toSelf();
+container.bind(RecoveryCommandRepo).toSelf();
+container.bind(AuthSessionCommandRepo).toSelf();
+container.bind(AuthService).toSelf();
+
+// Testing
+
+container.bind(TestingController).toSelf();
 
 // Application
 
@@ -86,17 +98,11 @@ container.bind(CryptographyService).toSelf();
 container.bind(JWTService).toSelf();
 container.bind(CookiesService).toSelf();
 container.bind(CronService).toSelf();
-container.bind(AuthService).toSelf();
 
 container.bind(NotifyService).toSelf();
 container.bind(EmailNotify).toSelf();
 container.bind(SMTPEmailAdapter).toSelf();
 container.bind(EmailTemplatesCreator).toSelf();
 container.bind(NotifyManager).toSelf();
-
-container.bind(TestingController).toSelf();
-
-container.bind(RecoveryCommandRepo).toSelf();
-container.bind(AuthSessionCommandRepo).toSelf();
 
 export { container };

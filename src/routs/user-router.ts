@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { Routs } from "../enums";
 import { userValidators } from "../validators/user";
-import UserController from "../controllers/userController";
+import UserController from "../modules/user/api/userController";
 import { basicAuth } from "../middlewares";
 import { container } from "../inversify.config";
 

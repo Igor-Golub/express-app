@@ -1,17 +1,15 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import {
-  AuthSessionsModel,
-  BlogModel,
-  CommentsModel,
-  PostsModel,
-  UsersModel,
-  CommentsLikesModel,
-  UnauthorizedSessionsModel,
-  EndpointsLogsModel,
-  RecoveryModel,
-  PostsLikesModel,
-} from "./models";
+import { EndpointsLogsModel } from "./models";
+import { BlogModel } from "../../modules/blog/domain/blogSchema";
+import { PostsModel } from "../../modules/post/domain/postSchema";
+import { CommentsModel } from "../../modules/comment/domain/commentsSchema";
+import { CommentsLikesModel } from "../../modules/comment/domain/commentsLikesSchema";
+import { PostsLikesModel } from "../../modules/post/domain/postsLikesSchema";
+import { UsersModel } from "../../modules/user/domain/userSchema";
+import { AuthSessionsModel } from "../../modules/auth/domain/sessionSchema";
+import { UnauthorizedSessionsModel } from "../../modules/auth/domain/unauthorizedSessions";
+import { RecoveryModel } from "../../modules/auth/domain/recovery";
 
 dotenv.config();
 

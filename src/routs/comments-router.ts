@@ -2,7 +2,7 @@ import { Router } from "express";
 import { CommentsRouts } from "../enums";
 import { jwtAccessAuth, jwtExisting } from "../middlewares";
 import { commentsValidators } from "../validators/comments";
-import CommentController from "../controllers/commentController";
+import CommentController from "../modules/comment/api/commentController";
 import { container } from "../inversify.config";
 
 const commentController = container.resolve(CommentController);

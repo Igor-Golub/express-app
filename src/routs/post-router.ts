@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { PostRouts } from "../enums";
 import { postValidators } from "../validators/post";
-import PostController from "../controllers/postController";
+import PostController from "../modules/post/api/postController";
 import { basicAuth, jwtAccessAuth, jwtExisting } from "../middlewares";
 import { container } from "../inversify.config";
 

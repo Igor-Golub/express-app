@@ -1,5 +1,5 @@
 import { Router } from "express";
-import SessionController from "../controllers/sessionController";
+import SessionController from "../modules/auth/api/sessionController";
 import { SessionRoutes } from "../enums";
 import { sessionsValidators } from "../validators/sessions";
 import { jwtRefreshAuth } from "../middlewares";

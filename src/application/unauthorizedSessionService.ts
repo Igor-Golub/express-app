@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { add } from "date-fns";
 import DbService from "./db/dbService";
 import CookiesService from "./cookiesService";
-import { UnauthorizedSessionsModel } from "./db/models";
+import { UnauthorizedSessionsModel } from "../modules/auth/domain/unauthorizedSessions";
 
 class UnauthorizedSessionService {
   constructor(
